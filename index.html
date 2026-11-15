@@ -209,6 +209,7 @@ nav button.on{background:var(--ink);color:#fff;box-shadow:0 4px 12px rgba(15,23,
 nav button.on .ic{color:var(--accent)}
 nav button{font-size:10.5px;padding:9px 0 8px}
 /* ===== DESKTOP (>=1024px): menu di sisi kiri, area konten lebar & rapi ===== */
+.grid2>*{min-width:0}.chart-box{position:relative;max-width:100%}
 #tgl{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.3}
 @media(min-width:1024px){
   :root{--side:260px}
@@ -242,6 +243,8 @@ nav button{font-size:10.5px;padding:9px 0 8px}
   #tab-cust.active #custList>:not(.cust){grid-column:1/-1}
   #tab-cust.active #custList>.cust{margin:0}
   #tab-add.active,#tab-proj.active,#tab-admin.active{display:block;max-width:980px;margin-left:auto;margin-right:auto}
+  #tab-dash .grid2{grid-template-columns:minmax(0,1fr);gap:22px}
+  #tab-dash .chart-box{height:270px!important}
   #tab-hist.active{display:block;max-width:1100px;margin-left:auto;margin-right:auto}
   #tab-hist.active>*{margin-bottom:18px}
   #toast{bottom:36px}
@@ -342,7 +345,7 @@ nav button{font-size:10.5px;padding:9px 0 8px}
           <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat ulang</span></button>
           <button role="menuitem" id="btnSound" onclick="toggleSound()"><span id="sndIco"></span><span id="sndLbl">Suara</span><i class="sw" id="sndSw"></i></button>
           <div class="hsep"></div>
-          <button role="menuitem" id="btnAdmin" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.15-j</div>
+          <button role="menuitem" id="btnAdmin" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.15-k</div>
         </div>
       </div>
     </div>
