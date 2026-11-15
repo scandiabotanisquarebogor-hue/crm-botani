@@ -1,6 +1,0 @@
-/* Isi URL Web App Apps Script Anda (hasil Deploy, berakhiran /exec).
-   Jika dikosongkan, aplikasi akan menanyakannya saat pertama dibuka. */
-window.CRM_CONFIG = {
-  apiUrl: '',
-  apiKey: ''   // samakan dengan Script property PWA_KEY (opsional)
-};
