@@ -1,0 +1,2105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CRM Follow Up">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<script src="config.js"></script>
+<script src="gas-shim.js"></script>
+<title>CRM Follow Up</title>
+<script>
+(function () {
+  var L = []; window.__errs = L;
+  function show() {
+    var b = document.getElementById('diagBar');
+    if (!b) { b = document.createElement('pre'); b.id = 'diagBar';
+      b.style.cssText = 'position:fixed;left:8px;right:8px;bottom:84px;z-index:9999;background:#7f1d1d;color:#fff;font:11px/1.45 monospace;padding:10px 12px;border-radius:12px;white-space:pre-wrap;word-break:break-word;max-height:42vh;overflow:auto;margin:0';
+      (document.body || document.documentElement).appendChild(b); }
+    b.textContent = 'DIAGNOSTIK (kirim teks/screenshot ini)\n' + L.join('\n') + '\n' + navigator.userAgent;
+  }
+  window.addEventListener('error', function (e) { if (e.target && e.target !== window) return; L.push((e.message || 'error') + '  [baris ' + (e.lineno || '?') + ':' + (e.colno || '?') + ']'); show(); });
+  window.addEventListener('unhandledrejection', function (e) { L.push('Promise: ' + ((e.reason && e.reason.message) || e.reason)); show(); });
+  window.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      if (typeof boot !== 'function') { L.push('Skrip utama TIDAK berjalan (fungsi boot tidak ada).'); show(); }
+      else if (!window.__booted) { L.push('boot() belum dijalankan.'); show(); }
+    }, 3000);
+  });
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+<script async src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" onload="try{if(LAST)drawCharts(LAST)}catch(e){}"></script>
+<style>
+/* ===== PALET: ganti nilai di sini untuk mengubah seluruh warna aplikasi ===== */
+:root{
+  --ink:#0f172a;--ink2:#1e293b;
+  --accent:#14b8a6;--accent2:#0d9488;--accent3:#0f766e;--soft:#e6f7f5;
+  --bg:#f1f5f9;--card:#ffffff;--text:#0f172a;--muted:#64748b;--line:#e2e8f0;
+  --ok:#10b981;--bad:#ef4444;--warn:#f59e0b;--wa:#25d366;
+  --shadow:0 4px 18px rgba(15,23,42,.07)
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:'Plus Jakarta Sans',system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);padding-bottom:98px}
+.ic{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;vertical-align:-3px;flex:none}
+/* HEADER */
+header{background:radial-gradient(circle at 90% -10%,rgba(20,184,166,.45),transparent 45%),radial-gradient(circle at 0% 110%,rgba(99,102,241,.25),transparent 45%),linear-gradient(165deg,var(--ink2),var(--ink));color:#fff;padding:calc(14px + env(safe-area-inset-top)) 18px 52px;border-radius:0 0 30px 30px}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:10px;max-width:920px;margin:0 auto}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{height:56px;width:auto;display:block;flex:none}
+.brand .tt{padding-left:12px;border-left:1px solid rgba(255,255,255,.2);min-width:0}
+.brand h1{margin:0;font-size:17px;font-weight:700;line-height:1.25}.brand small{opacity:.7;font-size:12px}
+.hbtn{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);color:#fff;width:38px;height:38px;border-radius:12px;cursor:pointer;display:grid;place-items:center}
+.hbtn:active{transform:scale(.94)}
+.seg{display:flex;background:#eef2f6;border-radius:12px;padding:3px;gap:3px;margin:4px 0 2px}
+.seg button{flex:1;border:0;background:none;padding:9px 6px;border-radius:9px;font:600 12.5px/1.2 inherit;font-family:inherit;color:var(--muted);cursor:pointer}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 5px rgba(15,23,42,.14)}
+.seg button:disabled{opacity:.45;cursor:not-allowed}
+.psbar{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.psbar b{font-size:13px}
+.psit{display:flex;gap:11px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);font-size:12.5px;cursor:pointer;margin:0;color:var(--text)}
+.psit:last-child{border:0}
+.psit input[type=checkbox]{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--accent2)}
+.psit .nm{font-weight:700;font-size:13.5px;color:var(--text)}
+.psit small,.dbit small{display:block;color:var(--muted);margin-top:3px;line-height:1.5;font-weight:500}
+.psit.sv{opacity:.55}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--soft);color:var(--accent3);margin-left:6px;vertical-align:middle}
+.tag.ok{background:#dcfce7;color:#166534}.tag.pu{background:#ede9fe;color:#6d28d9}
+.dbit{padding:13px 0;border-bottom:1px solid var(--line);font-size:12.5px}.dbit:last-child{border:0}
+.dbit .nm{font-weight:700;font-size:14px}
+.pbar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#ede9fe;color:#5b21b6;border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.45;margin-bottom:12px}
+.pbar .btn{flex:none}
+.hacts{display:flex;align-items:center;gap:8px;flex:none}
+.lang{display:flex;align-items:center;height:38px;padding:3px;border-radius:12px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14)}
+.lang button{border:0;background:none;color:rgba(255,255,255,.75);font:700 11.5px/1 inherit;font-family:inherit;letter-spacing:.3px;height:100%;min-width:32px;padding:0 7px;border-radius:9px;cursor:pointer;transition:.2s}
+.lang button.on{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.menuwrap{position:relative}
+.hmenu{position:absolute;right:0;top:calc(100% + 10px);min-width:200px;background:#fff;color:var(--text);border-radius:16px;box-shadow:0 14px 36px rgba(15,23,42,.28);padding:6px;z-index:60;display:none;transform-origin:top right;animation:pop .16s ease}
+.hmenu.show{display:block}
+.hmenu:before{content:"";position:absolute;right:13px;top:-6px;width:12px;height:12px;background:#fff;transform:rotate(45deg);border-radius:3px}
+.hmenu button{position:relative;display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;padding:11px 10px;border-radius:11px;font:600 13px/1.2 inherit;font-family:inherit;color:var(--text);cursor:pointer;text-align:left}
+.hmenu button:hover,.hmenu button:active{background:var(--bg)}
+.hmenu .ic{color:var(--accent3)}
+.hsep{height:1px;background:var(--line);margin:4px 6px}
+.hmenu button.hon{background:var(--soft);color:var(--accent3)}
+.hmenu .sw{margin-left:auto;width:34px;height:20px;border-radius:20px;background:#cbd5e1;position:relative;flex:none;transition:.2s}
+.hmenu .sw:after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:.2s}
+.hmenu .sw.on{background:var(--accent2)}.hmenu .sw.on:after{left:16px}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(-4px)}to{opacity:1;transform:none}}
+.brand{min-width:0}.brand .tt h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand .tt small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hbtn.hon{background:#fff;color:var(--ink);border-color:#fff}
+.greet{max-width:920px;margin:12px auto 0;font-size:12.5px;opacity:.85}
+.greet b{font-size:18px;display:block;font-weight:700;opacity:1;margin-top:2px}
+main{position:relative;z-index:1;max-width:920px;margin:-36px auto 0;padding:0 14px}
+.tab{display:none;animation:up .3s ease}.tab.active{display:block}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border-radius:20px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card h2{font-size:14.5px;margin:0 0 14px;font-weight:700;display:flex;align-items:center;gap:10px}
+.card h2 small{margin-left:auto;font-weight:500;color:var(--muted);font-size:11px}
+.hi{width:30px;height:30px;border-radius:10px;background:var(--soft);color:var(--accent3);display:grid;place-items:center;flex:none}
+/* PERFORMA */
+.perf{display:flex;gap:16px;align-items:center}
+.ring{--p:0%;width:104px;height:104px;border-radius:50%;background:conic-gradient(var(--accent) var(--p),#e8eef4 0);display:grid;place-items:center;flex:none}
+.ring>div{width:82px;height:82px;border-radius:50%;background:#fff;display:grid;place-content:center;text-align:center}
+.ring b{font-size:21px;line-height:1;font-weight:800}.ring small{font-size:10px;color:var(--muted)}
+.mini{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mini div{background:#f6f8fb;border-radius:14px;padding:10px 12px}
+.mini b{font-size:20px;display:block;line-height:1.15;font-weight:800}.mini span{font-size:11px;color:var(--muted)}
+.mini .w b{color:#d97706}.mini .b b{color:var(--bad)}.mini .g b{color:var(--ok)}
+.grid2{display:grid;gap:14px}@media(min-width:780px){.grid2{grid-template-columns:1.4fr 1fr}}
+.chart-box{position:relative;height:250px}
+.sublbl{font-size:11.5px;color:var(--muted);font-weight:600;margin:6px 0 4px}
+/* NILAI CLOSING */
+.bigval{background:linear-gradient(135deg,var(--ink2),var(--ink));color:#fff;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+.bigval small{display:block;font-size:11px;opacity:.7;font-weight:500}
+.bigval b{font-size:24px;font-weight:800;line-height:1.2;color:#5eead4}
+.bigval .bv2{text-align:right}.bigval .bv2 span{font-size:15px;font-weight:700}
+.hint{font-size:11px;color:var(--muted);margin:10px 0 0;line-height:1.5}
+/* PERINGKAT */
+.lb{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line)}
+.lb:last-child{border:0}
+.medal{width:30px;height:30px;border-radius:10px;background:#eef2f6;color:var(--muted);display:grid;place-items:center;font-size:13px;font-weight:800;flex:none}
+.medal.m1{background:linear-gradient(135deg,#fbbf24,#d97706);color:#fff}
+.medal.m2{background:linear-gradient(135deg,#cbd5e1,#94a3b8);color:#fff}
+.medal.m3{background:linear-gradient(135deg,#d6a273,#a16207);color:#fff}
+.lb .info{flex:1;min-width:0;cursor:pointer}.lb .info b{font-size:13.5px;font-weight:700}
+.bar{height:6px;background:#e8eef4;border-radius:9px;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:9px}
+.lb small{color:var(--muted);font-size:11px;display:block;margin-top:4px}
+.iconwa{border:0;background:var(--wa);color:#fff;width:36px;height:36px;border-radius:11px;cursor:pointer;flex:none;display:grid;place-items:center}
+/* TABEL */
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{padding:9px 5px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}th{color:var(--muted);font-weight:600;font-size:11px}
+.wrap-x{overflow-x:auto}
+/* FORM */
+label{display:block;font-size:12px;color:var(--muted);margin:12px 0 5px;font-weight:600}
+input,select,textarea{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:13px;font-size:14px;font-family:inherit;background-color:#f8fafc;color:var(--text)}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--accent);background-color:#fff;box-shadow:0 0 0 4px rgba(20,184,166,.16)}
+input:disabled{opacity:.6;background-color:#eef2f6}
+input:not([type=checkbox]),select{height:46px}
+select{-webkit-appearance:none;appearance:none;background-repeat:no-repeat;background-position:right 14px center;background-size:20px;padding-right:44px;cursor:pointer;text-overflow:ellipsis}
+input[type=date]{-webkit-appearance:none;appearance:none;position:relative;min-height:46px;padding-right:44px;text-align:left;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230d9488' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;background-size:20px}
+input[type=date]::-webkit-calendar-picker-indicator{opacity:0;position:absolute;left:0;top:0;width:100%;height:100%;cursor:pointer}
+input[type=date]::-webkit-date-and-time-value{text-align:left}
+textarea{min-height:92px;resize:vertical}
+.btn{border:0;border-radius:13px;padding:13px 16px;font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-family:inherit;box-shadow:0 4px 12px rgba(13,148,136,.28);display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.btn:active{transform:scale(.98)}.btn.block{width:100%;margin-top:16px}
+.btn.sm{padding:9px 13px;font-size:12.5px;border-radius:11px;box-shadow:none}
+.btn.wa{background:var(--wa);box-shadow:0 4px 12px rgba(37,211,102,.28)}
+.btn.soft{background:var(--soft);color:var(--accent3);box-shadow:none}
+.btn.dark{background:var(--ink);box-shadow:none}
+.btn.danger{background:#fee2e2;color:#b91c1c;box-shadow:none}
+.btn[disabled]{opacity:.55;pointer-events:none}
+.row{display:flex;gap:10px}.row>*{flex:1;min-width:0}
+.chips{display:flex;gap:7px;overflow-x:auto;padding:12px 0 2px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;padding:8px 14px;border-radius:999px;background:#eef2f6;font-size:12.5px;font-weight:600;cursor:pointer;border:0;color:var(--muted);font-family:inherit}
+.chip.on{background:var(--ink);color:#fff}
+.search{position:relative}.search .ic{position:absolute;left:13px;top:50%;margin-top:-8px;color:var(--muted)}.search input{padding-left:38px}
+/* KARTU CUSTOMER */
+.cust{display:flex;gap:12px;position:relative;overflow:hidden}
+.cust:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+.cust.late:before{background:var(--bad)}.cust.today:before{background:var(--warn)}
+.av{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:15px;flex:none}
+.cbody{flex:1;min-width:0}
+.top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.cust h3{margin:0;font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cust p{margin:4px 0;font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cust p b{color:var(--text)}
+.badge{font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:999px;color:#fff;white-space:nowrap}
+.pill{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px;background:#fee2e2;color:#b91c1c}
+.pill.t{background:#fef3c7;color:#92400e}
+.nilai{color:var(--accent3)!important;font-weight:700}
+.acts{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+.empty{text-align:center;color:var(--muted);padding:26px 8px;font-size:13px}
+.empty .ei{width:54px;height:54px;border-radius:18px;background:var(--soft);color:var(--accent3);display:grid;place-items:center;margin:0 auto 10px}
+/* ADMIN */
+.note{background:#fef3c7;color:#92400e;border-radius:12px;padding:10px 12px;font-size:12px;line-height:1.5;margin:8px 0}
+.note.bad{background:#fee2e2;color:#b91c1c}
+.note.info{background:var(--soft);color:var(--accent3)}
+.arow{display:flex;gap:8px;margin-bottom:8px;align-items:center}
+.arow input{flex:1;min-width:0}.arow .sw{max-width:150px}
+.arow2{border:1.5px solid var(--line);border-radius:14px;padding:10px;margin-bottom:10px;background:#fafcfd}
+.arow2 textarea{min-height:70px;margin-top:8px;font-size:13px}
+.xbtn{border:0;background:#fee2e2;color:#b91c1c;width:42px;height:44px;border-radius:12px;cursor:pointer;flex:none;display:grid;place-items:center}
+.badge-lock{font-size:10px;font-weight:700;background:var(--soft);color:var(--accent3);padding:2px 8px;border-radius:999px;margin-left:6px}
+.item{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:12.5px}
+.item:last-child{border:0}.item small{color:var(--muted);display:block;margin-top:3px;line-height:1.45}
+.item .r{text-align:right;flex:none}.item .r .nilai{display:block;margin-top:4px;font-size:12px}
+input.err,select.err,textarea.err{border-color:var(--bad)!important;background-color:#fef2f2!important}
+.ferr{color:var(--bad);font-size:11px;font-weight:600;margin-top:5px}
+.req{color:var(--bad)}
+.mini3 b{font-size:15px!important}
+.est{color:#b45309!important;font-weight:600}
+/* NAV */
+nav{position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-radius:22px;display:flex;padding:7px;box-shadow:0 10px 30px rgba(15,23,42,.18);z-index:30}
+nav button{flex:1;border:0;background:none;padding:9px 2px 8px;font-size:10.5px;color:var(--muted);cursor:pointer;border-radius:16px;font-family:inherit;font-weight:600;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button.on{background:var(--ink);color:#fff;box-shadow:0 4px 12px rgba(15,23,42,.3)}
+nav button.on .ic{color:var(--accent)}
+nav button{font-size:10.5px;padding:9px 0 8px}
+.sug{background:#fff;border:1.5px solid var(--line);border-radius:12px;margin-top:6px;overflow:hidden}
+.sug button{display:block;width:100%;text-align:left;border:0;background:#fff;padding:10px 12px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;border-bottom:1px solid var(--line);color:var(--text)}
+.sug button:last-child{border:0}.sug small{display:block;color:var(--muted);font-weight:500;margin-top:2px}
+.paperwrap{background:#e2e8f0;border-radius:14px;padding:8px;overflow:hidden}
+#pvPaper{width:794px;background:#fff;transform-origin:0 0;padding:34px 40px 40px;color:#000;font-family:Arial,Helvetica,sans-serif;font-size:12px;box-sizing:border-box}
+#pvPaper table{border-collapse:collapse;width:100%}
+.fotoRow{display:flex;gap:12px;align-items:center}
+.fthumb{width:88px;height:66px;border-radius:12px;background:#f1f5f9;border:1.5px dashed #cbd5e1;display:grid;place-items:center;overflow:hidden;color:#94a3b8;flex:none}
+.fthumb img{width:100%;height:100%;object-fit:cover}
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:flex-end;justify-content:center;z-index:50;backdrop-filter:blur(3px)}
+.modal.show{display:flex}
+.sheet{background:#fff;width:100%;max-width:580px;border-radius:26px 26px 0 0;padding:8px 18px 20px;max-height:93vh;overflow:auto;animation:sl .28s ease}
+@keyframes sl{from{transform:translateY(60px);opacity:0}to{transform:none;opacity:1}}
+@media(min-width:640px){.modal{align-items:center}.sheet{border-radius:26px}}
+.grab{width:42px;height:5px;background:#cbd5e1;border-radius:9px;margin:6px auto 12px}
+.sheet h2{margin:0;font-size:18px;font-weight:800}.sub{margin:2px 0 0;color:var(--muted);font-size:12.5px}
+.wabox{background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:18px;padding:13px;margin-top:14px}
+.wabox h4{margin:0 0 7px;font-size:13px;color:#166534;display:flex;gap:7px;align-items:center}
+.wabox textarea{background:#fff;border-color:#bbf7d0;min-height:96px}
+.hist{margin-top:14px;font-size:12px;color:var(--muted)}
+.hist div{padding:8px 0;border-bottom:1px solid var(--line)}
+#toast{position:fixed;left:50%;bottom:106px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:14px;font-size:13px;font-weight:600;opacity:0;transition:.25s;z-index:99;max-width:90%;text-align:center;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.err{background:var(--bad)}#toast.ok{background:var(--accent3)}
+#loader{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);background-size:200% 100%;animation:ld 1s linear infinite;display:none;z-index:100}
+@keyframes ld{to{background-position:-200% 0}}
+@media(max-width:430px){.logo{height:42px}.brand{gap:8px}.brand .tt{padding-left:8px}.brand h1{font-size:14px}.brand small{font-size:10.5px}.hacts{gap:6px}.hbtn{width:36px;height:36px;border-radius:11px}.lang{height:36px;border-radius:11px}.lang button{min-width:28px;padding:0 5px;font-size:11px}}
+@media(max-width:350px){.logo{height:36px}.brand .tt{display:none}.brand{flex:none}}
+</style>
+</head>
+<body>
+<!-- ===== SET IKON (garis, konsisten) ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <symbol id="i-phone-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1 1 21 11.5z"/><path d="M9.3 8.8c0 2.8 2.1 4.9 4.9 4.9l.9-1.3-1.7-.9-.8.7a3.3 3.3 0 0 1-1.7-1.7l.7-.8-.9-1.7z"/></symbol>
+ <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></symbol>
+ <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+ <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+ <symbol id="i-user-plus" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
+ <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+ <symbol id="i-bell-off" viewBox="0 0 24 24"><path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5"/><path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="m2 2 20 20"/></symbol>
+ <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></symbol>
+ <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+ <symbol id="i-mobile" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 18h.01"/></symbol>
+ <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></symbol>
+ <symbol id="i-crown" viewBox="0 0 24 24"><path d="m3 7 4.5 4L12 4l4.5 7L21 7l-2 12H5z"/></symbol>
+ <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></symbol>
+ <symbol id="i-pie" viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></symbol>
+ <symbol id="i-trend" viewBox="0 0 24 24"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></symbol>
+ <symbol id="i-alarm" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M5 3 2 6M22 6l-3-3"/></symbol>
+ <symbol id="i-list" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></symbol>
+ <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+ <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+ <symbol id="i-note" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+ <symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></symbol>
+ <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></symbol>
+ <symbol id="i-check" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></symbol>
+ <symbol id="i-folder" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"/></symbol>
+ <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+ <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+ <symbol id="i-settings" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></symbol>
+ <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></symbol>
+ <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></symbol>
+ <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+ <symbol id="i-save" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></symbol>
+ <symbol id="i-archive" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></symbol>
+ <symbol id="i-history" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></symbol>
+ <symbol id="i-gear" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></symbol>
+ <symbol id="i-camera" viewBox="0 0 24 24"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></symbol>
+ <symbol id="i-more" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></symbol>
+ <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></symbol>
+ <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
+ <symbol id="i-web" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></symbol>
+ <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></symbol>
+</svg>
+
+<div id="loader"></div>
+<header>
+  <div class="hrow">
+    <div class="brand"><img class="logo" alt="Scandia Lifestyle & Home" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASsAAACUCAYAAADLTw+gAAAVMElEQVR42u2dTXLbSpaFj9WO6OhJE2/UQ+HVBsS3AsErEL0CwSswvQLBC6gQvQJBKzC9gTbYo549aAVFrsBgR01q0IEa4KIIw0wgM5EAk+L5IhgKkfhJZN48eW8if96UZQlCHDAHEBz5fisfQgbxlllALFkAiORzo3H8BkAGYA0gZ/YRU97QsyIGBACWAGIA1wOu8wJgBSBllhKKFRlDpJYAZg6vuwOQULQIxYq4IBIxuR7xHhvx1rbMbqLiillAOkgAfB9ZqADgFlU/1oJZTuhZEVNSAPeG3lEOoGh8F6J6S3hjcJ0PDAvJMfg2kAwRqmdUb/fWPccF4jXF4kV18dRIAyH0rIiSFYCPPcd8kRCxsLh+KELUJ1rvNUSQUKzIhbIA8LXj9xfxjnJH90qhfru4lxByy2IhFCvSDtW2HeKxEYEpHN5zLt7Tdcc9IxYNAfg2kBzo8nKeRTQKx/fMRbBeFL/fohrbRQg9KwKIEH3vCP3GEKq2h5UpxHKPqp+rYDHRsyJE5b3sRwj9VB5WrPht1vEboWdFLogQwN8Uv31C9XZwKtYA7o58v5N0EnpW5IJZKL7fTSxUXR7etYSKhGJFLhhViDVEqJY4vrZVH1sA3wzTSShW5AIIoJ4Kk1peLwPwKH9tvCHVfSMW12XDPqvLJsLxt4A245vm+PWN3l6ukxteS2WUb1hk9KzI5YrVMTKLsO9P/Dr0YCbXMg3hNvSuCMWK6KDrCQUStj12HDNDNTl5OcL9CcWKXAih4vtCM+zLob+MzKMIW6BxbGGYXkKxIhcqVrphn+mifPcSFgYTp5dQrMiZszU8PkA1cPNxwD1v5L7zCdJLKFbklYtV2BH23Wlcd9/ze1/He0CxIhQr0qTQFCuTsO+znP+iIVhPqBbxOyaMhPwEx1ldNhG6x1kFqDrFdb2pBX4e9pBCf3nkpYhnAOCHyl5ZZPSsyGWSK76/xWEwp45QbcSbylrfx6gmQ/fR7HhfKI55YXFRrMhlh4EqEdDdguszute7WqFaT72vH6vueFd5YhmLi2JF6F3ZsAfwDsf7nNqsRdB0+rEixW8pi4piRS6btcU53xRhX58oRlBPpeliB45qp1gxCyhWAP5hcPwn2K8eWohgPRuet2IxEYrVZROId/Tvmt7NH46EI0a187IO/w/gv1lUhGJ1uUSoOrRvNY79hsOgUFekqPq8+jre/w3A/4Bjry4ejrO6TBIAD5rH/gDwF4y3aUQI4H8B/JfGsR/AjnZ6VuQiCMU7ejA45zfovfGzpQDwH5rHPoH9VxQr8upZiFDdWJz7EeMtfLcC8J+GaVnDfuUGwjCQeMxKKvkQxtgOK4J6c9U+XlB11OcsXnpW5PWEfR81K/8fAL4ofr8eIRxMFd//HcD/9Zx7g+pNZsRipliR80c37HvGYS5gIl7UMR4celcJ1NN5/iq/6Yx4/w5u08UwkJw9fYW7R7XaQWoQntnsfKPy+GY94WYgIazuyg0ULXpW5BXyIqJzLBTLoB5lfutAFFKFUKF17UL+/6xxzXtwWAM9K/LqPKtaqIqOcwNUg0ZnCo8shN3YqwWArxbeUSxe1qzj2i68PkLPinhEoSE0RYdwzGC/Y3PaE5J2eWMR1P1phGJFLpg11Ksk3Fl4MUmHZ7TUENAcnHZDsSKkI/zad3g7geZ15lAPodgYeGoFi4RiRcgxtlBPcbmG/k7LXWK0ZDYTihVxQQL1mKcHjdBsCfV4r8/gKHRCsSIO6fJ+Vh2/hVCPfN+BE5MJxYo4JoN6Ks5th5it0D2mqmDWEooVGSMc3HX8FrS+i6DeyusbuGMNoViRkSg6PKj22KsA9mOqCKFYkcGsxSs6xh0Om5QuoZ6onKB6y0gIxYqMyhLqsVcrCf9Uq5G+gJ3qhGJFJmIL9Ru+a3TvRRgz+wjFikzJCuqxV6q3f1/AMVWEYkVOgImXtMe4G08QihUhSnKox14dE7aCWUYoVuRUJOhftmWD7n4sQihWZHSKnnBwD3aqE4oV8YQM6rFXK3BMFaFYEY+I8evYqx3YqU4oVsTDcDA5ImCEUKyId6xwWAb5GZyoTChWxGOW4ERlMgJvmQUXyS36N0Adyg9mM6FnRQihWBFCCMWKEEIoVoSQ1ww72F83mwt73oxF/np5U5Ylc4EQwjCQEEIoVoQQihUhhFCsCCGEYkUIoVgRQgjFihBC1LgaFDoHELS+yzx/9naafUtvZHh8Dve7xxwr16nTYJsfNmUaOUjnFu6XcQ5hvpBhOlI6QoPjCzjcJ9JmUOhCCnWOaqmRPnaSaZkkPMO0WzIFkl7dNO8knTmqHVlyTE8I4G+G5zzD/cqcmWYZ17xIPo9Rvjajl99McI+uvKjtfT0wTyIA3w3PeTdCA5wDuDE4fi+27MQedMUqRLWYWgz1brsmfJMCXGM84VpIeu8GXmcnrdQYLZWKFYCPhuc4NQxLsRpLNM9RrI7ZfAq7Lcl8ECubNADAB3nuwej0WSWiqB8dCRVEQJ6k8ieGoUYfsVz3qwOhAoBrAA/i6aSO06ryBG0q+0wE+tTcg2uvq2z+q9jm4gzTb1umiasEXPV4U7lU1NlIGTCT628dPFQoLcmTCMxYFXFsY1sMyO/EE8N+kpCbHG/8voqthmeS5kBs3/Z5ozHFam4Rn7oSLRsjjyW9txOl9asr1/YIy4EVIfLEwNcTeKHnzK3Y7Dl4WcuB5zvxtK8UKroe0Zvqq2x/GhbgSlryqdN7L8bmskJGDhoIX0Kwa3DLeN2Gz/ewOXZQVwZ7kcfEKh0xjNJlq3lcCvOOaJfciDsfeGIUzgzDofeQgOiEzb4K1sKRHgx+vqsjLfvdiTPnE/SGC6wGxNGuBctFSBg4fB6fDP8B59mhfArB8jGflr7YZFusTt0KbkSEdB78o0cFeucg75YO0+NbK53ifDqTmU8HQrjrB74eapdXIyXMhr3mw4SagjZ12rcDr+FSYK7hl2DNwA533XxKPUrP0vH1Btnk21ZsasMzfh3cGconMhDAWLPCpzhN57+KFxzeRp66X6Cdnz4Z/o00MjFIF7dSbzIP0hKP8GyhbcPeFKu5xfnv0f/GJ5DKuIT6Tdcz9N4cmYifinr0/LZhEFFDXE36jZ7luQrPWrDBhjES95LnKUgXCU4/BCUeySlIrEWwLMv6k5Vm5I1zdT/Rkftsy7IMNM83TWOTrCzLUOMeYVmWqcb1lhbPr7rfWKQD05aNlK65RVpsmOIeYxG16s2Q820++UjPVRjU958+Uy8Rk0mL8V76eeoQSMczGeJVPcv5Ol7GVpS/mcZ2/9QfDvvNliPm98LTfiL2X00fgpkwx3gDwq2nhQ0Rq5sBGbqWEOW9QV+P7b1sJ9auReCagrXBYRqSC4KRjdKX+YJtOGBUr6E5FaYN6N4iFJxUrIBqbEhq2d9VGBqsTeFtBopB3hCsL3C//MnCsF9gJ+I7umFMAAeM9jc0p+i3CmA+3s+0HK2mhb1thT82Yda9fHYiPhncr1kVWXb2uQixchHj7QiGYZq+laTn3sIwMg8r5AMO64bpNDxj49sO1uEZhJ97scu5oV3GpjbZXM9qCeDR4UM3Fx/LBlb2RAzbhG/we+R0BPP1gX6TRmALs6EOtqFwhvHH3u1HbAxeCza2YruelaltfRHtsEnj7ybl3gwDXfch3IjSPqFaCypvKLBNYZmSem6ApuLx3PBWVxbeb+hpPnDAqF+iaDreb9Vo2HZj1oGrlqKO6QbfoJoi86fca2lgoDaGvPbYKGz6BdKBQhx7nB838G9WwiVi2i2xaXlGqzFt8mpgYm25lpBzC73OOdPXqC+vzCh2LZe+gHlHe+x5ntxPaH/kV0KYL2KQDnQQjKaFtcUqR7XqwZQhwJBF91QUrywEXDkIc6eaL/hlwLmP8GfxwEvD1Db2R2xwi6qveJT7XikqxpeJM6pedC++AKNYWPQLHBOm0fsIBniNQzzbNbhCwzl4+6nh9ypudcv7qiPhH2A+2Gsovq7pc0qjeO7wFG0MYz7BM0YDbIcd7qfxqkyHBqUdjc1ujDpx1ZOYOcz7RoaSvuKWNYT5UIDU8jdXYmkbhg8J51wtaEjG8bjrYUmu7DLWaZz6RrBv5UK/i2hN4WnN8Gunu+l9bz01ClOhaHesw0EfwWIiryXHsP5PFwsakn7mFvVlNaCBVdX53ohKd7rNtqF+7ycQrvtWhcotC+HcW7CVxjE2hhFP9LyrgZ75A7j+lW8NaNNzVn3CMUJBm+3j24KwwGFrdpfr3zR3ck1hPi7pC/x6FR6j6pPzgZ1mqJ1ZtLrtXZADuY7tLP692Fd+wYISYZwR7IE4Ir4sZtmZ5qETmXMcFgoLUC2d8gluBpfOW5XGRhwCjwzOJ+Gccn/BQsqCHe7+sYBfq+7GLsJAE/FaSUX4TbyjneW1horVzGGfRz6wwswx3YaxPopnPjCcuwbwA0Bp+DGl9OwTjlwuiWc2ed9Vx/reBuYDMqzA4c3e0DeKW9iN3fnowINIRWjucFgy5py9qpo7TPvWdY3px++dMy8Yd3J3hNPvD2pUV6463LF7qaQ53GwfvXMgGraVZG5xXiDn3rda+O8wmwMVwI/9DY3d7pEMcQMypr37WvaD03WlUNynVjj1OMCraHpHQwvPpt9jhmp0vIngRvK8dx0eW64pgrHHFeIUHt/CQcN1CaxHvHbocQN6DcUwhqsjfSuqTLoRryKzqIAhzN8qbRVhpS31xOm4Iy5eyPN913CR663jlx4KgomQTy2mBbhDcx/PI4eAsefPv+wTqwB6e/LdiudViLDFHR5GAIsVAYX8yHcJho3vupa0/8BhK65M7lUC+GooqrXXuVYI4MLTfoFTG26O6uULOU5yoSFgU2PC9pdvW27njWFFvWuFSvuGyIQDK2qmaJUTuFnR9NqhkNyJ+AVnZhS1Ycwx/TimFOb7NF4CXybwqq7PIB+WbQ/rqmE4LqaozOQ6twMzZNdReVbws5M2ORL63p1JBVme8L4vIE27v3SvqpnOoO1ZxR62bn0FthAx86WFeMavbwhtBGCD4Rs7hBbluRDDKCbOt6JRljNcNnvo76E5xDZMnZKdI4FbG5ZxPV8wbYrV3LNCe0F/R3pt5JkHRv6iKEybAo4dhAABzEcm1x3tqxPk31bu/fXCxWo5QShu04Cu4WZnpLVFI7psasEVTrd2lap10a3kOYatm+RKqCKF6JiK6MZRX0UBu9feyxPm4xrA5wsWqg8Yf1xVYNmAumrAbK5z06xfzT6ryIP+A9PWJRfP8BTpfpZ7F44qvktjtTGMKecLqkL/b7gs9qgm76YT3MvU23bZgNZ11aaexm2xalb8U3hZQwptK5VsyqkcnzpaqTnM5wHu4XYQoK1hLE9ceWNczoDRjdhKNtH9Tt2A2l7vX/MFrxQXDMUt351JoRVSGO9G9rI2qBYiXI3QL1A4TquNdzX1fMFj5bjwpEtiLHbiEESYbmPXyLIB9UGs/lWnrjqMJhHD/TCSe74RcXFZaFnDO9ycIK0B7N6srkbIX1tPLT5xZc7xOrfkehG7DDH9ks3xhPbT1xg926bfZPG9QCrrAvZLnryIoKSYZhBiKA+6sEjvRgpsbSCmS5gPWH3BeG9kUwvx3OMwviXD8MX3pkz70LSUjvO/HoqyHmjvEewX3wtQzdgw5Y+R6qjNswDA+6ErhUatv6qWspgwNu9Lb9gR6uQiTLaFFFuEUdmIeTOH3Ty8FIchBabPkzhMfzLx+S7Snom9u6zooYV3VJehzbkFxh3GYpPP2VCxIoSQSbhiFhBCKFaEEEKxIoRQrAghhGJFCCEUK0IIxYoQQihWhBDSyVvP0xfJJ4XZ/MFEjk87fte5hio9XWToHpEeoxpVPJc0FuiejqFzz2P3DeVeBfonXgeKNNT3TgzLLXF0TBcBfl76Noeb+Wx1vnWVo84xzXQu5JwIh1kSaw2bru+DnjoQ4DCfUpUmHTvqqjOnpyxLnz9JWREZnleWZZn1/N5HV3q6SBTnzsuy3Hacl5VlGVjeU3XfXH5bKtIUy+95z71hkf82+av7CcuyLOQ6zTxdObC5qKccdY+p87foyIO1It/b9ynLskx77tNnfzp2lPmsB5ccBm5QTXRVfbp413GeymNYoVrg7jOA3xrHv5e03OL4HK5U7ld/Psn3z63vj7WIC1QTkx/x62TpuaRp3/DAfMlfHa9sJnkRNvIk9si+ljhsFvxBUeZ30J8XuoB6v0sTL7XLdiOfKyz7rKbjFtUKC0lLGNZiJB8U4dq24dpnjVCt/f1Wce6icZ+gETakUuGXmH4brqEEjWeqG4Idpt/woit8e5SGoO7GOFbm31CtBtInNrtGWR3rVriGnzs+UazOlL0Y5lLRQo7VV5CJN3fdqtw34p2lZ5iXacN7iXHY6SjxJH1xI315j/el4xGmIljHbGcptrV67RXo7QWLR9hh3H0djXGHy6zqCK3Dgkf5vIgh5zBbM8s2bIrEu8saXt7S0/ztoxaAjw3P4z3cLhgXdaQ/1DgXGiHettEFoFOGT/h5e6qo0ejoepVdtpvBj6WcKFYtrgE8dPS3dFWm+x5PZqsQsUwEYi4GeiPXepR7LkYMZRaSrltMs0fdkPztq2xPLY910RCwSI5JBjYAtxi+8a/LBmgt3lPSyLuk8TfUvE7fgobeihU72O06Grs6KbMe413K9d+gWo3xk3gGtyO78kUj3Fhh/PW/h+Rvl8fyJF7h76j6+WY4LGddP5uLTXs/d6T/nUZeA3orwAYG5beSRiBuNHjPhmVp83KIYkWQiwHOG97PmBRnnl9RI6SuQ8mmYK3EW/2M6TZj6PJOlhrPcwP9TU5W4kkuG9deXUploVhNQyAGHPe0rltmlXZ+NsPrWrA+ipd66gqciqjcd5R5eCSc02ls1o3ugw3O702uNefSZxUrQoctTvM2K4ZZJ2Uo3tMTDlti541QIWkYuY8kBs/afObE4pp9HsuD5FOCn/upauow6ZSCVUiaMinzGIcXLwEO/WozCePWhmVxPyAPu2x367ENno1Y3Xf0i6QepacdBjTDvXnD0No74OxR9V356tI/GDxrUzQeRhCrejza4xFbWMl160GwyxOGvnWZr1AN/mx31u9EONaG193isBt45th2T1WftPB9w4gQ3W85CoUbHKF7h5G+323TUxtTXzgXaVZ4VQg017zP0HP7nld1nUhTeIYQKdJRP2MtGMUIeWSaj800wcD2VPcJ5LM1SJOO7drUicn4J1g2KJBfwlwwAAAAAElFTkSuQmCC">
+      <div class="tt"><h1 id="tokoNama">CRM Follow Up</h1><small id="tgl"></small></div></div>
+    <div class="hacts">
+      <div class="lang" role="group" aria-label="Bahasa / Language">
+        <button id="lgId" onclick="setLang('id')" aria-pressed="true" title="Bahasa Indonesia">ID</button>
+        <button id="lgEn" onclick="setLang('en')" aria-pressed="false" title="English">EN</button>
+      </div>
+      <div class="menuwrap">
+        <button class="hbtn" id="btnMenu" onclick="toggleMenu(event)" title="Menu" aria-haspopup="true" aria-expanded="false"><svg class="ic" width="18" height="18"><use href="#i-more"/></svg></button>
+        <div class="hmenu" id="hMenu" role="menu">
+          <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat ulang</span></button>
+          <button role="menuitem" id="btnSound" onclick="toggleSound()"><span id="sndIco"></span><span id="sndLbl">Suara</span><i class="sw" id="sndSw"></i></button>
+          <div class="hsep"></div>
+          <button role="menuitem" id="btnAdmin" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.15-h</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="greet">Ringkasan hari ini<b id="greetTxt">Small changes, big impact</b></div>
+</header>
+
+<main>
+  <!-- DASHBOARD -->
+  <section id="tab-dash" class="tab active">
+    <div class="card">
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-trend"/></svg></i>Performa Toko<small id="kPeriode"></small></h2>
+      <div class="perf">
+        <div class="ring" id="ring"><div><b id="kRate">0%</b><small>Closing Rate</small></div></div>
+        <div class="mini">
+          <div><b id="kTotal">0</b><span>Total Customer</span></div>
+          <div class="g"><b id="kClose">0</b><span>Closing</span></div>
+          <div class="w"><b id="kToday">0</b><span>Follow Up Hari Ini</span></div>
+          <div class="b"><b id="kLate">0</b><span>Terlambat</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-wallet"/></svg></i>Nilai Closing<small>bulan berjalan</small></h2>
+      <div class="bigval">
+        <div><small>Realisasi nilai closing</small><b id="kNilai">Rp 0</b></div>
+        <div class="bv2"><span id="kEst">Rp 0</span><small>estimasi bulan ini</small></div>
+      </div>
+      <div class="mini mini3" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">
+        <div><b id="kCapai">0%</b><span>Capaian vs estimasi</span></div>
+        <div><b id="kPot">Rp 0</b><span>Potensi penjualan</span></div>
+        <div><b id="kAvg">-</b><span>Rata-rata / closing</span></div>
+      </div>
+      <div class="grid2">
+        <div><div class="sublbl">Estimasi vs realisasi per Sales</div><div class="chart-box" style="height:230px"><canvas id="chNilai"></canvas></div></div>
+        <div><div class="sublbl">Estimasi vs realisasi tiap bulan</div><div class="chart-box" style="height:230px"><canvas id="chTren"></canvas></div></div>
+      </div>
+      <p class="hint">Estimasi = total perkiraan nilai dari customer yang diinput di bulan itu; potensi penjualan = total estimasi customer yang masih diproses (belum Closing/Batal). Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet <b translate="no">Rekap YYYY-MM</b> dan <b translate="no">Riwayat</b> pada Google Sheets untuk dianalisa.</p>
+    </div>
+
+    <div class="card">
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-trophy"/></svg></i>Peringkat Sales<small>ketuk nama untuk lihat customer</small></h2>
+      <div id="leader"></div>
+      <button class="btn sm dark block" id="btnRemAll" style="display:none" onclick="remindAll()"><svg class="ic" width="15" height="15"><use href="#i-send"/></svg>Kirim Pengingat WA ke Semua Sales</button>
+    </div>
+
+    <div class="card">
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-file"/></svg></i>Laporan Mingguan<small>7 hari terakhir</small></h2>
+      <div class="row">
+        <button class="btn sm soft" onclick="buatLaporan()">Buat Laporan</button>
+        <button class="btn sm dark" id="btnLapSrv" style="display:none" onclick="laporanServer()">Kirim Otomatis</button>
+      </div>
+      <div id="lapBox" style="display:none">
+        <textarea id="lapTxt" style="min-height:190px;margin-top:10px;font-size:13px"></textarea>
+        <button class="btn sm wa block" style="margin-top:10px" onclick="laporanWA()"><svg class="ic" width="16" height="16"><use href="#i-phone-chat"/></svg>Buka WhatsApp</button>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Status per Sales</h2><div class="chart-box"><canvas id="chSales"></canvas></div></div>
+      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="chart-box"><canvas id="chStatus"></canvas></div></div>
+    </div>
+
+    <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-alarm"/></svg></i>Perlu Follow Up Sekarang</h2><div id="reminders"></div></div>
+    <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-list"/></svg></i>Rekap Detail</h2><div class="wrap-x"><table id="tbRekap"></table></div></div>
+  </section>
+
+  <!-- CUSTOMER -->
+  <section id="tab-cust" class="tab">
+    <div class="card">
+      <label style="margin-top:0">Pilih Sales</label>
+      <select id="selSales" onchange="loadCust()"></select>
+      <label>Cari customer</label>
+      <div class="search"><svg class="ic" width="16" height="16"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Nama / HP / produk..." oninput="renderCust()"></div>
+      <div class="chips" id="chips"></div>
+    </div>
+    <div id="custList"></div>
+  </section>
+
+  <!-- TAMBAH -->
+  <section id="tab-add" class="tab">
+    <div class="card">
+      <div class="pbar" id="fProspekBar" style="display:none"></div>
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-user-plus"/></svg></i>Customer Baru</h2>
+      <label style="margin-top:0">Nama Customer <span class="req">*</span></label><input id="fNama" placeholder="Nama lengkap">
+      <label>No WhatsApp <span class="req">*</span></label><input id="fHp" type="tel" placeholder="08xxxxxxxxxx">
+      <label>Produk Diminati <span class="req">*</span></label><input id="fProduk" placeholder="Contoh: Sofa 3 seater">
+      <label>Estimasi Nilai Closing (Rp) <span class="req">*</span></label><input id="fEst" inputmode="numeric" placeholder="Perkiraan nilai pembelian" oninput="fmtNum(this)">
+      <div class="row"><div><label>Sumber <span class="req">*</span></label><select id="fSumber"></select></div><div><label>Sales <span class="req">*</span></label><select id="fSales"></select></div></div>
+      <div class="row"><div><label>Status <span class="req">*</span></label><select id="fStatus" onchange="toggleFields('f')"></select></div><div id="fNextBox"><label>Follow Up Berikutnya <span class="req">*</span></label><input id="fNext" type="date"></div></div>
+      <div id="fNilaiBox" style="display:none"><label>Nilai Closing (Rp) <span class="req">*</span></label><input id="fNilai" inputmode="numeric" placeholder="0" oninput="fmtNum(this)"></div>
+      <label>Catatan <span class="req">*</span></label><textarea id="fCatatan" placeholder="Catatan awal..."></textarea>
+      <p class="hint"><span class="req">*</span> Semua kolom wajib diisi. Tanggal follow up tidak diperlukan untuk status Closing atau Batal.</p>
+      <button class="btn block" id="btnAdd" onclick="submitAdd()">Simpan Customer</button>
+    </div>
+  </section>
+
+  <!-- RIWAYAT BULANAN -->
+  <section id="tab-hist" class="tab">
+    <div class="card">
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-history"/></svg></i>Riwayat Bulanan</h2>
+      <label style="margin-top:0">Pilih Bulan</label>
+      <select id="selBulan" onchange="loadBulan()"></select>
+    </div>
+    <div id="hSum"></div>
+    <div class="card">
+      <div class="chips" style="padding-top:0">
+        <button class="chip on" id="hvCust" onclick="setHv('cust')">Customer Selesai</button>
+        <button class="chip" id="hvLog" onclick="setHv('log')">Aktivitas Follow Up</button>
+      </div>
+      <div class="search" style="margin-top:6px"><svg class="ic" width="16" height="16"><use href="#i-search"/></svg><input id="hq" type="search" placeholder="Cari nama / sales..." oninput="renderHList()"></div>
+      <div id="hList" style="margin-top:6px"></div>
+    </div>
+  </section>
+
+  <!-- PROJECT / QUOTATION -->
+  <section id="tab-proj" class="tab">
+    <div class="card">
+      <div class="chips" style="padding-top:0">
+        <button class="chip on" id="pcBuat" onclick="projView('buat')">Buat Penawaran</button>
+        <button class="chip" id="pcList" onclick="projView('list')">Riwayat Penawaran</button>
+        <button class="chip" id="pcCari" onclick="projView('cari')">Cari Customer</button>
+        <button class="chip" id="pcDb" onclick="projView('db')">Database</button>
+      </div>
+    </div>
+    <div id="projCari" style="display:none">
+      <div class="card">
+        <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-search"/></svg></i>Cari Customer Baru</h2>
+        <p class="hint" style="margin:-4px 0 8px">Temukan calon customer (toko, kantor, hotel, dll.) di suatu kota, simpan ke Database, lalu follow up.</p>
+        <label style="margin-top:6px">Sumber data</label>
+        <div class="seg"><button id="psOsm" class="on" onclick="psSrc('osm')">OpenStreetMap</button><button id="psGoo" onclick="psSrc('google')">Google Maps</button></div>
+        <p class="hint" id="psSrcInfo" style="margin-top:6px"></p>
+        <label>Jenis usaha</label>
+        <select id="psKat">
+          <option value="furniture">Furniture & dekorasi rumah</option>
+          <option value="elektronik">Elektronik & peralatan rumah</option>
+          <option value="properti">Properti, arsitek & kontraktor</option>
+          <option value="hotel">Hotel & penginapan</option>
+          <option value="kuliner">Restoran & kafe</option>
+          <option value="kesehatan">Klinik & rumah sakit</option>
+          <option value="pendidikan">Sekolah & kampus</option>
+          <option value="kantor">Kantor & perusahaan</option>
+          <option value="nama">Cari berdasarkan nama saja</option>
+        </select>
+        <label>Nama / kata kunci <span style="font-weight:500">(opsional)</span></label><input id="psKata" placeholder="Contoh: Mebel Jaya" onkeydown="if(event.key==='Enter')psCari()">
+        <label>Lokasi <span class="req">*</span></label><input id="psLok" placeholder="Contoh: Surabaya" onkeydown="if(event.key==='Enter')psCari()">
+        <button class="btn block" id="btnCari" style="margin-top:16px" onclick="psCari()"><svg class="ic" width="16" height="16"><use href="#i-search"/></svg> Cari</button>
+        <p class="hint">Tips: tulis nama kota atau kabupaten (bukan provinsi) agar hasilnya cepat dan lengkap.</p>
+      </div>
+      <div id="psRes"></div>
+    </div>
+    <div id="projDb" style="display:none">
+      <div class="card">
+        <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-database"/></svg></i>Database Prospek<small id="dbCount"></small></h2>
+        <input id="dbQ" placeholder="Cari nama / alamat / telepon..." oninput="dbRender()">
+        <div id="dbSel" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0"></div>
+        <div class="chips" id="dbChips"></div>
+        <div id="dbList"></div>
+        <p class="hint">Database ini tersimpan di sheet "Prospek" (terpisah dari sheet Customer). Tombol Follow Up memindahkan data ke menu Tambah sebagai customer baru.</p>
+      </div>
+    </div>
+    <div id="projBuat">
+      <div class="card">
+        <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-file"/></svg></i>Data Penawaran<small><a href="#" onclick="pReset();return false" style="color:var(--accent3);text-decoration:none;font-weight:700">Penawaran baru</a></small></h2>
+        <label style="margin-top:0">Kepada <span class="req">*</span></label><input id="pKepada" placeholder="Contoh: BPK. FERRY KOST. DRAMAGA">
+        <div class="row"><div><label>Tanggal <span class="req">*</span></label><input id="pTgl" type="date"></div><div><label>No. Penawaran <span class="req">*</span></label><input id="pNo"></div></div>
+        <label>Dibuat oleh (Sales) <span class="req">*</span></label><select id="pSales"></select>
+      </div>
+      <div id="pItems"></div>
+      <button class="btn soft block" style="margin:0 0 14px" onclick="pAdd()"><svg class="ic" width="16" height="16"><use href="#i-plus"/></svg>Tambah Item</button>
+      <div class="card">
+        <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-wallet"/></svg></i>Total & Ketentuan</h2>
+        <div class="bigval"><div><small>Total harga normal</small><b id="pTotN" style="font-size:19px">Rp 0</b></div><div class="bv2"><span id="pTotP">Rp 0</span><small>total harga promo</small></div></div>
+        <label>Syarat & ketentuan</label><textarea id="pSyarat" style="min-height:104px"></textarea>
+        <label>Catatan (Note)</label><textarea id="pCatatan" style="min-height:62px"></textarea>
+      </div>
+      <div class="row"><button class="btn" onclick="pPreview()">Preview</button><button class="btn soft" onclick="pSimpan()">Simpan Draft</button></div>
+    </div>
+    <div id="projList" style="display:none"><div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-history"/></svg></i>Riwayat Penawaran</h2><div id="pListBox"></div>
+    <p class="hint">Tombol Hapus hanya menghapus catatan penawaran di aplikasi. File PDF/Doc yang sudah dibuat tetap ada di folder Google Drive "CRM Quotation".</p></div></div>
+  </section>
+
+  <!-- ADMIN -->
+  <section id="tab-admin" class="tab"><div id="adminBox"></div></section>
+</main>
+
+<!-- MODAL FOLLOW UP -->
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h2 id="mTitle"></h2><p class="sub" id="mSub"></p>
+    <div class="wabox">
+      <h4><svg class="ic" width="17" height="17"><use href="#i-phone-chat"/></svg>Pesan WhatsApp <span style="font-weight:500;color:#4b5563">(template otomatis, boleh diedit)</span></h4>
+      <textarea id="mMsg"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn sm wa" onclick="openWA()">Buka WhatsApp</button>
+        <button class="btn sm dark" id="btnSrv" onclick="sendServer()">Kirim Otomatis</button>
+      </div>
+      <div class="sub" id="srvHint" style="margin-top:8px;font-size:11px"></div>
+    </div>
+    <div class="row">
+      <div><label>Channel <span class="req">*</span></label><select id="mChannel"><option value="WhatsApp">WhatsApp</option><option value="Telepon">Telepon</option><option value="Walk In">Walk In</option><option value="Lainnya">Lainnya</option></select></div>
+      <div><label>Status Baru <span class="req">*</span></label><select id="mStatus" onchange="applyTpl();toggleFields('m')"></select></div>
+    </div>
+    <div id="mNilaiBox" style="display:none"><label>Nilai Closing (Rp) <span class="req">*</span></label><input id="mNilai" inputmode="numeric" placeholder="0" oninput="fmtNum(this)"></div>
+    <div id="mEstBox"><label>Estimasi Nilai Closing (Rp) <span class="req">*</span></label><input id="mEst" inputmode="numeric" placeholder="Perbarui bila ada perubahan" oninput="fmtNum(this)"></div>
+    <div id="mNextBox"><label>Follow Up Berikutnya <span class="req">*</span></label><input id="mNext" type="date"></div>
+    <label id="mNoteLbl">Hasil / Catatan <span class="req">*</span></label><textarea id="mNote" style="min-height:70px" placeholder="Apa hasil follow up hari ini?"></textarea>
+    <div class="row" style="margin-top:16px"><button class="btn soft" onclick="closeModal()">Batal</button><button class="btn" id="btnFu" onclick="submitFU()">Simpan</button></div>
+    <div class="hist"><b>Riwayat Follow Up</b><div id="mHist">Memuat...</div></div>
+  </div>
+</div>
+
+<div class="modal" id="pvModal" onclick="if(event.target===this)pvClose()">
+  <div class="sheet" style="max-width:880px">
+    <div class="grab"></div>
+    <h2>Preview Penawaran</h2><p class="sub">Periksa dulu sebelum diunduh.</p>
+    <div class="paperwrap" id="pvWrap" style="margin-top:10px"><div id="pvPaper" translate="no"></div></div>
+    <div class="row" style="margin-top:14px"><button class="btn" onclick="pDownload('pdf')">Download PDF</button><button class="btn dark" onclick="pDownload('docx')">Download Doc</button></div>
+    <div class="row" style="margin-top:8px"><button class="btn soft" onclick="pvClose()">Kembali edit</button></div>
+    <p class="hint" id="pvLink"></p>
+  </div>
+</div>
+
+<nav>
+  <button class="on" data-t="dash" onclick="show('dash')"><svg class="ic" width="21" height="21"><use href="#i-grid"/></svg>Dashboard</button>
+  <button data-t="cust" onclick="show('cust')"><svg class="ic" width="21" height="21"><use href="#i-users"/></svg>Customer</button>
+  <button data-t="add" onclick="show('add')"><svg class="ic" width="21" height="21"><use href="#i-user-plus"/></svg>Tambah</button>
+  <button data-t="hist" onclick="show('hist')"><svg class="ic" width="21" height="21"><use href="#i-history"/></svg>Riwayat</button>
+  <button data-t="proj" onclick="show('proj')"><svg class="ic" width="21" height="21"><use href="#i-file"/></svg>Penawaran</button>
+</nav>
+<div id="toast"></div>
+
+<script>
+/* ============ STATE & UTIL ============ */
+const $ = id => document.getElementById(id);
+/* ============ BAHASA / LANGUAGE (ID | EN) ============
+ * Teks sumber ditulis dalam Bahasa Indonesia. Kamus EN di bawah dipakai untuk:
+ *  1) menerjemahkan seluruh tampilan (teks, placeholder, tooltip) secara otomatis, dan
+ *  2) fungsi tx('teks {0}', data) untuk kalimat yang berisi data dinamis.
+ * Data customer & isi follow up (nama, produk, catatan, riwayat) TIDAK diterjemahkan.
+ * Untuk menambah/ubah terjemahan, edit objek EN. Pilihan bahasa tersimpan di browser (crmLang). */
+let LANG = 'id';
+try { LANG = localStorage.getItem('crmLang') === 'en' ? 'en' : 'id'; } catch (e) {}
+const LOC = () => LANG === 'en' ? 'en-US' : 'id-ID';
+const EN = {
+ "Muat ulang": "Refresh",
+ "Suara aktif": "Sound on",
+ "Suara mati": "Sound off",
+ "Pengaturan (Admin)": "Settings (Admin)",
+ "Ringkasan hari ini": "Today's summary",
+ "Kirim pengingat ke WA Sales": "Send reminder to Sales via WhatsApp",
+ "Performa Toko": "Store Performance",
+ "Total Customer": "Total Customers",
+ "Follow Up Hari Ini": "Follow-ups Due Today",
+ "Terlambat": "Overdue",
+ "Hari ini": "Today",
+ "Nilai Closing": "Closing Value",
+ "bulan berjalan": "current month",
+ "Realisasi nilai closing": "Actual closing value",
+ "estimasi bulan ini": "estimate this month",
+ "Capaian vs estimasi": "Achievement vs estimate",
+ "Potensi penjualan": "Sales potential",
+ "Rata-rata / closing": "Average / closing",
+ "Estimasi vs realisasi per Sales": "Estimate vs actual per Sales",
+ "Estimasi vs realisasi tiap bulan": "Estimate vs actual per month",
+ "Estimasi = total perkiraan nilai dari customer yang diinput di bulan itu; potensi penjualan = total estimasi customer yang masih diproses (belum Closing/Batal). Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet": "Estimate = total expected value of customers entered that month; sales potential = total estimate of customers still in progress (not yet Closed/Cancelled). Figures reset automatically at the start of every month. Last month's data is saved in the sheet",
+ "dan": "and",
+ "pada Google Sheets untuk dianalisa.": "in Google Sheets for analysis.",
+ "Peringkat Sales": "Sales Ranking",
+ "ketuk nama untuk lihat customer": "tap a name to view customers",
+ "Kirim Pengingat WA ke Semua Sales": "Send WhatsApp Reminder to All Sales",
+ "Laporan Mingguan": "Weekly Report",
+ "7 hari terakhir": "last 7 days",
+ "Buat Laporan": "Create Report",
+ "Kirim Otomatis": "Send Automatically",
+ "Buka WhatsApp": "Open WhatsApp",
+ "Status per Sales": "Status by Salesperson",
+ "Komposisi Status": "Status Distribution",
+ "Perlu Follow Up Sekarang": "Needs Follow-up Now",
+ "Rekap Detail": "Detailed Summary",
+ "Estimasi": "Estimate",
+ "Realisasi": "Actual",
+ "{0} follow up menunggu tindakan": "{0} {0|follow-up|follow-ups} awaiting action",
+ "Semua follow up on track": "All follow-ups on track",
+ "{0} customer • {1} closing • {2}": "{0} {0|customer|customers} • {1} closed • {2}",
+ "Isi nama Sales di menu Admin.": "Enter Sales names in the Admin menu.",
+ "Tidak ada follow up tertunda.": "No pending follow-ups.",
+ "Pilih Sales": "Select Sales",
+ "Semua Sales": "All Sales",
+ "Cari customer": "Search customers",
+ "Semua": "All",
+ "Nama / HP / produk...": "Name / phone / product...",
+ "Belum ada data customer.": "No customer data yet.",
+ "Closing {0}": "Closing {0}",
+ "Estimasi {0}": "Estimate {0}",
+ "Follow Up": "Follow Up",
+ "Phone": "Phone",
+ "Telepon": "Phone",
+ "Customer Baru": "New Customer",
+ "Nama Customer": "Customer Name",
+ "No WhatsApp": "WhatsApp No.",
+ "Produk Diminati": "Product of Interest",
+ "Estimasi Nilai Closing (Rp)": "Estimated Closing Value (Rp)",
+ "Sumber": "Source",
+ "Follow Up Berikutnya": "Next Follow-up",
+ "Nilai Closing (Rp)": "Closing Value (Rp)",
+ "Catatan": "Notes",
+ "Pilih sumber": "Select source",
+ "Nama lengkap": "Full name",
+ "Contoh: Sofa 3 seater": "e.g. 3-seater sofa",
+ "Perkiraan nilai pembelian": "Expected purchase value",
+ "Catatan awal...": "Initial notes...",
+ "Semua kolom wajib diisi. Tanggal follow up tidak diperlukan untuk status Closing atau Batal.": "All fields are required. A follow-up date is not needed for Closing or Cancelled status.",
+ "Simpan Customer": "Save Customer",
+ "Nama customer wajib diisi": "Customer name is required",
+ "No WhatsApp wajib diisi": "WhatsApp number is required",
+ "No WhatsApp tidak valid (angka saja, 9-15 digit)": "Invalid WhatsApp number (digits only, 9-15 digits)",
+ "Produk diminati wajib diisi": "Product of interest is required",
+ "Estimasi nilai closing wajib diisi (lebih dari 0)": "Estimated closing value is required (greater than 0)",
+ "Pilih sumber customer": "Select the customer source",
+ "Pilih status": "Select a status",
+ "Tanggal follow up berikutnya wajib diisi": "Next follow-up date is required",
+ "Nilai closing wajib diisi (lebih dari 0)": "Closing value is required (greater than 0)",
+ "Catatan wajib diisi": "Notes are required",
+ "Lengkapi kolom yang wajib diisi": "Please fill in the required fields",
+ "Customer tersimpan": "Customer saved",
+ "Pesan WhatsApp": "WhatsApp Message",
+ "(template otomatis, boleh diedit)": "(automatic template, editable)",
+ "Kirim Otomatis: pesan dikirim dari nomor toko & tercatat di riwayat.": "Send Automatically: the message is sent from the store number & recorded in the history.",
+ "Kirim Otomatis belum aktif. \"Buka WhatsApp\" tetap bisa dipakai.": "Send Automatically is not active. \"Open WhatsApp\" can still be used.",
+ "Status Baru": "New Status",
+ "Lainnya": "Other",
+ "Perbarui bila ada perubahan": "Update if anything changed",
+ "Hasil / Catatan": "Result / Notes",
+ "Alasan Batal": "Cancellation Reason",
+ "Apa hasil follow up hari ini?": "What was the result of today's follow-up?",
+ "Alasan batal...": "Reason for cancellation...",
+ "Catatan closing...": "Closing notes...",
+ "Batal": "Cancel",
+ "Simpan": "Save",
+ "Riwayat Follow Up": "Follow-up History",
+ "Memuat...": "Loading...",
+ "Belum ada riwayat.": "No history yet.",
+ "tanpa HP": "no phone",
+ "Pilih channel": "Select a channel",
+ "Pilih status baru": "Select a new status",
+ "Hasil / catatan wajib diisi": "Result / notes are required",
+ "Alasan batal wajib diisi": "Cancellation reason is required",
+ "Closing! {0}": "Closing! {0}",
+ "Selamat!": "Congratulations!",
+ "Follow up tersimpan": "Follow-up saved",
+ "Nomor HP tidak lengkap/tersensor ({0}). Lengkapi di data customer.": "Phone number is incomplete/masked ({0}). Complete it in the customer data.",
+ "Customer belum punya nomor HP": "Customer has no phone number yet",
+ "Menelepon {0} ({1})": "Calling {0} ({1})",
+ "Kirim otomatis belum aktif (isi FONNTE_TOKEN)": "Automatic sending is not active (set FONNTE_TOKEN)",
+ "Pesan WhatsApp terkirim": "WhatsApp message sent",
+ "Isi No WA {0} di menu Admin": "Enter {0}'s WhatsApp number in the Admin menu",
+ "Pengingat terkirim ke {0} Sales": "Reminder sent to {0} Sales",
+ "Laporan mingguan terkirim ke WA leader": "Weekly report sent to the leader's WhatsApp",
+ "Data diperbarui": "Data refreshed",
+ "Riwayat Bulanan": "Monthly History",
+ "Pilih Bulan": "Select Month",
+ "berjalan": "current",
+ "dari arsip": "from archive",
+ "dihitung langsung": "calculated live",
+ "Total nilai closing": "Total closing value",
+ "{0} closing": "{0} closed",
+ "Win rate {0}%": "Win rate {0}%",
+ "Ringkasan {0}": "Summary {0}",
+ "Customer baru": "New customers",
+ "Follow up": "Follow-ups",
+ "Estimasi nilai": "Estimated value",
+ "Bulan berjalan: angka bertambah seiring follow up dan closing. Customer yang masih berjalan ada di menu Customer.": "Current month: figures grow as follow-ups and closings happen. Customers still in progress are in the Customer menu.",
+ "Belum ada data untuk bulan ini.": "No data for this month yet.",
+ "Customer Selesai ({0})": "Completed Customers ({0})",
+ "Aktivitas Follow Up ({0})": "Follow-up Activity ({0})",
+ "Cari nama / sales...": "Search name / sales...",
+ "selesai": "completed",
+ "Belum ada customer Closing/Batal pada bulan ini.": "No Closed/Cancelled customers this month.",
+ "Belum ada aktivitas follow up pada bulan ini.": "No follow-up activity this month.",
+ "Menampilkan {0} terbaru dari {1} aktivitas. Data lengkap ada di sheet FollowUp.": "Showing the latest {0} of {1} activities. Full data is in the FollowUp sheet.",
+ "Buat Penawaran": "Create Quotation",
+ "Riwayat Penawaran": "Quotation History",
+ "Data Penawaran": "Quotation Details",
+ "Penawaran baru": "New quotation",
+ "Kepada": "To",
+ "Tanggal": "Date",
+ "No. Penawaran": "Quotation No.",
+ "Dibuat oleh (Sales)": "Created by (Sales)",
+ "SKU / cari produk": "SKU / search product",
+ "Ketik SKU atau nama produk": "Type an SKU or product name",
+ "Deskripsi": "Description",
+ "Harga Normal": "Normal Price",
+ "Harga Promo": "Promo Price",
+ "Foto produk": "Product photo",
+ "(opsional)": "(optional)",
+ "Ambil / pilih foto": "Take / choose photo",
+ "Lepas foto": "Remove photo",
+ "Hapus item": "Delete item",
+ "Isi SKU dulu supaya foto tersimpan dan dipakai lagi nanti.": "Enter the SKU first so the photo is saved and can be reused later.",
+ "Foto terpasang di penawaran ini.": "Photo attached to this quotation.",
+ "Memproses foto...": "Processing photo...",
+ "Mengunggah foto...": "Uploading photo...",
+ "Produk tidak ada di daftar. Isi deskripsi dan harga secara manual.": "Product is not in the list. Enter the description and price manually.",
+ "Subtotal normal {0}": "Normal subtotal {0}",
+ "promo {0}": "promo {0}",
+ "Normal {0}": "Normal {0}",
+ "Promo {0}": "Promo {0}",
+ "Tambah Item": "Add Item",
+ "Total & Ketentuan": "Total & Terms",
+ "Total harga normal": "Total normal price",
+ "total harga promo": "total promo price",
+ "Syarat & ketentuan": "Terms & conditions",
+ "Catatan (Note)": "Notes",
+ "Simpan Draft": "Save Draft",
+ "Duplikat": "Duplicate",
+ "Hapus": "Delete",
+ "Hapus dari riwayat": "Remove from history",
+ "Tombol Hapus hanya menghapus catatan penawaran di aplikasi. File PDF/Doc yang sudah dibuat tetap ada di folder Google Drive \"CRM Quotation\".": "The Delete button only removes the quotation record in the app. PDF/Doc files already created remain in the Google Drive folder \"CRM Quotation\".",
+ "Belum ada penawaran. Buat yang pertama di tab \"Buat Penawaran\".": "No quotations yet. Create the first one in the \"Create Quotation\" tab.",
+ "Preview Penawaran": "Quotation Preview",
+ "Periksa dulu sebelum diunduh.": "Check it before downloading.",
+ "Kembali edit": "Back to edit",
+ "Kolom \"Kepada\" wajib diisi": "The \"To\" field is required",
+ "Tanggal wajib diisi": "Date is required",
+ "Nomor penawaran wajib diisi": "Quotation number is required",
+ "Pilih Sales pembuat penawaran": "Select the Sales who created the quotation",
+ "Deskripsi wajib diisi": "Description is required",
+ "Qty wajib diisi": "Quantity is required",
+ "Harga normal wajib diisi": "Normal price is required",
+ "Penawaran tersimpan": "Quotation saved",
+ "Penawaran dihapus dari riwayat": "Quotation removed from history",
+ "Penawaran diduplikat. Periksa lalu preview.": "Quotation duplicated. Review it, then preview.",
+ "Membuat file {0}...": "Creating {0} file...",
+ "File siap: {0}": "File ready: {0}",
+ "Tersimpan di Google Drive:": "Saved to Google Drive:",
+ "Jika unduhan tidak mulai, buka tautan itu.": "If the download does not start, open that link.",
+ "Foto tersimpan untuk SKU {0}": "Photo saved for SKU {0}",
+ "Foto terpasang (isi SKU agar bisa dipakai lagi)": "Photo attached (enter an SKU so it can be reused)",
+ "Foto tidak bisa dibaca": "The photo could not be read",
+ "File harus berupa gambar": "The file must be an image",
+ "Customer": "Customers",
+ "Tambah": "Add",
+ "Riwayat": "History",
+ "Login Admin": "Admin Login",
+ "Khusus untuk mengubah data Master: Sales, Status, Template WhatsApp, Sumber dan Pengaturan Toko.": "Only for changing Master data: Sales, Status, WhatsApp Templates, Sources and Store Settings.",
+ "Password admin belum diatur. Tambahkan": "Admin password has not been set. Add",
+ "di Apps Script > Project Settings > Script properties.": "in Apps Script > Project Settings > Script properties.",
+ "Password Admin": "Admin Password",
+ "Masuk": "Log in",
+ "Login admin berhasil": "Admin login successful",
+ "Isi password admin": "Enter the admin password",
+ "Anda sudah keluar dari admin": "You have logged out of admin",
+ "Pengaturan Toko": "Store Settings",
+ "Keluar": "Log out",
+ "Nama Toko": "Store Name",
+ "No WA Leader (penerima laporan mingguan)": "Leader WhatsApp No. (weekly report recipient)",
+ "Data PT & Penawaran": "Company & Quotation Data",
+ "Nama PT": "Company Name",
+ "Alamat PT (satu baris per baris alamat)": "Company address (one line per address line)",
+ "Folder foto produk (tempel tautan folder Google Drive)": "Product photo folder (paste a Google Drive folder link)",
+ "Foto bisa diunggah langsung saat membuat penawaran (otomatis tersimpan di sini atau di folder \"CRM Foto Produk\" bila kolom ini kosong). Foto juga bisa disiapkan lebih dulu: beri nama file sama dengan SKU, misalnya 420084900.jpg.": "Photos can be uploaded directly while creating a quotation (saved here automatically, or in the \"CRM Foto Produk\" folder if this field is empty). Photos can also be prepared in advance: name the file after the SKU, e.g. 420084900.jpg.",
+ "maks 10": "max 10",
+ "Nama Sales": "Sales name",
+ "No WA 08xx": "WhatsApp no. 08xx",
+ "Tambah Sales": "Add Sales",
+ "Mengganti nama Sales ikut memperbarui data customer & riwayat yang sudah ada. Menghapus Sales tidak menghapus datanya.": "Renaming a Sales person also updates existing customer data & history. Deleting a Sales person does not delete their data.",
+ "Status & Template WhatsApp": "Status & WhatsApp Templates",
+ "dikunci": "locked",
+ "Template pesan WhatsApp": "WhatsApp message template",
+ "Placeholder:": "Placeholders:",
+ ". Status \"Closing\" dan \"Batal\" dikunci karena dipakai untuk perhitungan.": ". The \"Closing\" and \"Batal\" (Cancelled) statuses are locked because they are used in calculations.",
+ "Sumber Customer": "Customer Sources",
+ "satu per baris": "one per line",
+ "Simpan Master": "Save Master",
+ "Arsip & Reset Bulanan": "Monthly Archive & Reset",
+ "Setiap awal bulan, customer Closing/Batal bulan lalu otomatis dipindah ke sheet": "At the start of each month, last month's Closing/Cancelled customers are automatically moved to the sheet",
+ ", ringkasannya masuk sheet": ", their summary goes into the sheet",
+ ", lalu angka dashboard mulai dari nol. Customer yang masih berjalan tetap dibawa.": ", then the dashboard figures start from zero. Customers still in progress are carried over.",
+ "Arsipkan bulan lalu": "Archive last month",
+ "Arsipkan & reset sekarang": "Archive & reset now",
+ "Ketuk lagi untuk konfirmasi": "Tap again to confirm",
+ "\"Arsipkan & reset sekarang\" ikut memindahkan Closing/Batal bulan berjalan, jadi dashboard kembali kosong. Ketuk dua kali untuk konfirmasi.": "\"Archive & reset now\" also moves the current month's Closing/Cancelled customers, so the dashboard becomes empty. Tap twice to confirm.",
+ "Ubah Password Admin": "Change Admin Password",
+ "Password lama": "Old password",
+ "Password baru (min. 6 karakter)": "New password (min. 6 characters)",
+ "Ubah Password": "Change Password",
+ "Maksimal 10 Sales": "Maximum 10 Sales",
+ "Minimal 1 Sales": "At least 1 Sales is required",
+ "Nama Sales tidak boleh kosong": "Sales name cannot be empty",
+ "Master tersimpan": "Master saved",
+ "{0} data diarsipkan ke sheet {1}": "{0} {0|record|records} archived to sheet {1}",
+ "Tidak ada data yang perlu diarsipkan": "No data needs to be archived",
+ "Isi password lama dan baru": "Enter the old and new passwords",
+ "Password diubah": "Password changed",
+ "Data customer kosong.": "Customer data is empty.",
+ "Nama customer wajib diisi.": "Customer name is required.",
+ "No WhatsApp wajib diisi.": "WhatsApp number is required.",
+ "No WhatsApp hanya boleh berisi angka.": "WhatsApp number may only contain digits.",
+ "No WhatsApp tidak valid (9-15 digit).": "Invalid WhatsApp number (9-15 digits).",
+ "Produk diminati wajib diisi.": "Product of interest is required.",
+ "Sumber customer wajib dipilih.": "Customer source must be selected.",
+ "Sales wajib dipilih.": "Sales must be selected.",
+ "Status wajib dipilih.": "Status must be selected.",
+ "Tanggal follow up berikutnya wajib diisi.": "Next follow-up date is required.",
+ "Estimasi nilai closing wajib diisi.": "Estimated closing value is required.",
+ "Nilai closing wajib diisi.": "Closing value is required.",
+ "Catatan wajib diisi.": "Notes are required.",
+ "Data follow up tidak lengkap.": "Follow-up data is incomplete.",
+ "Status baru wajib dipilih.": "New status must be selected.",
+ "Channel wajib dipilih.": "Channel must be selected.",
+ "Alasan batal wajib diisi.": "Cancellation reason is required.",
+ "Hasil / catatan wajib diisi.": "Result / notes are required.",
+ "Customer tidak ditemukan.": "Customer not found.",
+ "Izin Google Drive/Docs belum diberikan. Buka Apps Script, jalankan fungsi \"otorisasiIzin\" lalu setujui, kemudian Deploy > Manage deployments > Edit > New version.": "Google Drive/Docs permission has not been granted. Open Apps Script, run the \"otorisasiIzin\" function and approve, then Deploy > Manage deployments > Edit > New version.",
+ "Format foto tidak dikenali (gunakan JPG/PNG).": "Photo format not recognized (use JPG/PNG).",
+ "Foto terlalu besar (maksimal 3 MB).": "Photo is too large (maximum 3 MB).",
+ "Data penawaran kosong.": "Quotation data is empty.",
+ "Kolom \"Kepada\" wajib diisi.": "The \"To\" field is required.",
+ "Pembuat penawaran (Sales) wajib dipilih.": "The quotation creator (Sales) must be selected.",
+ "Tanggal wajib diisi.": "Date is required.",
+ "Nomor penawaran wajib diisi.": "Quotation number is required.",
+ "Minimal 1 item produk.": "At least 1 product item is required.",
+ "Terlalu banyak item untuk disimpan.": "Too many items to save.",
+ "Penawaran tidak ditemukan.": "Quotation not found.",
+ "ID penawaran kosong.": "Quotation ID is empty.",
+ "Penawaran tidak ditemukan (mungkin sudah dihapus).": "Quotation not found (it may have been deleted).",
+ "Password admin belum diatur. Tambahkan ADMIN_PASSWORD di Script Properties.": "Admin password has not been set. Add ADMIN_PASSWORD in Script Properties.",
+ "Terlalu banyak percobaan salah. Coba lagi 10 menit lagi.": "Too many failed attempts. Try again in 10 minutes.",
+ "Password salah.": "Incorrect password.",
+ "Sesi admin berakhir. Silakan login lagi.": "Admin session expired. Please log in again.",
+ "Password lama salah.": "Old password is incorrect.",
+ "Password baru minimal 6 karakter.": "New password must be at least 6 characters.",
+ "Data kosong.": "Data is empty.",
+ "Jumlah Sales harus 1 sampai 10.": "The number of Sales must be between 1 and 10.",
+ "Nama Sales tidak boleh kosong.": "Sales name cannot be empty.",
+ "Nama Sales tidak boleh sama.": "Sales names must be unique.",
+ "Jumlah Status harus 2 sampai 6.": "The number of Statuses must be between 2 and 6.",
+ "Nama Status tidak boleh kosong.": "Status name cannot be empty.",
+ "Nama Status tidak boleh sama.": "Status names must be unique.",
+ "Status \"Closing\" dan \"Batal\" wajib ada dan namanya tidak boleh diubah.": "The \"Closing\" and \"Batal\" (Cancelled) statuses must exist and their names cannot be changed.",
+ "Maksimal 10 Sumber.": "Maximum 10 Sources.",
+ "Token WhatsApp (FONNTE_TOKEN) belum diisi di Script Properties.": "WhatsApp token (FONNTE_TOKEN) has not been set in Script Properties.",
+ "Pesan kosong.": "Message is empty.",
+ "Customer belum punya nomor HP.": "Customer has no phone number yet.",
+ "No WA Leader belum diisi (menu Admin > Pengaturan Toko).": "Leader WhatsApp number has not been set (Admin menu > Store Settings).",
+ "Cari Customer": "Find Customers",
+ "Database": "Database",
+ "Cari Customer Baru": "Find New Customers",
+ "Temukan calon customer (toko, kantor, hotel, dll.) di suatu kota, simpan ke Database, lalu follow up.": "Find prospective customers (stores, offices, hotels, etc.) in a city, save them to the Database, then follow up.",
+ "Sumber data": "Data source",
+ "Gratis, tanpa API key. Nomor telepon hanya muncul bila sudah diisi di OpenStreetMap.": "Free, no API key needed. Phone numbers only appear if they have been added on OpenStreetMap.",
+ "Google Places API (memakai API key Anda).": "Google Places API (uses your API key).",
+ "Jenis usaha": "Business type",
+ "Furniture & dekorasi rumah": "Furniture & home decor",
+ "Elektronik & peralatan rumah": "Electronics & home appliances",
+ "Properti, arsitek & kontraktor": "Property, architects & contractors",
+ "Hotel & penginapan": "Hotels & lodging",
+ "Restoran & kafe": "Restaurants & cafes",
+ "Klinik & rumah sakit": "Clinics & hospitals",
+ "Sekolah & kampus": "Schools & campuses",
+ "Kantor & perusahaan": "Offices & companies",
+ "Cari berdasarkan nama saja": "Search by name only",
+ "Nama / kata kunci": "Name / keyword",
+ "Contoh: Mebel Jaya": "e.g. Mebel Jaya",
+ "Lokasi": "Location",
+ "Contoh: Surabaya": "e.g. Surabaya",
+ "Cari": "Search",
+ "Tips: tulis nama kota atau kabupaten (bukan provinsi) agar hasilnya cepat dan lengkap.": "Tip: enter a city or regency name (not a province) so results are fast and complete.",
+ "Lokasi wajib diisi": "Location is required",
+ "Mencari...": "Searching...",
+ "Tidak ada hasil. Coba kata kunci, jenis usaha, atau lokasi lain.": "No results. Try a different keyword, business type, or location.",
+ "{0} hasil": "{0} {0|result|results}",
+ "Batal pilih": "Deselect all",
+ "Pilih semua": "Select all",
+ "Simpan terpilih ({0})": "Save selected ({0})",
+ "Tersimpan": "Saved",
+ "Sumber: Google Maps (Places API).": "Source: Google Maps (Places API).",
+ "Sumber: © kontributor OpenStreetMap (ODbL).": "Source: © OpenStreetMap contributors (ODbL).",
+ "{0} prospek disimpan ({1} sudah ada)": "{0} saved ({1} already existed)",
+ "{0} prospek disimpan ke Database": "{0} saved to the Database",
+ "Database Prospek": "Prospect Database",
+ "Cari nama / alamat / telepon...": "Search name / address / phone...",
+ "{0} prospek": "{0} {0|prospect|prospects}",
+ "Belum Follow Up": "Not Followed Up",
+ "Sudah Follow Up": "Followed Up",
+ "Tidak ada data yang cocok.": "No matching data.",
+ "Database masih kosong. Cari customer di menu \"Cari Customer\" lalu simpan hasilnya.": "The database is empty. Find customers in the \"Find Customers\" menu, then save the results.",
+ "Di-follow up pada {0}": "Followed up on {0}",
+ "Lihat peta": "View map",
+ "Prospek dihapus": "Prospect deleted",
+ "Database ini tersimpan di sheet \"Prospek\" (terpisah dari sheet Customer). Tombol Follow Up memindahkan data ke menu Tambah sebagai customer baru.": "This database is stored in the \"Prospek\" sheet (separate from the Customer sheet). The Follow Up button moves the data to the Add menu as a new customer.",
+ "Prospek dari pencarian ({0}).": "Prospect from search ({0}).",
+ "Alamat: {0}": "Address: {0}",
+ "Data prospek dibawa ke form. Lengkapi lalu simpan.": "Prospect data brought to the form. Complete it, then save.",
+ "Data prospek dibawa. Periksa nomor WhatsApp (nomor ini mungkin telepon kantor).": "Prospect data brought to the form. Check the WhatsApp number (this may be an office landline).",
+ "Dari Database Prospek:": "From Prospect Database:",
+ "Lepas": "Detach",
+ "Prospek": "Prospecting",
+ "API key Google belum diatur (Script properties: GOOGLE_PLACES_API_KEY).": "Google API key has not been set (Script properties: GOOGLE_PLACES_API_KEY).",
+ "Layanan peta (OpenStreetMap) sedang sibuk. Coba lagi sebentar lagi.": "The map service (OpenStreetMap) is busy. Please try again in a moment.",
+ "Lokasi tidak ditemukan. Coba tulis kota/kabupaten yang lebih jelas.": "Location not found. Try entering a clearer city/regency name.",
+ "Wilayah terlalu luas. Isi nama kota atau kabupaten (bukan provinsi).": "The area is too large. Enter a city or regency name (not a province).",
+ "Data pencarian kosong.": "Search data is empty.",
+ "Lokasi wajib diisi.": "Location is required.",
+ "Isi kata kunci nama usaha": "Enter a business name keyword",
+ "Isi kata kunci nama usaha.": "Enter a business name keyword.",
+ "Pilih minimal 1 hasil untuk disimpan.": "Select at least 1 result to save.",
+ "Maksimal 100 hasil sekali simpan.": "Maximum 100 results per save.",
+ "ID prospek kosong.": "Prospect ID is empty.",
+ "Prospek tidak ditemukan.": "Prospect not found.",
+ "Fitur \"{0}\" belum ada di server. Deploy Code.gs terbaru sebagai versi baru, lalu muat ulang halaman.": "The feature \"{0}\" is not on the server yet. Deploy the latest Code.gs as a new version, then reload the page.",
+ "Data belum termuat. Periksa koneksi internet, lalu muat ulang. Jika tetap gagal, pastikan Code.gs terbaru sudah di-deploy sebagai versi baru.": "Data has not loaded. Check your internet connection and reload. If it still fails, make sure the latest Code.gs is deployed as a new version.",
+ "Muat ulang halaman": "Reload page",
+ "Cari Berikutnya": "Next Results",
+ "Sembunyikan yang sudah tersimpan": "Hide saved",
+ "Semua hasil di halaman ini sudah tersimpan. Ketuk \"Cari Berikutnya\" untuk hasil lain.": "All results on this page are saved. Tap \"Next Results\" for more.",
+ "Tidak ada hasil lagi untuk pencarian ini. Coba kata kunci atau lokasi lain.": "No more results for this search. Try another keyword or location.",
+ "Tidak ada hasil baru.": "No new results.",
+ "Prospek ini belum punya nomor telepon": "This prospect has no phone number yet",
+ "Semua jenis usaha": "All business types",
+ "Semua lokasi": "All locations",
+ "Penawaran": "Quotation",
+ "Pengaturan": "Settings"
+};
+const STEN = {Baru: 'New', Dihubungi: 'Contacted', Tertarik: 'Interested', Negosiasi: 'Negotiation', Closing: 'Closing', Batal: 'Cancelled'};
+const stL = s => LANG === 'en' ? (STEN[s] || s) : s;           // label status untuk tampilan (nilai asli tetap Indonesia)
+const fmtT = (s, a) => s.replace(/\{(\d+)\|([^|}]*)\|([^}]*)\}/g, (m, i, one, many) => Number(a[i]) === 1 ? one : many)   // {0|follow-up|follow-ups}: pilih bentuk tunggal/jamak
+                       .replace(/\{(\d+)\}/g, (m, i) => a[i] == null ? '' : a[i]);
+const RXEN = [
+  [/^(Item \d+): deskripsi wajib diisi\.$/, (m, a) => a + ': description is required.'],
+  [/^(Item \d+): qty wajib diisi\.$/, (m, a) => a + ': quantity is required.'],
+  [/^(Item \d+): harga normal wajib diisi\.$/, (m, a) => a + ': normal price is required.'],
+  [/^Gagal menyusun dokumen pada tahap "(.+)": (.+)$/, (m, a, b) => 'Failed to build the document at step "' + a + '": ' + b],
+  [/^Google Places: (.+)$/, (m, a) => 'Google Places: ' + a],
+  [/^Gagal kirim WA: (.+)$/, (m, a) => 'Failed to send WhatsApp: ' + a],
+  [/^Nomor HP customer tidak lengkap\/tersensor \((.*)\)\.$/, (m, a) => 'The customer\'s phone number is incomplete/masked (' + a + ').']
+];
+function lk(s) {                                               // cari terjemahan EN untuk teks Indonesia
+  const v = EN[s]; if (v !== undefined) return v;
+  for (const [re, fn] of RXEN) { const m = s.match(re); if (m) return fn(...m); }
+  return undefined;
+}
+function tx(s, ...a) { const v = LANG === 'en' ? lk(s) : undefined; return fmtT(v !== undefined ? v : s, a); }
+
+/* --- Penerjemah DOM otomatis (teks + atribut), bisa dikembalikan ke Indonesia --- */
+const TR_ATTRS = ['placeholder', 'title', 'alt', 'aria-label'];
+const TR_SKIP = {SCRIPT: 1, STYLE: 1, CANVAS: 1, TEXTAREA: 1, NOSCRIPT: 1};
+const trLocked = el => !!(el.closest && el.closest('[translate="no"]'));
+function trText(n) {
+  const p = n.parentNode; if (!p || TR_SKIP[p.nodeName] || trLocked(p)) return;
+  if (n.__t !== undefined && n.nodeValue === n.__t) return;     // sudah diterjemahkan
+  const raw = n.nodeValue, core = raw.trim(); if (!core) return;
+  const v = lk(core); if (v === undefined || v === core) return;
+  if (p.nodeName === 'OPTION' && !p.hasAttribute('value')) p.setAttribute('value', core);   // nilai tetap Indonesia
+  n.__o = raw; n.__t = raw.replace(core, () => v); n.nodeValue = n.__t;
+}
+function trAttrs(el) {
+  if (!el.getAttribute || trLocked(el)) return;
+  TR_ATTRS.forEach(a => {
+    const cur = el.getAttribute(a); if (!cur) return;
+    el.__ao = el.__ao || {}; el.__at = el.__at || {};
+    if (el.__at[a] !== undefined && cur === el.__at[a]) return;
+    const core = cur.trim(), v = lk(core); if (v === undefined || v === core) return;
+    el.__ao[a] = cur; el.__at[a] = v; el.setAttribute(a, v);
+  });
+}
+function textNodes(root) {
+  const out = [], w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  while (w.nextNode()) out.push(w.currentNode);
+  return out;
+}
+function attrEls(root) {
+  const sel = TR_ATTRS.map(a => '[' + a + ']').join(',');
+  return (root.matches && root.matches(sel) ? [root] : []).concat([...(root.querySelectorAll ? root.querySelectorAll(sel) : [])]);
+}
+function trTree(root) {
+  if (LANG !== 'en' || !root) return;
+  if (root.nodeType === 3) { trText(root); return; }
+  textNodes(root).forEach(trText); attrEls(root).forEach(trAttrs);
+}
+function untrTree(root) {                                       // kembalikan semua teks ke Indonesia
+  textNodes(root).forEach(n => { if (n.__t !== undefined && n.nodeValue === n.__t) n.nodeValue = n.__o; n.__t = n.__o = undefined; });
+  attrEls(root).forEach(el => {
+    if (!el.__ao) return;
+    Object.keys(el.__ao).forEach(a => { if (el.getAttribute(a) === el.__at[a]) el.setAttribute(a, el.__ao[a]); });
+    el.__ao = el.__at = null;
+  });
+}
+const trObs = new MutationObserver(ms => {
+  if (LANG !== 'en') return;
+  ms.forEach(m => {
+    if (m.type === 'characterData') trText(m.target);
+    else if (m.type === 'attributes') trAttrs(m.target);
+    else m.addedNodes.forEach(trTree);
+  });
+});
+function startTr() {
+  trObs.observe(document.body, {childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: TR_ATTRS});
+  trTree(document.body);
+}
+
+/* --- Tombol bahasa & menu header --- */
+function paintLangSw() {
+  $('lgId').classList.toggle('on', LANG === 'id'); $('lgEn').classList.toggle('on', LANG === 'en');
+  $('lgId').setAttribute('aria-pressed', LANG === 'id'); $('lgEn').setAttribute('aria-pressed', LANG === 'en');
+}
+function setLang(l) {
+  if (l === LANG) return;
+  LANG = l; try { localStorage.setItem('crmLang', l); } catch (e) {}
+  document.documentElement.lang = l;
+  if (l === 'en') trTree(document.body); else untrTree(document.body);
+  beep('tap'); applyLang();
+}
+function applyLang() {            // gambar ulang bagian yang berisi data dinamis dari cache (tanpa memuat ulang server)
+  paintLangSw(); paintSound(); paintDate();
+  ['fStatus', 'mStatus'].forEach(id => { const el = $(id); if (el) [...el.options].forEach(o => o.textContent = stL(o.value)); });
+  if (LAST) renderDash(LAST);
+  if (CUST.length || $('custList').innerHTML) { renderChips(); renderCust(); }
+  if (HIST) { renderBulan(); paintBulanOpts(); }
+  pHitung(); psPaintSrc(); psRender(); dbRender(); psBar();
+  if ($('projList').style.display === 'block') pLoadList();
+  if ($('modal').classList.contains('show') && curCust) { setModalSub(); toggleFields('m'); }
+  if (typeof P !== 'undefined' && P.items.length) { /* form quotation: teks statis ikut diterjemahkan otomatis */ }
+}
+function paintDate() { $('tgl').textContent = new Date().toLocaleDateString(LOC(), {weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'}); }
+function toggleMenu(e) {
+  e && e.stopPropagation();
+  const m = $('hMenu'), open = !m.classList.contains('show');
+  m.classList.toggle('show', open); $('btnMenu').setAttribute('aria-expanded', open);
+}
+function closeMenu() { $('hMenu').classList.remove('show'); $('btnMenu').setAttribute('aria-expanded', false); }
+document.addEventListener('click', e => { if (!e.target.closest('.menuwrap')) closeMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+function menuRefresh() { closeMenu(); refreshAll(); }
+
+const ic = (n, s) => '<svg class="ic" width="' + (s || 14) + '" height="' + (s || 14) + '"><use href="#i-' + n + '"/></svg>';
+let INIT = {sales:[], statuses:[], templates:{}, sumber:[], toko:'Toko Kami', waServer:false, leaderWa:'', adminReady:false};
+let CUST = [], charts = {}, curCust = null, statusFilter = 'ALL', LAST = null, cacheRem = [], LAP = {leaderWa:''};
+const COLORS = {Baru:'#94a3b8', Dihubungi:'#3b82f6', Tertarik:'#8b5cf6', Negosiasi:'#f59e0b', Closing:'#10b981', Batal:'#ef4444'};
+const FALLBACK = ['#0ea5e9','#14b8a6','#ec4899','#84cc16','#f97316','#6366f1'];
+const AVC = ['#0d9488','#4f46e5','#0284c7','#7c3aed','#db2777','#059669','#2563eb','#c026d3'];
+const MONS = {id: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'], en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']};
+const colorOf = (s, i) => COLORS[s] || FALLBACK[(i || 0) % FALLBACK.length];
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const localISO = d => { d.setMinutes(d.getMinutes() - d.getTimezoneOffset()); return d.toISOString().slice(0,10); };
+const todayStr = () => localISO(new Date());
+const addDays = n => { const d = new Date(); d.setDate(d.getDate() + n); return localISO(d); };
+const fmtDate = s => s ? s.split('-').reverse().join('/') : '-';
+const initials = n => String(n).trim().split(/\s+/).slice(0,2).map(w => w[0]).join('').toUpperCase() || '?';
+const avColor = n => AVC[[...String(n)].reduce((a, c) => a + c.charCodeAt(0), 0) % AVC.length];
+const salesNames = () => INIT.sales.map(s => s.nama);
+const rp = n => 'Rp ' + Math.round(n || 0).toLocaleString(LOC());
+const rpc = n => { n = n || 0; const u = LANG === 'en' ? [' B', ' m', ' k'] : [' M', ' jt', ' rb']; if (n >= 1e9) return (n / 1e9).toFixed(1).replace('.0', '') + u[0]; if (n >= 1e6) return (n / 1e6).toFixed(1).replace('.0', '') + u[1]; if (n >= 1e3) return Math.round(n / 1e3) + u[2]; return String(Math.round(n)); };
+const monLbl = ym => { const p = String(ym).split('-'); return (MONS[LANG][+p[1] - 1] || p[1]) + ' ' + String(p[0]).slice(2); };
+const monLong = ym => { const p = String(ym).split('-'); return new Date(+p[0], +p[1] - 1, 1).toLocaleDateString(LOC(), {month:'long', year:'numeric'}); };
+const numVal = v => Number(String(v || '').replace(/\D/g, '')) || 0;
+function fmtNum(el) { const d = String(el.value).replace(/\D/g, ''); el.value = d ? Number(d).toLocaleString(LOC()) : ''; }
+
+function run(fn, args, ok, fail) {
+  loading(true);
+  try {
+    const g = google.script.run
+      .withSuccessHandler(r => { loading(false); ok && ok(r); })
+      .withFailureHandler(e => { loading(false); toast((e && e.message) || String(e), 'err'); fail && fail(e); });
+    if (typeof g[fn] !== 'function') throw new Error(tx('Fitur "{0}" belum ada di server. Deploy Code.gs terbaru sebagai versi baru, lalu muat ulang halaman.', fn));
+    g[fn](...(args || []));
+  } catch (e) { loading(false); toast((e && e.message) || String(e), 'err'); fail && fail(e); }
+}
+window.addEventListener('error', e => { try { loading(false); if (e && e.target && e.target !== window) return; toast('Error: ' + (e.message || e), 'err'); } catch (x) {} });
+window.addEventListener('unhandledrejection', e => { try { loading(false); toast('Error: ' + ((e.reason && e.reason.message) || e.reason), 'err'); } catch (x) {} });
+function loading(on) { $('loader').style.display = on ? 'block' : 'none'; }
+let toastT;
+const t_ = m => { const v = LANG === 'en' ? lk(String(m)) : undefined; return v !== undefined ? v : m; };
+function toast(msg, type) {
+  const t = $('toast'); msg = t_(msg); t.textContent = msg; t.className = 'show ' + (type || '');
+  beep(type === 'err' ? 'err' : type === 'ok' ? 'ok' : 'tap');
+  clearTimeout(toastT); toastT = setTimeout(() => t.className = '', 3200);
+}
+
+/* ============ WEB AUDIO API ============ */
+let audioCtx = null, soundOn = true;
+try { soundOn = localStorage.getItem('crmSound') !== 'off'; } catch (e) {}
+function beep(type) {
+  if (!soundOn) return;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const seqs = {
+      tap:  [[520, 0, .06]],
+      ok:   [[660, 0, .12], [880, .12, .2]],
+      send: [[523, 0, .1], [659, .1, .1], [784, .2, .22]],
+      warn: [[440, 0, .15], [440, .22, .15], [440, .44, .15]],
+      err:  [[220, 0, .18], [160, .18, .28]]
+    };
+    (seqs[type] || []).forEach(([f, t, d]) => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain(), s = audioCtx.currentTime + t;
+      o.type = 'sine'; o.frequency.value = f; o.connect(g); g.connect(audioCtx.destination);
+      g.gain.setValueAtTime(0.0001, s);
+      g.gain.exponentialRampToValueAtTime(0.25, s + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, s + d);
+      o.start(s); o.stop(s + d + 0.03);
+    });
+  } catch (e) {}
+}
+function paintSound() {
+  $('sndIco').innerHTML = ic(soundOn ? 'bell' : 'bell-off', 18);
+  $('sndLbl').textContent = tx(soundOn ? 'Suara aktif' : 'Suara mati');
+  $('sndSw').classList.toggle('on', soundOn);
+}
+function toggleSound() {
+  soundOn = !soundOn; try { localStorage.setItem('crmSound', soundOn ? 'on' : 'off'); } catch (e) {}
+  paintSound(); if (soundOn) beep('ok');
+}
+
+/* ============ NAVIGASI & INIT ============ */
+/* ============ IKON DROPDOWN (berubah sesuai pilihan) ============ */
+const IP = {
+  pin: '<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>',
+  'phone-chat': '<path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1 1 21 11.5z"/><path d="M9.3 8.8c0 2.8 2.1 4.9 4.9 4.9l.9-1.3-1.7-.9-.8.7a3.3 3.3 0 0 1-1.7-1.7l.7-.8-.9-1.7z"/>',
+  phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  walkin: '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>',
+  dots: '<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>',
+  sparkle: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 3v4M17 5h4"/>',
+  send: '<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',
+  heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7z"/>',
+  message: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/><path d="M8 11h8M8 14.5h5"/>',
+  check: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/>',
+  x: '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  globe: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'
+};
+const CH_ICON = {'WhatsApp': 'phone-chat', 'Telepon': 'phone', 'Walk In': 'walkin', 'Lainnya': 'dots'};
+const ST_ICON = {Baru: 'sparkle', Dihubungi: 'send', Tertarik: 'heart', Negosiasi: 'message', Closing: 'check', Batal: 'x'};
+function srcIcon(v) {
+  const t = String(v).toLowerCase();
+  if (/walk/.test(t)) return 'walkin';
+  if (/whatsapp|\bwa\b/.test(t)) return 'phone-chat';
+  if (/insta|\big\b|tiktok|facebook|sosmed/.test(t)) return 'camera';
+  if (/referral|rekan|teman|keluarga/.test(t)) return 'users';
+  if (/event|pameran|expo/.test(t)) return 'calendar';
+  return 'globe';
+}
+function icoURL(name, color) {
+  const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='" + color + "' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>" + (IP[name] || IP.globe) + "</svg>";
+  return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
+}
+function paintSel(id) {
+  const el = $(id); if (!el) return;
+  const v = el.value; let name = 'globe', color = '#0d9488';
+  if (id === 'mChannel') name = CH_ICON[v] || 'dots';
+  else if (id === 'mStatus' || id === 'fStatus') { name = ST_ICON[v] || 'sparkle'; color = COLORS[v] || '#0d9488'; }
+  else if (id === 'fSales' || id === 'pSales') { name = 'user'; if (!v) color = '#94a3b8'; }
+  else if (id === 'selSales') name = v === 'ALL' || !v ? 'users' : 'user';
+  else if (id === 'fSumber') { name = v ? srcIcon(v) : 'globe'; if (!v) color = '#94a3b8'; }
+  else if (id === 'selBulan') name = 'calendar';
+  else if (id === 'psKat') name = 'pin';
+  el.style.backgroundImage = icoURL(name, color);
+}
+function paintAllSel() { ['mChannel', 'mStatus', 'fStatus', 'fSales', 'pSales', 'fSumber', 'selSales', 'selBulan', 'psKat'].forEach(paintSel); }
+document.addEventListener('change', e => { if (e.target && e.target.tagName === 'SELECT') paintSel(e.target.id); });
+
+function show(t) {
+  paintAllSel();
+  document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
+  $('tab-' + t).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  $('btnAdmin').classList.toggle('hon', t === 'admin');
+  beep('tap'); window.scrollTo({top: 0, behavior: 'smooth'});
+  if (t === 'dash') loadDash(); if (t === 'cust') loadCust(); if (t === 'hist') initBulan(); if (t === 'proj') initProj(); if (t === 'admin') showAdmin();
+}
+let BOOTED = false;
+function boot() {
+  if (BOOTED) return; BOOTED = true; window.__booted = true;
+  document.documentElement.lang = LANG; paintDate(); paintLangSw(); paintSound(); startTr();
+  run('getInitData', [], d => { INIT = d; BOOTOK = true; fillSelects(); loadDash(); });
+  setTimeout(() => { if (!BOOTOK) fatal(tx('Data belum termuat. Periksa koneksi internet, lalu muat ulang. Jika tetap gagal, pastikan Code.gs terbaru sudah di-deploy sebagai versi baru.')); }, 15000);
+}
+let BOOTOK = false;
+function fatal(msg) {
+  let b = $('fatalBar');
+  if (!b) { b = document.createElement('div'); b.id = 'fatalBar'; b.style.cssText = 'position:fixed;left:12px;right:12px;top:12px;z-index:200;background:#b91c1c;color:#fff;border-radius:14px;padding:12px 14px;font:600 12.5px/1.5 system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.3)'; document.body.appendChild(b); }
+  b.innerHTML = '';
+  const t = document.createElement('div'); t.textContent = msg; b.appendChild(t);
+  const x = document.createElement('button'); x.textContent = tx('Muat ulang halaman'); x.style.cssText = 'margin-top:8px;border:0;border-radius:10px;padding:8px 12px;font-weight:700;background:#fff;color:#b91c1c;cursor:pointer';
+  x.onclick = () => location.reload(); b.appendChild(x);
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
+const opts = (arr, all, st) => (all ? '<option value="ALL">Semua Sales</option>' : '') + arr.map(x => `<option value="${esc(x)}">${esc(st ? stL(x) : x)}</option>`).join('');
+function fillSelects() {
+  $('tokoNama').textContent = INIT.toko;
+  $('selSales').innerHTML = opts(salesNames(), true);
+  $('fSales').innerHTML = '<option value="">Pilih Sales</option>' + opts(salesNames());
+  $('pSales').innerHTML = '<option value="">Pilih Sales</option>' + opts(salesNames());
+  $('fStatus').innerHTML = opts(INIT.statuses, false, true);
+  $('fSumber').innerHTML = '<option value="">Pilih sumber</option>' + opts(INIT.sumber);
+  $('mStatus').innerHTML = opts(INIT.statuses, false, true);
+  $('btnRemAll').style.display = INIT.waServer ? 'flex' : 'none';
+  $('btnLapSrv').style.display = INIT.waServer ? 'flex' : 'none';
+  toggleFields('f');
+  paintAllSel();
+}
+function refreshAll() {
+  run('getInitData', [], d => { INIT = d; fillSelects(); loadDash(); loadCust(); toast('Data diperbarui', 'ok'); });
+}
+function toggleFields(p) {
+  const st = $(p === 'm' ? 'mStatus' : 'fStatus').value;
+  const done = st === 'Closing' || st === 'Batal';
+  $(p + 'NilaiBox').style.display = st === 'Closing' ? 'block' : 'none';
+  $(p + 'NextBox').style.display = done ? 'none' : 'block';
+  if (done) { $(p + 'Next').value = ''; clearErr($(p + 'Next')); }
+  if (st !== 'Closing') clearErr($(p + 'Nilai'));
+  if (p === 'm') { $('mEstBox').style.display = done ? 'none' : 'block'; if (done) clearErr($('mEst')); }
+  if (p === 'm') {
+    $('mNote').placeholder = st === 'Batal' ? 'Alasan batal...' : st === 'Closing' ? 'Catatan closing...' : 'Apa hasil follow up hari ini?';
+    $('mNoteLbl').innerHTML = (st === 'Batal' ? 'Alasan Batal' : 'Hasil / Catatan') + ' <span class="req">*</span>';
+  }
+}
+
+/* ============ VALIDASI FORM ============ */
+function clearErr(el) { if (!el) return; el.classList.remove('err'); const n = el.nextElementSibling; if (n && n.classList.contains('ferr')) n.remove(); }
+function setErr(id, msg) {
+  const el = $(id); if (!el) return; el.classList.add('err');
+  let n = el.nextElementSibling;
+  if (!(n && n.classList.contains('ferr'))) { n = document.createElement('div'); n.className = 'ferr'; el.after(n); }
+  n.textContent = msg;
+}
+function clearErrs(ids) { ids.forEach(i => clearErr($(i))); }
+function validate(rules) {
+  let first = null;
+  rules.forEach(r => { clearErr($(r[0])); if (!r[2]) { setErr(r[0], r[1]); first = first || r[0]; } });
+  if (first) {
+    toast('Lengkapi kolom yang wajib diisi', 'err');
+    const el = $(first); el.scrollIntoView({behavior: 'smooth', block: 'center'});
+    try { el.focus({preventScroll: true}); } catch (e) {}
+  }
+  return !first;
+}
+document.addEventListener('input', e => { if (e.target.classList && e.target.classList.contains('err')) clearErr(e.target); });
+document.addEventListener('change', e => { if (e.target.classList && e.target.classList.contains('err')) clearErr(e.target); });
+
+/* ============ WHATSAPP ============ */
+function waNum(hp) {
+  let n = String(hp || '').replace(/\D/g, '');
+  if (!n) return '';
+  if (n.startsWith('0')) n = '62' + n.slice(1); else if (n.startsWith('8')) n = '62' + n;
+  return n;
+}
+function fillTpl(tpl, c) {
+  return String(tpl || 'Halo Kak {nama}, saya {sales} dari {toko}. Ada yang bisa kami bantu?')
+    .replace(/\{nama\}/g, c.nama).replace(/\{sales\}/g, c.sales)
+    .replace(/\{produk\}/g, c.produk || 'produk kami').replace(/\{toko\}/g, INIT.toko);
+}
+const waLink = (num, text) => 'https://wa.me/' + num + '?text=' + encodeURIComponent(text);
+function findCust(id, from) { return (from === 'rem' ? cacheRem : CUST).find(x => x.id === id) || CUST.find(x => x.id === id) || cacheRem.find(x => x.id === id); }
+function hpOk(hp) { const t = String(hp || ''), d = t.replace(/\D/g, ''); return !/[*xX#]/.test(t) && d.length >= 9 && d.length <= 15; }
+function hpWarn(hp) {
+  if (hpOk(hp)) return false;
+  toast(String(hp || '').trim() ? tx('Nomor HP tidak lengkap/tersensor ({0}). Lengkapi di data customer.', hp) : tx('Customer belum punya nomor HP'), 'err');
+  return true;
+}
+function callCust(id, from) {
+  const c = findCust(id, from); if (!c || hpWarn(c.hp)) return;
+  const num = String(c.hp).replace(/[^\d+]/g, '');
+  beep('tap');
+  toast(tx('Menelepon {0} ({1})', c.nama, num), 'ok');
+  try { navigator.clipboard.writeText(num); } catch (e) {}   // cadangan: nomor tersalin bila dialer tidak terbuka
+  window.open('tel:' + num, '_blank');
+}
+function quickWA(id, from) {
+  const c = findCust(id, from); if (!c) return;
+  if (hpWarn(c.hp)) return;
+  const n = waNum(c.hp);
+  beep('send'); window.open(waLink(n, fillTpl(INIT.templates[c.status], c)), '_blank');
+}
+function applyTpl() { if (curCust) $('mMsg').value = fillTpl(INIT.templates[$('mStatus').value], curCust); }
+function openWA() {
+  if (!curCust) return;
+  if (hpWarn(curCust.hp)) return;
+  const n = waNum(curCust.hp);
+  beep('send'); window.open(waLink(n, $('mMsg').value), '_blank');
+}
+function sendServer() {
+  if (!curCust) return;
+  if (!INIT.waServer) { toast('Kirim otomatis belum aktif (isi FONNTE_TOKEN)', 'err'); return; }
+  if (hpWarn(curCust.hp)) return;
+  $('btnSrv').disabled = true;
+  run('kirimWA', [{id: curCust.id, pesan: $('mMsg').value}], () => {
+    $('btnSrv').disabled = false; beep('send'); toast('Pesan WhatsApp terkirim', 'ok');
+    google.script.run.withSuccessHandler(renderHist).getLog(curCust.id);
+  }, () => $('btnSrv').disabled = false);
+}
+function remindSales(i) {
+  const s = INIT.sales[i]; if (!s || !LAST) return;
+  if (!s.wa) { toast(tx('Isi No WA {0} di menu Admin', s.nama), 'err'); return; }
+  const od = LAST.overdue.filter(c => c.sales === s.nama), td = LAST.dueToday.filter(c => c.sales === s.nama);
+  const en = LANG === 'en';
+  let m = (en ? 'Hi ' + s.nama + '! Follow-up reminder for ' + INIT.toko + ':\n' : 'Halo ' + s.nama + '! Pengingat follow up ' + INIT.toko + ':\n');
+  m += (en ? '\nToday (' : '\nHari ini (') + td.length + '):\n' + (td.map(c => '• ' + c.nama + ' (' + c.status + ')').join('\n') || '-');
+  m += (en ? '\n\nOverdue (' : '\n\nTerlambat (') + od.length + '):\n' + (od.map(c => '• ' + c.nama + (en ? ' - due ' : ' - jadwal ') + fmtDate(c.nextFU)).join('\n') || '-');
+  beep('send'); window.open(waLink(s.wa, m), '_blank');
+}
+function remindAll() { run('kirimReminderHarian', [LANG], n => toast(tx('Pengingat terkirim ke {0} Sales', n), 'ok')); }
+
+/* ============ LAPORAN MINGGUAN ============ */
+function buatLaporan() {
+  run('getLaporanMingguan', [LANG], r => { LAP = r; $('lapTxt').value = r.teks; $('lapBox').style.display = 'block'; beep('ok'); });
+}
+function laporanWA() {
+  const t = $('lapTxt').value; if (!t.trim()) return;
+  beep('send');
+  window.open(LAP.leaderWa ? waLink(LAP.leaderWa, t) : 'https://wa.me/?text=' + encodeURIComponent(t), '_blank');
+}
+function laporanServer() { run('kirimLaporanMingguan', [LANG], () => { beep('send'); toast('Laporan mingguan terkirim ke WA leader', 'ok'); }); }
+
+/* ============ DASHBOARD ============ */
+const emptyBox = (icon, txt) => `<div class="empty"><div class="ei">${ic(icon, 26)}</div>${txt}</div>`;
+function loadDash() { run('getRekap', [], r => { LAST = r; renderDash(r); if (r.overdue.length) beep('warn'); }); }
+function renderDash(r) {
+  {
+    $('kTotal').textContent = r.total; $('kClose').textContent = r.closing; $('kRate').textContent = r.rate + '%';
+    $('kToday').textContent = r.dueToday.length; $('kLate').textContent = r.overdue.length;
+    $('kPeriode').textContent = monLong(r.bulan);
+    $('kNilai').textContent = rp(r.nilaiTotal);
+    $('kEst').textContent = rp(r.estimasiBulan);
+    $('kCapai').textContent = r.estimasiBulan ? Math.round(r.nilaiTotal / r.estimasiBulan * 100) + '%' : '-';
+    $('kPot').textContent = 'Rp ' + rpc(r.potensiTotal);
+    $('kAvg').textContent = r.closing ? 'Rp ' + rpc(r.nilaiTotal / r.closing) : '-';
+    $('ring').style.setProperty('--p', Math.min(r.rate, 100) + '%');
+    $('greetTxt').textContent = r.overdue.length ? tx('{0} follow up menunggu tindakan', r.overdue.length) : tx('Semua follow up on track');
+    const rows = r.sales.map((s, i) => {
+      const tot = r.statuses.reduce((a, st) => a + r.matrix[s][st], 0), cl = r.matrix[s]['Closing'] || 0;
+      return {s, tot, cl, nilai: r.nilaiBySales[s] || 0, idx: i};
+    }).sort((a, b) => b.nilai - a.nilai || b.cl - a.cl || b.tot - a.tot);
+    const mx = Math.max(1, ...rows.map(x => x.nilai));
+    $('leader').innerHTML = rows.length ? rows.map((x, k) =>
+      `<div class="lb"><div class="medal ${k < 3 ? 'm' + (k + 1) : ''}">${k < 3 ? ic('crown', 15) : k + 1}</div>
+       <div class="info" onclick="goSales(${x.idx})"><b>${esc(x.s)}</b><div class="bar"><i style="width:${x.nilai / mx * 100}%"></i></div>
+       <small>${tx('{0} customer • {1} closing • {2}', x.tot, x.cl, rp(x.nilai))}</small></div>
+       <button class="iconwa" title="Kirim pengingat ke WA Sales" onclick="remindSales(${x.idx})">${ic('phone-chat', 18)}</button></div>`).join('')
+      : emptyBox('users', 'Isi nama Sales di menu Admin.');
+    let h = '<tr><th>Sales</th>' + r.statuses.map(s => `<th>${esc(stL(s))}</th>`).join('') + '<th>Total</th><th>Estimasi</th><th>Nilai Closing</th></tr>';
+    r.sales.forEach(s => {
+      const tot = r.statuses.reduce((a, st) => a + r.matrix[s][st], 0);
+      h += `<tr><td><b>${esc(s)}</b></td>` + r.statuses.map(st => `<td>${r.matrix[s][st]}</td>`).join('') + `<td><b>${tot}</b></td><td>${rp((r.estimasiBySales || {})[s])}</td><td>${rp(r.nilaiBySales[s])}</td></tr>`;
+    });
+    h += '<tr><td><b>TOTAL</b></td>' + r.statuses.map(st => `<td><b>${r.byStatus[st]}</b></td>`).join('') + `<td><b>${r.total}</b></td><td><b>${rp(r.estimasiBulan)}</b></td><td><b>${rp(r.nilaiTotal)}</b></td></tr>`;
+    $('tbRekap').innerHTML = h;
+    drawCharts(r);
+    const all = r.overdue.map(c => ({c, late: true})).concat(r.dueToday.map(c => ({c, late: false})));
+    cacheRem = all.map(x => x.c);
+    $('reminders').innerHTML = all.length ? all.slice(0, 30).map(x => custCard(x.c, x.late ? 'late' : 'today', 'rem')).join('')
+      : emptyBox('check', 'Tidak ada follow up tertunda.');
+  }
+}
+function drawCharts(r) {
+  if (typeof Chart === 'undefined') { console.error('Chart.js belum termuat'); return; }
+  Object.values(charts).forEach(c => c.destroy());
+  Chart.defaults.font.family = "'Plus Jakarta Sans',system-ui,sans-serif";
+  Chart.defaults.color = '#64748b';
+  const leg = {position: 'bottom', labels: {boxWidth: 10, usePointStyle: true}};
+  charts.sales = new Chart($('chSales'), {
+    type: 'bar',
+    data: { labels: r.sales, datasets: r.statuses.map((st, i) => ({label: stL(st), data: r.sales.map(s => r.matrix[s][st]), backgroundColor: colorOf(st, i), borderRadius: 4})) },
+    options: { responsive: true, maintainAspectRatio: false, scales: {x: {stacked: true, grid: {display: false}}, y: {stacked: true, beginAtZero: true, ticks: {precision: 0}, grid: {color: '#eef2f6'}}}, plugins: {legend: leg} }
+  });
+  charts.status = new Chart($('chStatus'), {
+    type: 'doughnut',
+    data: { labels: r.statuses.map(stL), datasets: [{data: r.statuses.map(s => r.byStatus[s]), backgroundColor: r.statuses.map(colorOf), borderWidth: 3, borderColor: '#fff'}] },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '64%', plugins: {legend: leg} }
+  });
+  const lbl = c => c.dataset.label + ': ' + rp(c.parsed.x !== undefined && c.chart.options.indexAxis === 'y' ? c.parsed.x : c.parsed.y);
+  charts.nilai = new Chart($('chNilai'), {
+    type: 'bar',
+    data: { labels: r.sales, datasets: [
+      {label: tx('Estimasi'), data: r.sales.map(s => (r.estimasiBySales || {})[s] || 0), backgroundColor: '#cbd5e1', borderRadius: 5},
+      {label: tx('Realisasi'), data: r.sales.map(s => r.nilaiBySales[s] || 0), backgroundColor: '#14b8a6', borderRadius: 5}] },
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      scales: {x: {beginAtZero: true, ticks: {callback: v => rpc(v)}, grid: {color: '#eef2f6'}}, y: {grid: {display: false}}},
+      plugins: {legend: leg, tooltip: {callbacks: {label: lbl}}} }
+  });
+  const t = r.tren || [];
+  charts.tren = new Chart($('chTren'), {
+    type: 'bar',
+    data: { labels: t.map(x => monLbl(x.bulan)), datasets: [
+      {label: tx('Estimasi'), data: t.map(x => x.estimasi || 0), backgroundColor: '#cbd5e1', borderRadius: 5},
+      {label: tx('Realisasi'), data: t.map(x => x.nilai), backgroundColor: '#14b8a6', borderRadius: 5}] },
+    options: { responsive: true, maintainAspectRatio: false,
+      scales: {y: {beginAtZero: true, ticks: {callback: v => rpc(v)}, grid: {color: '#eef2f6'}}, x: {grid: {display: false}}},
+      plugins: {legend: leg, tooltip: {callbacks: {label: lbl}}} }
+  });
+}
+function goSales(i) { $('selSales').value = INIT.sales[i].nama; show('cust'); }
+
+/* ============ LIST CUSTOMER ============ */
+function loadCust() { run('getCustomers', [$('selSales').value || 'ALL'], d => { CUST = d; renderChips(); renderCust(); }); }
+function renderChips() {
+  const cnt = {ALL: CUST.length}; INIT.statuses.forEach(s => cnt[s] = CUST.filter(c => c.status === s).length);
+  $('chips').innerHTML = ['ALL'].concat(INIT.statuses).map(s =>
+    `<button class="chip ${statusFilter === s ? 'on' : ''}" onclick="setFilter(this.dataset.s)" data-s="${esc(s)}">${s === 'ALL' ? tx('Semua') : esc(stL(s))} (${cnt[s] || 0})</button>`).join('');
+}
+function setFilter(s) { statusFilter = s; beep('tap'); renderChips(); renderCust(); }
+function custCard(c, cls, from) {
+  const idx = INIT.statuses.indexOf(c.status);
+  return `<div class="card cust ${cls}">
+    <div class="av" style="background:${avColor(c.nama)}">${esc(initials(c.nama))}</div>
+    <div class="cbody">
+      <div class="top"><div style="min-width:0"><h3 translate="no">${esc(c.nama)}</h3><p translate="no">${ic('box', 13)}${esc(c.produk) || '-'} &bull; ${esc(c.sumber) || '-'}</p></div>
+      <span class="badge" style="background:${colorOf(c.status, idx)}">${esc(stL(c.status))}</span></div>
+      <p translate="no">${ic('user', 13)}${esc(c.sales)} &nbsp; ${ic('mobile', 13)}${esc(c.hp) || '-'}</p>
+      <p>${ic('calendar', 13)}<b>${fmtDate(c.nextFU)}</b>${cls === 'late' ? `<span class="pill">${tx('Terlambat')}</span>` : cls === 'today' ? `<span class="pill t">${tx('Hari ini')}</span>` : ''}</p>
+      ${c.status === 'Closing' && c.nilai ? `<p class="nilai">${ic('wallet', 13)}${tx('Closing {0}', rp(c.nilai))}</p>` : (c.status !== 'Closing' && c.status !== 'Batal' && c.estimasi ? `<p class="est">${ic('wallet', 13)}${tx('Estimasi {0}', rp(c.estimasi))}</p>` : '')}
+      ${c.catatan ? `<p translate="no">${ic('note', 13)}${esc(c.catatan)}</p>` : ''}
+      <div class="acts"><button class="btn sm" onclick="openFU('${c.id}','${from}')">${ic('check', 14)}${tx('Follow Up')}</button>
+      <button class="btn sm wa" onclick="quickWA('${c.id}','${from}')">${ic('phone-chat', 15)}WhatsApp</button>
+      <button class="btn sm soft" title="Telepon" onclick="callCust('${c.id}','${from}')">${ic('phone', 15)}</button></div>
+    </div></div>`;
+}
+function renderCust() {
+  const q = $('q').value.toLowerCase().trim(), today = todayStr();
+  const data = CUST.filter(c => (statusFilter === 'ALL' || c.status === statusFilter) && (!q || (c.nama + ' ' + c.hp + ' ' + c.produk).toLowerCase().includes(q)));
+  $('custList').innerHTML = data.length ? data.map(c => {
+    const open = c.status !== 'Closing' && c.status !== 'Batal';
+    const cls = open && c.nextFU && c.nextFU < today ? 'late' : open && c.nextFU === today ? 'today' : '';
+    return custCard(c, cls, 'list');
+  }).join('') : emptyBox('folder', 'Belum ada data customer.');
+}
+
+/* ============ TAMBAH CUSTOMER ============ */
+function submitAdd() {
+  const st = $('fStatus').value, done = st === 'Closing' || st === 'Batal';
+  const hpDigits = $('fHp').value.replace(/\D/g, '');
+  const ok = validate([
+    ['fNama', 'Nama customer wajib diisi', $('fNama').value.trim() !== ''],
+    ['fHp', hpDigits ? 'No WhatsApp tidak valid (angka saja, 9-15 digit)' : 'No WhatsApp wajib diisi', /^[0-9+\s().-]+$/.test($('fHp').value.trim()) && hpDigits.length >= 9 && hpDigits.length <= 15],
+    ['fProduk', 'Produk diminati wajib diisi', $('fProduk').value.trim() !== ''],
+    ['fEst', 'Estimasi nilai closing wajib diisi (lebih dari 0)', numVal($('fEst').value) > 0],
+    ['fSumber', 'Pilih sumber customer', $('fSumber').value !== ''],
+    ['fSales', 'Pilih Sales', $('fSales').value !== ''],
+    ['fStatus', 'Pilih status', st !== ''],
+    ['fNext', 'Tanggal follow up berikutnya wajib diisi', done || $('fNext').value !== ''],
+    ['fNilai', 'Nilai closing wajib diisi (lebih dari 0)', st !== 'Closing' || numVal($('fNilai').value) > 0],
+    ['fCatatan', 'Catatan wajib diisi', $('fCatatan').value.trim() !== '']
+  ]);
+  if (!ok) return;
+  const d = {nama: $('fNama').value.trim(), hp: $('fHp').value.trim(), produk: $('fProduk').value.trim(), estimasi: numVal($('fEst').value), sumber: $('fSumber').value,
+             sales: $('fSales').value, status: st, nextFU: done ? '' : $('fNext').value, catatan: $('fCatatan').value.trim(),
+             nilai: st === 'Closing' ? numVal($('fNilai').value) : 0, prospekId: PS.link ? PS.link.id : ''};
+  $('btnAdd').disabled = true;
+  run('addCustomer', [d], () => {
+    $('btnAdd').disabled = false; toast('Customer tersimpan', 'ok'); if (PS.link) { PS.link = null; PS.db = null; psBar(); }
+    ['fNama','fHp','fProduk','fEst','fCatatan','fNilai','fNext'].forEach(i => $(i).value = '');
+    $('fSales').value = ''; $('fSumber').value = ''; $('fStatus').selectedIndex = 0; toggleFields('f'); paintAllSel();
+    $('selSales').value = d.sales; show('cust');
+  }, () => $('btnAdd').disabled = false);
+}
+
+/* ============ MODAL FOLLOW UP ============ */
+function setModalSub() { const c = curCust; if (c) $('mSub').textContent = c.sales + ' • ' + (c.produk || '-') + ' • ' + (c.hp || tx('tanpa HP')); }
+function renderHist(l) {
+  $('mHist').innerHTML = l.length ? l.map(x => `<div translate="no"><b>${esc(x.waktu)}</b> &bull; ${esc(x.channel)} &rarr; ${esc(x.status)}<br>${esc(x.catatan)}</div>`).join('') : 'Belum ada riwayat.';
+}
+function openFU(id, from) {
+  const c = findCust(id, from); if (!c) return;
+  curCust = c; beep('tap');
+  $('mTitle').textContent = c.nama;
+  setModalSub();
+  clearErrs(['mChannel', 'mStatus', 'mNext', 'mNilai', 'mEst', 'mNote']);
+  $('mChannel').selectedIndex = 0;
+  $('mStatus').value = c.status; $('mNext').value = ''; $('mNote').value = '';
+  $('mNilai').value = c.nilai ? Number(c.nilai).toLocaleString(LOC()) : '';
+  $('mEst').value = c.estimasi ? Number(c.estimasi).toLocaleString(LOC()) : '';
+  toggleFields('m'); paintAllSel();
+  $('mMsg').value = fillTpl(INIT.templates[c.status], c);
+  $('srvHint').textContent = INIT.waServer ? 'Kirim Otomatis: pesan dikirim dari nomor toko & tercatat di riwayat.' : 'Kirim Otomatis belum aktif. "Buka WhatsApp" tetap bisa dipakai.';
+  $('mHist').textContent = 'Memuat...'; $('modal').classList.add('show');
+  google.script.run.withSuccessHandler(renderHist).getLog(id);
+}
+function closeModal() { $('modal').classList.remove('show'); }
+function submitFU() {
+  if (!curCust) return;
+  const st = $('mStatus').value, done = st === 'Closing' || st === 'Batal';
+  const ok = validate([
+    ['mChannel', 'Pilih channel', $('mChannel').value !== ''],
+    ['mStatus', 'Pilih status baru', st !== ''],
+    ['mEst', 'Estimasi nilai closing wajib diisi (lebih dari 0)', done || numVal($('mEst').value) > 0],
+    ['mNext', 'Tanggal follow up berikutnya wajib diisi', done || $('mNext').value !== ''],
+    ['mNilai', 'Nilai closing wajib diisi (lebih dari 0)', st !== 'Closing' || numVal($('mNilai').value) > 0],
+    ['mNote', st === 'Batal' ? 'Alasan batal wajib diisi' : 'Hasil / catatan wajib diisi', $('mNote').value.trim() !== '']
+  ]);
+  if (!ok) return;
+  const d = {id: curCust.id, status: st, nextFU: done ? '' : $('mNext').value, channel: $('mChannel').value, catatan: $('mNote').value.trim(),
+             nilai: st === 'Closing' ? numVal($('mNilai').value) : 0, estimasi: done ? 0 : numVal($('mEst').value)};
+  $('btnFu').disabled = true;
+  run('saveFollowUp', [d], () => {
+    $('btnFu').disabled = false; closeModal();
+    toast(st === 'Closing' ? tx('Closing! {0}', d.nilai ? rp(d.nilai) : tx('Selamat!')) : tx('Follow up tersimpan'), 'ok');
+    loadCust(); loadDash();
+  }, () => $('btnFu').disabled = false);
+}
+
+/* ============ RIWAYAT BULANAN ============ */
+let HIST = null, histView = 'cust';
+let BL = null;
+function paintBulanOpts() { if (!BL) return; const v = $('selBulan').value; $('selBulan').innerHTML = BL.list.map(m => `<option value="${m}">${monLong(m)}${m === BL.cur ? ' (' + tx('berjalan') + ')' : ''}</option>`).join(''); if (v) $('selBulan').value = v; }
+function initBulan() {
+  run('getBulanList', [], d => {
+    BL = d; paintBulanOpts(); $('selBulan').value = d.cur; paintSel('selBulan'); loadBulan();
+  });
+}
+function loadBulan() { run('getRiwayatBulan', [$('selBulan').value], d => { HIST = d; renderBulan(); }); }
+function setHv(v) { histView = v; beep('tap'); renderBulan(); }
+function renderBulan() {
+  const d = HIST; if (!d) return; const t = d.total;
+  $('hvCust').className = 'chip' + (histView === 'cust' ? ' on' : '');
+  $('hvLog').className = 'chip' + (histView === 'log' ? ' on' : '');
+  $('hvCust').textContent = tx('Customer Selesai ({0})', d.customers.length);
+  $('hvLog').textContent = tx('Aktivitas Follow Up ({0})', d.logCount);
+  let tb = '<tr><th>Sales</th><th>' + stL('Baru') + '</th><th>FU</th><th>Closing</th><th>Estimasi</th><th>Nilai Closing</th><th>' + stL('Batal') + '</th><th>Win Rate</th></tr>';
+  d.ringkasan.forEach(o => { tb += `<tr><td><b>${esc(o.sales)}</b></td><td>${o.baru}</td><td>${o.fu}</td><td>${o.closing}</td><td>${rp(o.est)}</td><td>${rp(o.nilai)}</td><td>${o.batal}</td><td>${o.win}%</td></tr>`; });
+  tb += `<tr><td><b>TOTAL</b></td><td><b>${t.baru}</b></td><td><b>${t.fu}</b></td><td><b>${t.closing}</b></td><td><b>${rp(t.est)}</b></td><td><b>${rp(t.nilai)}</b></td><td><b>${t.batal}</b></td><td><b>${t.win}%</b></td></tr>`;
+  $('hSum').innerHTML = `<div class="card">
+    <h2><i class="hi">${ic('list', 17)}</i>${tx('Ringkasan {0}', monLong(d.bulan))}<small>${d.sumber === 'arsip' ? tx('dari arsip') : tx('dihitung langsung')}</small></h2>
+    <div class="bigval"><div><small>Total nilai closing</small><b>${rp(t.nilai)}</b></div><div class="bv2"><span>${tx('{0} closing', t.closing)}</span><small>${tx('Win rate {0}%', t.win)}</small></div></div>
+    <div class="mini mini3" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">
+      <div><b>${t.baru}</b><span>Customer baru</span></div><div><b>${t.fu}</b><span>Follow up</span></div><div><b>Rp ${rpc(t.est)}</b><span>Estimasi nilai</span></div>
+    </div>
+    ${d.ringkasan.length ? `<div class="wrap-x"><table>${tb}</table></div>` : emptyBox('folder', 'Belum ada data untuk bulan ini.')}
+    ${d.isCurrent ? '<p class="hint">Bulan berjalan: angka bertambah seiring follow up dan closing. Customer yang masih berjalan ada di menu Customer.</p>' : ''}</div>`;
+  renderHList();
+}
+function renderHList() {
+  const d = HIST; if (!d) return;
+  const q = ($('hq').value || '').toLowerCase().trim();
+  if (histView === 'cust') {
+    const items = d.customers.filter(c => !q || (c.nama + ' ' + c.sales + ' ' + c.produk).toLowerCase().includes(q));
+    $('hList').innerHTML = items.length ? items.map(c =>
+      `<div class="item"><div><b translate="no">${esc(c.nama)}</b><small><span translate="no">${esc(c.sales)} &bull; ${esc(c.produk) || '-'}</span> &bull; ${tx('selesai')} ${fmtDate(c.tgl)}${c.catatan ? '<br><span translate="no">' + esc(c.catatan) + '</span>' : ''}</small></div>
+       <div class="r"><span class="badge" style="background:${colorOf(c.status)}">${esc(stL(c.status))}</span>${c.status === 'Closing' && c.nilai ? `<span class="nilai">${rp(c.nilai)}</span>` : ''}</div></div>`).join('')
+      : emptyBox('folder', 'Belum ada customer Closing/Batal pada bulan ini.');
+  } else {
+    const items = d.logs.filter(l => !q || (l.nama + ' ' + l.sales + ' ' + l.catatan).toLowerCase().includes(q));
+    $('hList').innerHTML = (items.length ? items.map(l =>
+      `<div class="item" translate="no"><div><b>${esc(l.nama)}</b> &bull; ${esc(l.sales)}<small>${esc(l.waktu)} &bull; ${esc(l.channel)} &rarr; ${esc(l.status)}${l.catatan ? '<br>' + esc(l.catatan) : ''}</small></div>
+       <div class="r">${l.nilai ? `<span class="nilai">${rp(l.nilai)}</span>` : ''}</div></div>`).join('')
+      : emptyBox('folder', 'Belum ada aktivitas follow up pada bulan ini.'))
+      + (d.logCount > d.logs.length ? `<p class="hint">${tx('Menampilkan {0} terbaru dari {1} aktivitas. Data lengkap ada di sheet FollowUp.', d.logs.length, d.logCount)}</p>` : '');
+  }
+}
+
+/* ============ PROJECT: QUOTATION ============ */
+let P = {id: '', items: [], init: null, fotos: {}, sug: {}};
+let pTimer = null;
+const pEmptyItem = () => ({sku: '', desk: '', qty: '', normal: '', promo: '', remark: '', fotoId: ''});
+const fmtC = n => String(Math.round(Number(n) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+const nilaiFmt = v => v ? Number(v).toLocaleString(LOC()) : '';
+
+function initProj() {
+  if (P.init) return;
+  run('getProjectInit', [], d => { P.init = d; pReset(); });
+}
+
+/* ============ CARI CUSTOMER & DATABASE PROSPEK ============ */
+const PS_WA = 'https:/' + '/wa.me/';
+const psWebShort = w => String(w).replace('https:/' + '/', '').replace('http:/' + '/', '').slice(0, 40);
+const PS = {src: 'osm', google: false, ready: false, res: [], sel: new Set(), meta: null, page: 0, more: false, token: '', hideSaved: true, fk: '', fl: '', db: null, filter: 'ALL', link: null};
+function psInit() {
+  if (PS.ready) return;
+  run('getProspekInit', [], d => { PS.ready = true; PS.google = !!d.google; psPaintSrc(); });
+}
+function psSrc(s) {
+  if (s === 'google' && !PS.google) { toast('API key Google belum diatur (Script properties: GOOGLE_PLACES_API_KEY).', 'err'); return; }
+  PS.src = s; psPaintSrc(); beep('tap');
+}
+function psPaintSrc() {
+  $('psOsm').classList.toggle('on', PS.src === 'osm'); $('psGoo').classList.toggle('on', PS.src === 'google');
+  $('psGoo').disabled = !PS.google && PS.ready;
+  $('psSrcInfo').textContent = PS.src === 'google' ? tx('Google Places API (memakai API key Anda).')
+    : tx('Gratis, tanpa API key. Nomor telepon hanya muncul bila sudah diisi di OpenStreetMap.');
+}
+function psCari() {
+  const lok = $('psLok').value.trim(), kat = $('psKat').value, kata = $('psKata').value.trim();
+  const ok = validate([
+    ['psLok', 'Lokasi wajib diisi', lok.length >= 3],
+    ['psKata', 'Isi kata kunci nama usaha', kat !== 'nama' || kata.length >= 2]
+  ]);
+  if (!ok) return;
+  $('btnCari').disabled = true; $('psRes').innerHTML = `<div class="card">${emptyBox('search', tx('Mencari...'))}</div>`;
+  const meta = {sumber: PS.src, kat: kat, kata: kata, lokasi: lok};
+  run('cariProspek', [meta], r => {
+    $('btnCari').disabled = false; PS.res = r.hasil; PS.meta = meta; PS.sel = new Set(); PS.page = 0; PS.more = !!r.lagi; PS.token = r.token || ''; psRender();
+    beep('ok'); try { $('psRes').scrollIntoView({behavior: 'smooth', block: 'start'}); } catch (e) {}
+  }, () => { $('btnCari').disabled = false; $('psRes').innerHTML = ''; });
+}
+function psRender() {
+  const box = $('psRes'); if (!PS.meta) { box.innerHTML = ''; return; }
+  const n = PS.res.length;
+  if (!n) { box.innerHTML = `<div class="card">${emptyBox('search', tx('Tidak ada hasil. Coba kata kunci, jenis usaha, atau lokasi lain.'))}</div>`; return; }
+  const free = PS.res.filter(x => !x.tersimpan), nSaved = n - free.length;
+  const rows = PS.res.map((x, i) => ({x, i})).filter(r => !(PS.hideSaved && r.x.tersimpan));
+  box.innerHTML = `<div class="card">
+    <div class="psbar"><b>${tx('{0} hasil', n)}</b>
+      <span style="display:flex;gap:7px;flex-wrap:wrap">
+        <button class="btn sm soft" onclick="psAll()">${PS.sel.size >= free.length && free.length ? tx('Batal pilih') : tx('Pilih semua')}</button>
+        <button class="btn sm" id="btnPsSave" onclick="psSimpan()" ${PS.sel.size ? '' : 'disabled'}>${ic('save', 14)}${tx('Simpan terpilih ({0})', PS.sel.size)}</button>
+      </span></div>
+    ${nSaved ? `<label class="hint" style="display:flex;gap:8px;align-items:center;margin:0 0 4px;cursor:pointer"><input type="checkbox" ${PS.hideSaved ? 'checked' : ''} onchange="PS.hideSaved=this.checked;psRender()" style="width:16px;height:16px"> ${tx('Sembunyikan yang sudah tersimpan')} (${nSaved})</label>` : ''}
+    ${rows.map(({x, i}) => `<label class="psit${x.tersimpan ? ' sv' : ''}"><input type="checkbox" ${PS.sel.has(i) ? 'checked' : ''} ${x.tersimpan ? 'disabled' : ''} onchange="psTog(${i}, this.checked)">
+      <div style="min-width:0"><span class="nm" translate="no">${esc(x.nama)}</span>${x.kategori ? `<span class="tag" translate="no">${esc(x.kategori)}</span>` : ''}${x.tersimpan ? `<span class="tag ok">${tx('Tersimpan')}</span>` : ''}
+        <small translate="no">${x.alamat ? esc(x.alamat) : '-'}</small>
+        <small translate="no">${ic('phone', 12)} ${x.telp ? esc(x.telp) : '-'}${x.web ? ' &bull; ' + ic('web', 12) + ' ' + esc(psWebShort(x.web)) : ''}</small></div></label>`).join('') || `<p class="hint">${tx('Semua hasil di halaman ini sudah tersimpan. Ketuk "Cari Berikutnya" untuk hasil lain.')}</p>`}
+    ${PS.more ? `<button class="btn block" id="btnNext" style="margin-top:12px" onclick="psNext()">${ic('search', 15)}${tx('Cari Berikutnya')}</button>` : `<p class="hint">${tx('Tidak ada hasil lagi untuk pencarian ini. Coba kata kunci atau lokasi lain.')}</p>`}
+    <p class="hint">${PS.meta.sumber === 'google' ? tx('Sumber: Google Maps (Places API).') : tx('Sumber: © kontributor OpenStreetMap (ODbL).')}</p></div>`;
+}
+function psNext() {
+  if (!PS.meta || !PS.more) return;
+  const b = $('btnNext'); if (b) b.disabled = true;
+  const meta = Object.assign({}, PS.meta, {halaman: PS.page + 1, token: PS.token});
+  run('cariProspek', [meta], r => {
+    const ada = new Set(PS.res.map(x => x.ref)), baru = r.hasil.filter(x => !ada.has(x.ref));
+    PS.res = PS.res.concat(baru); PS.page++; PS.more = !!r.lagi; PS.token = r.token || '';
+    psRender(); beep('ok');
+    if (!baru.length) toast('Tidak ada hasil baru.', 'ok');
+  }, () => psRender());
+}
+function psTog(i, on) { on ? PS.sel.add(i) : PS.sel.delete(i); psRender(); }
+function psAll() {
+  const idx = PS.res.map((x, i) => x.tersimpan ? -1 : i).filter(i => i >= 0);
+  if (PS.sel.size >= idx.length) PS.sel = new Set(); else PS.sel = new Set(idx);
+  psRender();
+}
+function psSimpan() {
+  const items = [...PS.sel].map(i => PS.res[i]).filter(Boolean); if (!items.length) return;
+  $('btnPsSave').disabled = true;
+  run('simpanProspek', [items, PS.meta], r => {
+    items.forEach(x => x.tersimpan = true); PS.sel = new Set(); PS.db = null; psRender(); beep('ok');
+    toast(r.lewati ? tx('{0} prospek disimpan ({1} sudah ada)', r.tambah, r.lewati) : tx('{0} prospek disimpan ke Database', r.tambah), 'ok');
+  }, () => psRender());
+}
+
+/* --- Database prospek --- */
+function dbLoad() { run('listProspek', [], l => { PS.db = l; dbRender(); }); }
+function psHp(t) {                           // ambil nomor pertama & ubah ke format 62xxxx
+  let n = String(t || '').split(/[;,\/]/)[0].replace(/\D/g, '');
+  if (!n) return '';
+  if (n.startsWith('0')) n = '62' + n.slice(1); else if (n.startsWith('8')) n = '62' + n;
+  return n;
+}
+const psMobile = t => /^628/.test(psHp(t));
+function dbOpts(l, f, all, cur) {      // daftar pilihan unik (tanpa beda huruf besar/kecil) + jumlah
+  const m = {};
+  l.forEach(x => { const s = String(f(x) || '').trim(); if (!s) return; const k = s.toLowerCase(); (m[k] = m[k] || {t: s, n: 0}).n++; });
+  const ks = Object.keys(m).sort((a, b) => m[a].t.localeCompare(m[b].t));
+  return `<option value="">${all} (${l.length})</option>` + ks.map(k => `<option value="${esc(k)}"${cur === k ? ' selected' : ''}>${esc(m[k].t)} (${m[k].n})</option>`).join('');
+}
+function dbRender() {
+  const box = $('dbList'); if (!box) return;
+  const l = PS.db; if (!l) { box.innerHTML = ''; return; }
+  const cnt = {ALL: l.length, BELUM: l.filter(x => x.status !== 'Sudah Follow Up').length, SUDAH: l.filter(x => x.status === 'Sudah Follow Up').length};
+  $('dbCount').textContent = tx('{0} prospek', l.length);
+  const F = {ALL: tx('Semua'), BELUM: tx('Belum Follow Up'), SUDAH: tx('Sudah Follow Up')};
+  $('dbChips').innerHTML = Object.keys(F).map(k => `<button class="chip${PS.filter === k ? ' on' : ''}" onclick="PS.filter='${k}';dbRender()">${F[k]} (${cnt[k]})</button>`).join('');
+  if (PS.fk && !l.some(x => String(x.kategori || '').trim().toLowerCase() === PS.fk)) PS.fk = '';
+  if (PS.fl && !l.some(x => String(x.lokasi || '').trim().toLowerCase() === PS.fl)) PS.fl = '';
+  $('dbSel').innerHTML = `<select translate="no" aria-label="${tx('Jenis usaha')}" onchange="PS.fk=this.value;dbRender()">${dbOpts(l, x => x.kategori, tx('Semua jenis usaha'), PS.fk)}</select>
+    <select translate="no" aria-label="${tx('Lokasi')}" onchange="PS.fl=this.value;dbRender()">${dbOpts(l, x => x.lokasi, tx('Semua lokasi'), PS.fl)}</select>`;
+  const q = $('dbQ').value.trim().toLowerCase();
+  const v = l.filter(x => (!PS.fk || String(x.kategori || '').trim().toLowerCase() === PS.fk) && (!PS.fl || String(x.lokasi || '').trim().toLowerCase() === PS.fl)
+    && (PS.filter === 'ALL' || (PS.filter === 'SUDAH') === (x.status === 'Sudah Follow Up'))
+    && (!q || (x.nama + ' ' + x.alamat + ' ' + x.telp + ' ' + x.kategori).toLowerCase().includes(q)));
+  if (!v.length) { box.innerHTML = emptyBox('database', l.length ? tx('Tidak ada data yang cocok.') : tx('Database masih kosong. Cari customer di menu "Cari Customer" lalu simpan hasilnya.')); return; }
+  box.innerHTML = v.map(x => {
+    const done = x.status === 'Sudah Follow Up', num = psHp(x.telp);
+    return `<div class="dbit"><div><span class="nm" translate="no">${esc(x.nama)}</span>${x.kategori ? `<span class="tag" translate="no">${esc(x.kategori)}</span>` : ''}
+      ${done ? `<span class="tag ok">${tx('Sudah Follow Up')}</span>` : `<span class="tag pu">${tx('Belum Follow Up')}</span>`}</div>
+      <small translate="no">${x.alamat ? esc(x.alamat) : '-'}</small>
+      <small translate="no">${ic('phone', 12)} ${x.telp ? esc(x.telp) : '-'} &bull; ${esc(x.sumber)}${x.lokasi ? ' &bull; ' + esc(x.lokasi) : ''}</small>
+      ${done ? `<small>${tx('Di-follow up pada {0}', x.tglFU || '-')}</small>` : ''}
+      <div class="acts">
+        ${done ? '' : `<button class="btn sm" onclick="psFollow('${x.id}')">${ic('user-plus', 14)}${tx('Follow Up')}</button>`}
+        ${psMobile(x.telp) ? `<a class="btn sm wa" href="${PS_WA}${num}" target="_blank" rel="noopener" style="text-decoration:none">${ic('phone-chat', 14)}WhatsApp</a>` : ''}
+        ${num ? `<button class="btn sm soft" onclick="psCall('${x.id}')" title="${tx('Telepon')}">${ic('phone', 14)}</button>` : ''}
+        ${x.peta ? `<a class="btn sm soft" href="${esc(x.peta)}" target="_blank" rel="noopener" style="text-decoration:none" title="${tx('Lihat peta')}">${ic('pin', 14)}</a>` : ''}
+        ${x.web && /^https?:/i.test(x.web) ? `<a class="btn sm soft" href="${esc(x.web)}" target="_blank" rel="noopener" style="text-decoration:none" title="Website">${ic('web', 14)}</a>` : ''}
+        <button class="btn sm danger" onclick="arm(this, 'pdel_${x.id}', () => dbHapus('${x.id}'))" title="${tx('Hapus')}">${ic('trash', 14)}</button>
+      </div></div>`;
+  }).join('');
+}
+function psCall(id) {                       // sama seperti tombol telepon di daftar customer
+  const x = (PS.db || []).find(r => r.id === id); if (!x) return;
+  const num = psHp(x.telp); if (!num) { toast('Prospek ini belum punya nomor telepon', 'err'); return; }
+  beep('tap'); toast(tx('Menelepon {0} ({1})', x.nama, '+' + num), 'ok');
+  try { navigator.clipboard.writeText('+' + num).catch(function () {}); } catch (e) {}
+  window.open('tel:+' + num, '_blank');
+}
+function dbHapus(id) { run('hapusProspek', [id], () => { PS.db = (PS.db || []).filter(x => x.id !== id); dbRender(); toast('Prospek dihapus', 'ok'); }); }
+
+/* --- Follow up: pindahkan ke menu Tambah sebagai customer baru --- */
+function psFollow(id) {
+  const p = (PS.db || []).find(x => x.id === id); if (!p) return;
+  show('add');
+  $('fNama').value = p.nama; $('fHp').value = psHp(p.telp); $('fProduk').value = '';
+  if (![...$('fSumber').options].some(o => o.value === 'Prospek')) $('fSumber').insertAdjacentHTML('beforeend', '<option value="Prospek">Prospek</option>');
+  $('fSumber').value = 'Prospek';
+  $('fCatatan').value = tx('Prospek dari pencarian ({0}).', p.kategori || p.sumber) + (p.alamat ? ' ' + tx('Alamat: {0}', p.alamat) : '');
+  clearErrs(['fNama', 'fHp', 'fProduk', 'fSumber', 'fCatatan']); paintAllSel();
+  PS.link = {id: p.id, nama: p.nama}; psBar();
+  toast(psMobile(p.telp) ? 'Data prospek dibawa ke form. Lengkapi lalu simpan.' : 'Data prospek dibawa. Periksa nomor WhatsApp (nomor ini mungkin telepon kantor).', 'ok');
+}
+function psBar() {
+  const b = $('fProspekBar'); if (!b) return;
+  if (!PS.link) { b.style.display = 'none'; b.innerHTML = ''; return; }
+  b.style.display = 'flex';
+  b.innerHTML = `<span>${ic('database', 14)} ${tx('Dari Database Prospek:')} <b translate="no">${esc(PS.link.nama)}</b></span><button class="btn sm soft" onclick="psUnlink()">${tx('Lepas')}</button>`;
+}
+function psUnlink() { PS.link = null; psBar(); }
+
+function projView(v) {
+  const V = {cari: ['projCari', 'pcCari'], db: ['projDb', 'pcDb'], buat: ['projBuat', 'pcBuat'], list: ['projList', 'pcList']};
+  Object.keys(V).forEach(k => { $(V[k][0]).style.display = k === v ? 'block' : 'none'; $(V[k][1]).className = 'chip' + (k === v ? ' on' : ''); });
+  try { $(V[v][1]).scrollIntoView({inline: 'center', block: 'nearest', behavior: 'smooth'}); } catch (e) {}
+  beep('tap'); if (v === 'list') pLoadList(); if (v === 'cari') psInit(); if (v === 'db') dbLoad();
+}
+function pReset() {
+  P.id = ''; P.items = [pEmptyItem()]; P.sug = {};
+  $('pKepada').value = ''; $('pTgl').value = todayStr(); $('pSales').value = '';
+  $('pNo').value = P.init ? P.init.nomor : ''; $('pSyarat').value = P.init ? P.init.syarat : ''; $('pCatatan').value = P.init ? P.init.catatan : '';
+  clearErrs(['pKepada', 'pTgl', 'pNo', 'pSales']);
+  pRender(); paintAllSel();
+}
+function pItemHTML(it, i) {
+  return `<div class="card">
+    <h2><i class="hi">${ic('box', 17)}</i>Item ${i + 1}<small><button class="xbtn" style="width:36px;height:34px" title="Hapus item" onclick="pDel(${i})">${ic('trash', 15)}</button></small></h2>
+    <label style="margin-top:0">SKU / cari produk</label>
+    <input id="pSku_${i}" value="${esc(it.sku)}" placeholder="Ketik SKU atau nama produk" autocomplete="off" oninput="pSkuInput(${i}, this.value)">
+    <div id="pSug_${i}"></div>
+    <label>Deskripsi <span class="req">*</span></label><textarea id="pDesk_${i}" style="min-height:64px" oninput="pSet(${i}, 'desk', this.value)">${esc(it.desk)}</textarea>
+    <div class="row"><div><label>Qty <span class="req">*</span></label><input id="pQty_${i}" inputmode="numeric" value="${nilaiFmt(it.qty)}" oninput="pNum(${i}, 'qty', this)"></div>
+    <div><label>Harga Normal <span class="req">*</span></label><input id="pNor_${i}" inputmode="numeric" value="${nilaiFmt(it.normal)}" oninput="pNum(${i}, 'normal', this)"></div></div>
+    <div class="row"><div><label>Harga Promo</label><input id="pPro_${i}" inputmode="numeric" value="${nilaiFmt(it.promo)}" oninput="pNum(${i}, 'promo', this)"></div>
+    <div><label>Remark</label><input id="pRem_${i}" value="${esc(it.remark)}" oninput="pSet(${i}, 'remark', this.value)"></div></div>
+    <p class="hint" id="pSub_${i}"></p>
+    <label>Foto produk <span style="font-weight:500">(opsional)</span></label>
+    <div class="fotoRow"><div class="fthumb" id="pThumb_${i}">${thumbHTML(it)}</div>
+      <div style="flex:1;min-width:0">
+        <label class="btn sm soft" for="pFile_${i}" style="margin:0">${ic('camera', 15)}Ambil / pilih foto</label>
+        <input type="file" id="pFile_${i}" accept="image/*" style="display:none" onchange="pFoto(${i}, this)">
+        ${it.fotoId ? `<button class="btn sm danger" style="margin-left:6px" title="Lepas foto" onclick="pFotoHapus(${i})">${ic('trash', 14)}</button>` : ''}
+        <div class="hint" id="pFotoMsg_${i}" style="margin-top:6px">${it.fotoId ? 'Foto terpasang di penawaran ini.' : 'Isi SKU dulu supaya foto tersimpan dan dipakai lagi nanti.'}</div>
+      </div></div>
+  </div>`;
+}
+function pRender() {
+  $('pItems').innerHTML = P.items.map(pItemHTML).join('');
+  pHitung(); pMuatFoto();
+}
+function pHitung() {
+  let tn = 0, tp = 0;
+  P.items.forEach((it, i) => {
+    const q = numVal(it.qty), n = numVal(it.normal), pr = numVal(it.promo);
+    tn += q * n; tp += q * pr;
+    const el = $('pSub_' + i);
+    if (el) el.textContent = q && n ? tx('Subtotal normal {0}', rp(q * n)) + (pr ? ' • ' + tx('promo {0}', rp(q * pr)) : '') : '';
+  });
+  $('pTotN').textContent = rp(tn); $('pTotP').textContent = rp(tp);
+}
+function pSet(i, k, v) { P.items[i][k] = v; }
+function pNum(i, k, el) { fmtNum(el); P.items[i][k] = numVal(el.value); pHitung(); }
+function pAdd() {
+  P.items.push(pEmptyItem()); pRender();
+  const el = $('pSku_' + (P.items.length - 1)); if (el) { try { el.scrollIntoView({behavior: 'smooth', block: 'center'}); } catch (e) {} }
+}
+function pDel(i) {
+  if (P.items.length > 1) P.items.splice(i, 1); else P.items[0] = pEmptyItem();
+  P.sug = {}; pRender();
+}
+function pSkuInput(i, v) {
+  P.items[i].sku = v;
+  clearTimeout(pTimer);
+  if (String(v).trim().length < 2) { $('pSug_' + i).innerHTML = ''; return; }
+  pTimer = setTimeout(() => {
+    google.script.run.withSuccessHandler(r => pShowSug(i, r)).withFailureHandler(() => {}).cariProduk(v);
+  }, 300);
+}
+function pShowSug(i, list) {
+  const box = $('pSug_' + i); if (!box) return;
+  P.sug[i] = list || [];
+  box.innerHTML = P.sug[i].length ? '<div class="sug">' + P.sug[i].map((x, k) =>
+    `<button onclick="pPick(${i}, ${k})"><span translate="no">${esc(x.sku)}</span><small><span translate="no">${esc(x.desk)}</span> &bull; ${tx('Normal {0}', rp(x.normal))}${x.promo ? ' &bull; ' + tx('Promo {0}', rp(x.promo)) : ''}</small></button>`).join('') + '</div>'
+    : '<p class="hint">Produk tidak ada di daftar. Isi deskripsi dan harga secara manual.</p>';
+}
+function pPick(i, k) {
+  const x = (P.sug[i] || [])[k]; if (!x) return;
+  Object.assign(P.items[i], {sku: x.sku, desk: x.desk, normal: x.normal, promo: x.promo, fotoId: ''});
+  P.sug = {}; pRender(); beep('ok');
+  google.script.run.withSuccessHandler(r => { if (r && r.fotoId && P.items[i]) { P.items[i].fotoId = r.fotoId; pRender(); } }).getProduk(x.sku);
+}
+/* --- Foto produk: unggah langsung dari HP --- */
+function thumbHTML(it) {
+  const d = it.fotoId && P.fotos[it.fotoId];
+  return d ? `<img src="${d}" alt="">` : ic('camera', 22);
+}
+function pThumbs() { P.items.forEach((it, i) => { const el = $('pThumb_' + i); if (el) el.innerHTML = thumbHTML(it); }); }
+function pMuatFoto() {
+  P.pending = P.pending || {};
+  const ids = [...new Set(P.items.map(i => i.fotoId).filter(id => id && P.fotos[id] === undefined && !P.pending[id]))];
+  if (!ids.length) return;
+  ids.forEach(id => P.pending[id] = true);
+  const selesai = m => { ids.forEach(id => { delete P.pending[id]; P.fotos[id] = (m && m[id]) || ''; }); pThumbs(); };
+  google.script.run.withSuccessHandler(selesai).withFailureHandler(() => selesai({})).getFotoData(ids);
+}
+function kompresFoto(file, maxSide, quality, cb) {
+  const rd = new FileReader();
+  rd.onerror = () => cb(null);
+  rd.onload = () => {
+    const img = new Image();
+    img.onerror = () => cb(null);
+    img.onload = () => {
+      const sc = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const w = Math.max(1, Math.round(img.width * sc)), h = Math.max(1, Math.round(img.height * sc));
+      const c = document.createElement('canvas'); c.width = w; c.height = h;
+      const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h);
+      cb(c.toDataURL('image/jpeg', quality));
+    };
+    img.src = rd.result;
+  };
+  rd.readAsDataURL(file);
+}
+function pFoto(i, input) {
+  const f = input.files && input.files[0]; input.value = '';
+  if (!f) return;
+  if (!/^image\//.test(f.type)) { toast('File harus berupa gambar', 'err'); return; }
+  const msg = $('pFotoMsg_' + i); if (msg) msg.textContent = 'Memproses foto...';
+  kompresFoto(f, 700, 0.82, data => {
+    if (!data) { toast('Foto tidak bisa dibaca', 'err'); pRender(); return; }
+    pFotoUnggah(i, data);
+  });
+}
+function pFotoUnggah(i, data) {
+  const it = P.items[i]; if (!it) return;
+  const msg = $('pFotoMsg_' + i); if (msg) msg.textContent = 'Mengunggah foto...';
+  run('uploadFotoProduk', [it.sku, data], r => {
+    it.fotoId = r.fotoId; P.fotos[r.fotoId] = data; pRender();
+    toast(r.tersimpanPerSku ? tx('Foto tersimpan untuk SKU {0}', it.sku) : tx('Foto terpasang (isi SKU agar bisa dipakai lagi)'), 'ok');
+  }, () => pRender());
+}
+function pFotoHapus(i) { if (P.items[i]) { P.items[i].fotoId = ''; pRender(); } }
+
+function pCollect() {
+  return {id: P.id, bahasa: LANG, nomor: $('pNo').value.trim(), tanggal: $('pTgl').value, kepada: $('pKepada').value.trim(), sales: $('pSales').value,
+          syarat: $('pSyarat').value, catatan: $('pCatatan').value, items: P.items.map(it => Object.assign({}, it))};
+}
+function pValidate() {
+  const rules = [
+    ['pKepada', 'Kolom "Kepada" wajib diisi', $('pKepada').value.trim() !== ''],
+    ['pTgl', 'Tanggal wajib diisi', $('pTgl').value !== ''],
+    ['pNo', 'Nomor penawaran wajib diisi', $('pNo').value.trim() !== ''],
+    ['pSales', 'Pilih Sales pembuat penawaran', $('pSales').value !== '']
+  ];
+  P.items.forEach((it, i) => {
+    rules.push(['pDesk_' + i, 'Deskripsi wajib diisi', String(it.desk).trim() !== '']);
+    rules.push(['pQty_' + i, 'Qty wajib diisi', numVal(it.qty) > 0]);
+    rules.push(['pNor_' + i, 'Harga normal wajib diisi', numVal(it.normal) > 0]);
+  });
+  return validate(rules);
+}
+function pSimpan() {
+  if (!pValidate()) return;
+  run('simpanProject', [pCollect()], r => { P.id = r.id; toast('Penawaran tersimpan', 'ok'); });
+}
+
+/* --- Preview --- */
+function paperHTML(q) {
+  const pt = P.init.pt, logo = 'data:image/png;base64,' + P.init.logo, en = q.bahasa === 'en';
+  let tn = 0, tp = 0;
+  q.items.forEach(it => { tn += numVal(it.qty) * numVal(it.normal); tp += numVal(it.qty) * numVal(it.promo); });
+  const td = 'border:1px solid #000;padding:6px;vertical-align:middle;height:72px';
+  const th = 'background:#ffff00;border:1px solid #000;padding:4px 3px;font-weight:bold;text-align:center;font-size:11px';
+  const rows = q.items.map(it => `<tr>
+    <td style="${td}">${esc(it.sku)}</td>
+    <td style="${td};text-align:center;padding:4px">${P.fotos[it.fotoId] ? `<img src="${P.fotos[it.fotoId]}" style="max-width:96px;max-height:66px;display:block;margin:auto">` : ''}</td>
+    <td style="${td}">${esc(it.desk).replace(/\n/g, '<br>')}</td>
+    <td style="${td};text-align:center">${fmtC(it.qty)}</td>
+    <td style="${td};text-align:right">${fmtC(it.normal)}</td>
+    <td style="${td};text-align:right">${numVal(it.promo) ? fmtC(it.promo) : ''}</td>
+    <td style="${td}">${esc(it.remark)}</td></tr>`).join('');
+  const tg = q.tanggal ? q.tanggal.split('-').reverse().join('/') : '';
+  const syarat = String(q.syarat || '').split('\n').filter(x => x.trim()).map(x => `<div>${esc(x)}</div>`).join('');
+  const notes = String(q.catatan || '').split('\n').filter(x => x.trim());
+  const note = notes.length ? `<div style="height:14px"></div><div>Note:</div>` + notes.map(x => `<div>${esc(x)}</div>`).join('') : '';
+  return `<table style="margin-bottom:12px"><tr>
+      <td style="width:55%;vertical-align:top"><img src="${logo}" style="width:150px;display:block"></td>
+      <td style="vertical-align:top;text-align:right;font-family:'Times New Roman',serif;font-size:10px;line-height:1.35"><b style="font-family:Arial">${esc(pt.nama)}</b><br>${en ? 'Tax ID (NPWP) : ' : 'NPWP : '}${esc(pt.npwp)}<br>${esc(pt.alamat).replace(/\n/g, '<br>')}</td></tr></table>
+    <div style="text-align:center;font-weight:bold;font-size:17px;margin:14px 0 2px">${en ? 'QUOTATION' : 'PENAWARAN HARGA'}</div>
+    <div style="text-align:center;font-size:10px;margin-bottom:10px">${esc(q.nomor)} &nbsp;&bull;&nbsp; ${esc(tg)}</div>
+    <div style="border-top:4px double #000;padding:5px 0 6px;font-weight:bold;font-size:13px;margin-bottom:6px">TO : ${esc(q.kepada).toUpperCase()}</div>
+    <table style="table-layout:fixed"><colgroup><col style="width:11%"><col style="width:16%"><col style="width:28%"><col style="width:6%"><col style="width:13%"><col style="width:13%"><col style="width:13%"></colgroup>
+      <tr><th style="${th}">SKU</th><th style="${th}">PHOTO</th><th style="${th}">DESCRIPTION</th><th style="${th}">QTY</th><th style="${th}">${en ? 'NORMAL PRICE' : 'HARGA NORMAL'}</th><th style="${th}">${en ? 'PROMO PRICE' : 'HARGA PROMO'}</th><th style="${th}">REMARK</th></tr>
+      ${rows}
+      <tr><td colspan="4" style="background:#ffff00;border:1px solid #000;padding:5px"></td><td style="background:#ffff00;border:1px solid #000;padding:5px;text-align:right;font-weight:bold">${fmtC(tn)}</td><td style="background:#ffff00;border:1px solid #000;padding:5px;text-align:right;font-weight:bold">${tp ? fmtC(tp) : ''}</td><td style="background:#ffff00;border:1px solid #000"></td></tr>
+    </table>
+    <div style="border:1.5px solid #000;padding:8px 8px 16px;margin-top:14px;font-size:10px;font-weight:bold;line-height:1.5;min-height:90px">${syarat}${note}</div>`;
+}
+function pvFit() {
+  const w = $('pvWrap').clientWidth - 16, sc = Math.min(1, w / 794) || 1;
+  $('pvPaper').style.transform = 'scale(' + sc + ')';
+  $('pvWrap').style.height = ($('pvPaper').offsetHeight * sc + 16) + 'px';
+}
+function pPreview() {
+  if (!pValidate()) return;
+  const q = pCollect(), ids = [...new Set(q.items.map(i => i.fotoId).filter(id => id && !P.fotos[id]))];
+  const tampil = fotos => {
+    Object.assign(P.fotos, fotos || {});
+    $('pvPaper').innerHTML = paperHTML(q); $('pvLink').innerHTML = '';
+    $('pvModal').classList.add('show'); setTimeout(pvFit, 30);
+  };
+  if (ids.length) run('getFotoData', [ids], tampil, () => tampil({})); else tampil({});
+}
+function pvClose() { $('pvModal').classList.remove('show'); }
+window.addEventListener('resize', () => { if ($('pvModal').classList.contains('show')) pvFit(); });
+
+/* --- Download --- */
+function dlBase64(b64, mime, name) {
+  if (window.AndroidApp && AndroidApp.saveFile) { AndroidApp.saveFile(name, mime, b64); return; }
+  const bin = atob(b64), arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  const url = URL.createObjectURL(new Blob([arr], {type: mime}));
+  const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+function hasilFile(r) {
+  dlBase64(r.b64, r.mime, r.nama); beep('send');
+  $('pvLink').innerHTML = tx('Tersimpan di Google Drive:') + ' <a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.nama) + '</a><br>' + tx('Jika unduhan tidak mulai, buka tautan itu.');
+  toast(tx('File siap: {0}', r.nama), 'ok');
+}
+function pDownload(fmt) {
+  toast(tx('Membuat file {0}...', fmt === 'pdf' ? 'PDF' : 'Word'));
+  run('buatFileQuotation', [pCollect(), fmt], r => { P.id = r.id; hasilFile(r); });
+}
+
+/* --- Riwayat penawaran --- */
+function pLoadList() {
+  run('listProject', [], l => {
+    $('pListBox').innerHTML = l.length ? l.map(x => `<div class="item" style="flex-direction:column">
+      <div><b translate="no">${esc(x.kepada)}</b><small><span translate="no">${esc(x.nomor)} &bull; ${fmtDate(x.tanggal)} &bull; ${esc(x.sales)}</span><br>${tx('Normal {0}', rp(x.totalNormal))}${x.totalPromo ? ' &bull; ' + tx('Promo {0}', rp(x.totalPromo)) : ''}</small></div>
+      <div class="acts"><button class="btn sm" onclick="pEdit('${x.id}')">Edit</button><button class="btn sm soft" onclick="pDup('${x.id}')">${tx('Duplikat')}</button>
+      <button class="btn sm dark" onclick="pQuick('${x.id}', 'pdf')">PDF</button><button class="btn sm dark" onclick="pQuick('${x.id}', 'docx')">Doc</button>
+      <button class="btn sm danger" title="${tx('Hapus dari riwayat')}" onclick="arm(this, 'del_${x.id}', () => pHapus('${x.id}'))">${ic('trash', 14)}${tx('Hapus')}</button></div></div>`).join('')
+      : emptyBox('folder', 'Belum ada penawaran. Buat yang pertama di tab "Buat Penawaran".');
+  });
+}
+function pHapus(id) {
+  run('hapusProject', [id], () => {
+    if (P.id === id) P.id = '';
+    toast('Penawaran dihapus dari riwayat', 'ok'); pLoadList();
+  });
+}
+function pLoad(q, baru) {
+  P.id = baru ? '' : q.id; P.sug = {};
+  P.items = (q.items && q.items.length ? q.items : [pEmptyItem()]).map(it => Object.assign(pEmptyItem(), it));
+  $('pKepada').value = q.kepada; $('pTgl').value = baru ? todayStr() : q.tanggal; $('pNo').value = baru ? P.init.nomor : q.nomor;
+  $('pSales').value = q.sales; $('pSyarat').value = q.syarat; $('pCatatan').value = q.catatan;
+  clearErrs(['pKepada', 'pTgl', 'pNo', 'pSales']); pRender(); paintAllSel();
+}
+function pEdit(id) { run('getProject', [id], q => { pLoad(q, false); projView('buat'); }); }
+function pDup(id) {
+  run('getProject', [id], q => run('getProjectInit', [], d => { P.init = d; pLoad(q, true); projView('buat'); toast('Penawaran diduplikat. Periksa lalu preview.', 'ok'); }));
+}
+function pQuick(id, fmt) {
+  toast(tx('Membuat file {0}...', fmt === 'pdf' ? 'PDF' : 'Word'));
+  run('unduhProject', [id, fmt], r => { dlBase64(r.b64, r.mime, r.nama); beep('send'); toast(tx('File siap: {0}', r.nama), 'ok'); });
+}
+
+/* ============ ADMIN (LOGIN + EDIT MASTER) ============ */
+let ADM = {token: null, data: null};
+try { ADM.token = sessionStorage.getItem('crmAdm') || null; } catch (e) {}
+function saveTok(t) { ADM.token = t; try { t ? sessionStorage.setItem('crmAdm', t) : sessionStorage.removeItem('crmAdm'); } catch (e) {} }
+function showAdmin() { ADM.token ? loadAdmin() : renderLogin(); }
+function arun(fn, args, ok, fail) {
+  run(fn, [ADM.token].concat(args || []), ok, e => {
+    if (e && /Sesi admin/.test(e.message || '')) { saveTok(null); renderLogin(); }
+    fail && fail(e);
+  });
+}
+function renderLogin() {
+  $('adminBox').innerHTML = `<div class="card">
+    <h2><i class="hi">${ic('lock', 17)}</i>Login Admin</h2>
+    <p class="sub" style="margin:0 0 4px">Khusus untuk mengubah data Master: Sales, Status, Template WhatsApp, Sumber dan Pengaturan Toko.</p>
+    ${INIT.adminReady ? '' : '<div class="note bad">Password admin belum diatur. Tambahkan <b>ADMIN_PASSWORD</b> di Apps Script &gt; Project Settings &gt; Script properties.</div>'}
+    <label>Password Admin</label>
+    <input id="admPw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="btn block" onclick="doLogin()">${ic('lock', 16)}Masuk</button></div>`;
+}
+function doLogin() {
+  const pw = $('admPw').value; if (!pw) { toast('Isi password admin', 'err'); return; }
+  run('adminLogin', [pw], t => { saveTok(t); toast('Login admin berhasil', 'ok'); loadAdmin(); });
+}
+function doLogout() {
+  const t = ADM.token; saveTok(null); ADM.data = null; renderLogin();
+  if (t) google.script.run.adminLogout(t);
+  toast('Anda sudah keluar dari admin', 'ok');
+}
+function loadAdmin() { arun('adminGetMaster', [], d => { ADM.data = d; renderAdmin(); }); }
+
+const fixedSt = n => n === 'Closing' || n === 'Batal';
+const salesRow = s => `<div class="arow" data-old="${esc(s.old || '')}"><input class="sn" placeholder="Nama Sales" value="${esc(s.nama || '')}"><input class="sw" type="tel" placeholder="No WA 08xx" value="${esc(s.wa || '')}"><button class="xbtn" title="Hapus" onclick="this.parentNode.remove()">${ic('trash', 16)}</button></div>`;
+const stRow = s => `<div class="arow2" data-old="${esc(s.old || '')}"><input class="stn" value="${esc(s.nama)}" ${fixedSt(s.nama) ? 'disabled' : ''}>${fixedSt(s.nama) ? '<span class="badge-lock">dikunci</span>' : ''}<textarea class="stt" placeholder="Template pesan WhatsApp">${esc(s.template)}</textarea></div>`;
+
+function renderAdmin() {
+  const d = ADM.data;
+  $('adminBox').innerHTML = `
+  <div class="card">
+    <h2><i class="hi">${ic('settings', 17)}</i>Pengaturan Toko<small><a href="#" onclick="doLogout();return false" style="color:var(--bad);text-decoration:none;font-weight:700">Keluar</a></small></h2>
+    <label style="margin-top:0">Nama Toko</label><input id="aToko" value="${esc(d.toko)}">
+    <label>No WA Leader (penerima laporan mingguan)</label><input id="aLeader" type="tel" placeholder="08xxxxxxxxxx" value="${esc(d.leaderWa)}">
+  </div>
+  <div class="card">
+    <h2><i class="hi">${ic('file', 17)}</i>Data PT & Penawaran</h2>
+    <label style="margin-top:0">Nama PT</label><input id="aPtNama" value="${esc((d.pt || {}).nama)}">
+    <label>NPWP</label><input id="aPtNpwp" value="${esc((d.pt || {}).npwp)}">
+    <label>Alamat PT (satu baris per baris alamat)</label><textarea id="aPtAlamat" style="min-height:90px">${esc((d.pt || {}).alamat)}</textarea>
+    <label>Folder foto produk (tempel tautan folder Google Drive)</label><input id="aPtFolder" placeholder="https://drive.google.com/drive/folders/..." value="${esc((d.pt || {}).folderFoto)}">
+    <div class="note info">Foto bisa diunggah langsung saat membuat penawaran (otomatis tersimpan di sini atau di folder "CRM Foto Produk" bila kolom ini kosong). Foto juga bisa disiapkan lebih dulu: beri nama file sama dengan SKU, misalnya 420084900.jpg.</div>
+  </div>
+  <div class="card">
+    <h2><i class="hi">${ic('users', 17)}</i>Sales<small>maks 10</small></h2>
+    <div id="aSales">${d.sales.map(s => salesRow({old: s.nama, nama: s.nama, wa: s.wa})).join('')}</div>
+    <button class="btn sm soft" onclick="addSalesRow()">${ic('plus', 15)}Tambah Sales</button>
+    <div class="note info">Mengganti nama Sales ikut memperbarui data customer & riwayat yang sudah ada. Menghapus Sales tidak menghapus datanya.</div>
+  </div>
+  <div class="card">
+    <h2><i class="hi">${ic('phone-chat', 17)}</i>Status & Template WhatsApp</h2>
+    <div id="aStatus">${d.statuses.map(s => stRow({old: s.nama, nama: s.nama, template: s.template})).join('')}</div>
+    <div class="note info">Placeholder: <b>{nama} {sales} {produk} {toko}</b>. Status "Closing" dan "Batal" dikunci karena dipakai untuk perhitungan.</div>
+  </div>
+  <div class="card">
+    <h2><i class="hi">${ic('list', 17)}</i>Sumber Customer<small>satu per baris</small></h2>
+    <textarea id="aSumber" style="min-height:120px">${esc(d.sumber.join('\n'))}</textarea>
+  </div>
+  <button class="btn block" id="btnSaveMaster" onclick="saveMaster()">${ic('save', 17)}Simpan Master</button>
+
+  <div class="card" style="margin-top:14px">
+    <h2><i class="hi">${ic('archive', 17)}</i>Arsip & Reset Bulanan</h2>
+    <p class="sub" style="margin:0 0 8px">Setiap awal bulan, customer Closing/Batal bulan lalu otomatis dipindah ke sheet <b translate="no">Rekap YYYY-MM</b>, ringkasannya masuk sheet <b translate="no">Riwayat</b>, lalu angka dashboard mulai dari nol. Customer yang masih berjalan tetap dibawa.</p>
+    <div class="row">
+      <button class="btn sm soft" onclick="arm(this,'a1',()=>tutup(false))">${ic('archive', 15)}Arsipkan bulan lalu</button>
+      <button class="btn sm danger" onclick="arm(this,'a2',()=>tutup(true))">${ic('archive', 15)}Arsipkan & reset sekarang</button>
+    </div>
+    <div class="note">"Arsipkan & reset sekarang" ikut memindahkan Closing/Batal bulan berjalan, jadi dashboard kembali kosong. Ketuk dua kali untuk konfirmasi.</div>
+  </div>
+
+  <div class="card">
+    <h2><i class="hi">${ic('lock', 17)}</i>Ubah Password Admin</h2>
+    <label style="margin-top:0">Password lama</label><input id="pwOld" type="password" autocomplete="current-password">
+    <label>Password baru (min. 6 karakter)</label><input id="pwNew" type="password" autocomplete="new-password">
+    <button class="btn sm dark block" onclick="changePw()">Ubah Password</button>
+  </div>`;
+}
+function addSalesRow() {
+  const box = $('aSales');
+  if (box.children.length >= 10) { toast('Maksimal 10 Sales', 'err'); return; }
+  box.insertAdjacentHTML('beforeend', salesRow({}));
+}
+function saveMaster() {
+  const sales = [...document.querySelectorAll('#aSales .arow')].map(r => ({old: r.dataset.old || '', nama: r.querySelector('.sn').value.trim(), wa: r.querySelector('.sw').value.trim()}));
+  if (!sales.length) { toast('Minimal 1 Sales', 'err'); return; }
+  if (sales.some(s => !s.nama)) { toast('Nama Sales tidak boleh kosong', 'err'); return; }
+  const statuses = [...document.querySelectorAll('#aStatus .arow2')].map(r => ({old: r.dataset.old || '', nama: r.querySelector('.stn').value.trim(), template: r.querySelector('.stt').value}));
+  const data = {toko: $('aToko').value, leaderWa: $('aLeader').value, sales, statuses,
+                pt: {nama: $('aPtNama').value, npwp: $('aPtNpwp').value, alamat: $('aPtAlamat').value, folderFoto: $('aPtFolder').value},
+                sumber: $('aSumber').value.split('\n').map(s => s.trim()).filter(Boolean)};
+  $('btnSaveMaster').disabled = true;
+  arun('adminSaveMaster', [data], () => {
+    $('btnSaveMaster').disabled = false; toast('Master tersimpan', 'ok');
+    run('getInitData', [], d => { INIT = d; fillSelects(); loadAdmin(); });
+  }, () => $('btnSaveMaster').disabled = false);
+}
+let armT = {};
+function arm(btn, id, fn) {
+  if (btn.dataset.armed) { clearTimeout(armT[id]); delete btn.dataset.armed; btn.innerHTML = btn.dataset.lbl; fn(); return; }
+  btn.dataset.lbl = btn.innerHTML; btn.dataset.armed = '1'; btn.textContent = 'Ketuk lagi untuk konfirmasi';
+  armT[id] = setTimeout(() => { delete btn.dataset.armed; btn.innerHTML = btn.dataset.lbl; }, 4000);
+}
+function tutup(incl) {
+  arun('adminTutupBulan', [incl], r => {
+    toast(r.dipindah ? tx('{0} data diarsipkan ke sheet {1}', r.dipindah, r.bulan.map(m => '"Rekap ' + m + '"').join(', ')) : tx('Tidak ada data yang perlu diarsipkan'), 'ok');
+    loadDash();
+  });
+}
+function changePw() {
+  const o = $('pwOld').value, n = $('pwNew').value;
+  if (!o || !n) { toast('Isi password lama dan baru', 'err'); return; }
+  arun('adminChangePassword', [o, n], () => { $('pwOld').value = ''; $('pwNew').value = ''; toast('Password diubah', 'ok'); });
+}
+</script>
+</body>
+</html>
