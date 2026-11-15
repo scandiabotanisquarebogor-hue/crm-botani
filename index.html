@@ -210,8 +210,9 @@ nav button.on .ic{color:var(--accent)}
 nav button{font-size:10.5px;padding:9px 0 8px}
 /* ===== DESKTOP (>=1024px): menu di sisi kiri, area konten lebar & rapi ===== */
 .grid2>*{min-width:0}.chart-box{position:relative;max-width:100%}
+.hm-hide{display:none!important}.acit{display:block!important}.acbtn{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.acit small{display:block}
 #tgl{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.3}
-@media(min-width:1024px){
+@media(min-width:1024px),(orientation:landscape) and (min-width:640px){
   :root{--side:260px}
   body{padding-left:var(--side);padding-bottom:48px;background:radial-gradient(900px 420px at 85% -80px,rgba(20,184,166,.10),transparent 70%),var(--bg)}
   header{display:grid;grid-template-columns:1fr auto;align-items:center;gap:16px;padding:30px max(44px,calc((100% - 1240px) / 2)) 78px;border-radius:0 0 34px 34px}
@@ -247,7 +248,28 @@ nav button{font-size:10.5px;padding:9px 0 8px}
   #tab-dash .chart-box{height:270px!important}
   #tab-hist.active{display:block;max-width:1100px;margin-left:auto;margin-right:auto}
   #tab-hist.active>*{margin-bottom:18px}
+  #acList{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px}
+  #acList>.btn{grid-column:1/-1}
+  #acList>.item{margin:0}
   #toast{bottom:36px}
+}
+/* HP landscape / layar pendek: sidebar ringkas, konten satu kolom */
+@media(min-width:1024px) and (max-height:640px),(orientation:landscape) and (min-width:640px) and (max-height:640px){
+  :root{--side:204px}
+  header{padding:14px 22px 56px!important;border-radius:0 0 24px 24px}
+  .greet{font-size:12px}.greet b{font-size:17px}
+  main{padding:0 22px;margin-top:-40px}
+  .brand{padding:14px 16px 10px;gap:8px}
+  .brand .logo{height:34px}
+  .brand .tt{padding-top:8px}
+  .brand h1{font-size:12.5px}.brand small{font-size:10.5px;margin-top:1px}
+  nav{padding:112px 10px 12px;gap:3px;overflow-y:auto}
+  nav button{padding:9px 12px;font-size:13px;gap:11px;border-radius:11px}
+  nav button .ic{width:18px;height:18px}
+  .card{padding:16px 18px;border-radius:18px}
+  .tab.active{grid-template-columns:minmax(0,1fr);gap:14px}
+  #tab-dash.active>.card{grid-column:1!important;grid-row:auto!important}
+  #tab-dash .chart-box{height:230px!important}
 }
 @media(min-width:1500px){
   main{max-width:1500px}header{padding-left:max(44px,calc((100% - 1412px) / 2));padding-right:max(44px,calc((100% - 1412px) / 2))}
@@ -345,7 +367,7 @@ nav button{font-size:10.5px;padding:9px 0 8px}
           <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat ulang</span></button>
           <button role="menuitem" id="btnSound" onclick="toggleSound()"><span id="sndIco"></span><span id="sndLbl">Suara</span><i class="sw" id="sndSw"></i></button>
           <div class="hsep"></div>
-          <button role="menuitem" id="btnAdmin" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.15-k</div>
+          <button role="menuitem" id="btnAdmin" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-b</div>
         </div>
       </div>
     </div>
@@ -446,13 +468,35 @@ nav button{font-size:10.5px;padding:9px 0 8px}
 
   <!-- RIWAYAT BULANAN -->
   <section id="tab-hist" class="tab">
-    <div class="card">
+    <div class="card" style="padding-top:12px;padding-bottom:12px">
+      <div class="chips" style="padding:0">
+        <button class="chip on" id="hmBulan" onclick="setHMode('bulan')">Per Bulan</button>
+        <button class="chip" id="hmAll" onclick="setHMode('all')">Semua Customer</button>
+      </div>
+    </div>
+    <div class="card hm-hide" id="hAll">
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-database"/></svg></i>Database Semua Customer<small id="acCount"></small></h2>
+      <div class="search"><svg class="ic" width="16" height="16"><use href="#i-search"/></svg><input id="acQ" type="search" placeholder="Cari nama / nomor HP / sales..." oninput="acLim=100;acRender()"></div>
+      <div class="row" style="margin-top:8px">
+        <div><label>Sales</label><select id="acSales" translate="no" onchange="AC.sales=this.value;acLim=100;acRender()"></select></div>
+        <div><label>Bulan masuk</label><select id="acBulan" onchange="AC.bulan=this.value;acLim=100;acRender()"></select></div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div><label>Selesai dari</label><input type="date" id="acFrom" onchange="acLim=100;acRender()"></div>
+        <div><label>Sampai</label><input type="date" id="acTo" onchange="acLim=100;acRender()"></div>
+      </div>
+      <div class="chips" id="acChips"></div>
+      <div id="acSum"></div>
+      <div class="acbtn" style="margin:2px 0 4px"><button class="btn sm soft" onclick="acReset()">Reset filter</button><button class="btn sm" onclick="acExport()">Unduh Excel</button></div>
+      <div id="acList" style="margin-top:8px"></div>
+    </div>
+    <div class="card hm-b">
       <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-history"/></svg></i>Riwayat Bulanan</h2>
       <label style="margin-top:0">Pilih Bulan</label>
       <select id="selBulan" onchange="loadBulan()"></select>
     </div>
-    <div id="hSum"></div>
-    <div class="card">
+    <div id="hSum" class="hm-b"></div>
+    <div class="card hm-b">
       <div class="chips" style="padding-top:0">
         <button class="chip on" id="hvCust" onclick="setHv('cust')">Customer Selesai</button>
         <button class="chip" id="hvLog" onclick="setHv('log')">Aktivitas Follow Up</button>
@@ -797,7 +841,7 @@ const EN = {
  "Password admin belum diatur. Tambahkan": "Admin password has not been set. Add",
  "di Apps Script > Project Settings > Script properties.": "in Apps Script > Project Settings > Script properties.",
  "Password Admin": "Admin Password",
- "Masuk": "Log in",
+ "Masuk": "Added",
  "Login admin berhasil": "Admin login successful",
  "Isi password admin": "Enter the admin password",
  "Anda sudah keluar dari admin": "You have logged out of admin",
@@ -971,6 +1015,29 @@ const EN = {
  "Semua jenis usaha": "All business types",
  "Semua lokasi": "All locations",
  "Contoh: BPK. FERRY KOST. DRAMAGA": "e.g. MR. FERRY KOST. DRAMAGA",
+ "Per Bulan": "By Month",
+ "Semua Customer": "All Customers",
+ "Database Semua Customer": "All Customers Database",
+ "Cari nama / nomor HP / sales...": "Search name / phone / sales...",
+ "Semua sales": "All sales",
+ "Semua bulan": "All months",
+ "Bulan masuk": "Month added",
+ "Memuat data...": "Loading...",
+ "{0} dari {1} customer": "{0} of {1} customers",
+ "Ditampilkan": "Shown",
+ "Selesai": "Finished",
+ "Follow Up Lagi": "Follow Up Again",
+ "Buka": "Open",
+ "Tampilkan lebih banyak ({0})": "Show more ({0})",
+ "Belum ada customer yang cocok dengan filter.": "No customers match the filters.",
+ "Follow up ulang. Sebelumnya: {0}": "Follow-up again. Previously: {0}",
+ "Data customer dibawa ke form. Periksa lalu simpan.": "Customer data copied to the form. Review, then save.",
+ "Selesai dari": "Finished from",
+ "Sampai": "To",
+ "Reset filter": "Reset filters",
+ "Unduh Excel": "Download Excel",
+ "Tidak ada data untuk diunduh.": "No data to download.",
+ "{0} customer diunduh": "{0} customers downloaded",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1069,6 +1136,7 @@ function applyLang() {            // gambar ulang bagian yang berisi data dinami
   if (LAST) renderDash(LAST);
   if (CUST.length || $('custList').innerHTML) { renderChips(); renderCust(); }
   if (HIST) { renderBulan(); paintBulanOpts(); }
+  try { if (AC.list) acRender(); } catch (er) {}
   pHitung(); psPaintSrc(); psRender(); dbRender(); psBar();
   if ($('projList').style.display === 'block') pLoadList();
   if ($('modal').classList.contains('show') && curCust) { setModalSub(); toggleFields('m'); }
@@ -1221,7 +1289,7 @@ function show(t) {
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
   $('btnAdmin').classList.toggle('hon', t === 'admin');
   beep('tap'); window.scrollTo({top: 0, behavior: 'smooth'});
-  if (t === 'dash') loadDash(); if (t === 'cust') loadCust(); if (t === 'hist') initBulan(); if (t === 'proj') initProj(); if (t === 'admin') showAdmin();
+  if (t === 'dash') loadDash(); if (t === 'cust') loadCust(); if (t === 'hist') { initBulan(); if (AC.mode === 'all') acLoad(true); } if (t === 'proj') initProj(); if (t === 'admin') showAdmin();
 }
 let BOOTED = false;
 function boot() {
@@ -1600,6 +1668,157 @@ function renderHList() {
       : emptyBox('folder', 'Belum ada aktivitas follow up pada bulan ini.'))
       + (d.logCount > d.logs.length ? `<p class="hint">${tx('Menampilkan {0} terbaru dari {1} aktivitas. Data lengkap ada di sheet FollowUp.', d.logs.length, d.logCount)}</p>` : '');
   }
+}
+
+/* ============ SEMUA CUSTOMER (DATABASE LENGKAP) ============ */
+const AC = {list: null, mode: 'bulan', st: 'ALL', sales: '', bulan: '', cur: ''};
+let acLim = 100;
+const acDone = s => s === 'Closing' || s === 'Batal';
+function setHMode(m) {
+  AC.mode = m; beep('tap');
+  $('hmBulan').classList.toggle('on', m === 'bulan'); $('hmAll').classList.toggle('on', m === 'all');
+  document.querySelectorAll('.hm-b').forEach(e => e.classList.toggle('hm-hide', m !== 'bulan'));
+  $('hAll').classList.toggle('hm-hide', m !== 'all');
+  if (m === 'all') acLoad(true);
+}
+function acLoad(force) {
+  if (AC.list && !force) { acRender(); return; }
+  if (!AC.list) $('acList').innerHTML = `<p class="hint">${tx('Memuat data...')}</p>`;
+  run('getSemuaCustomer', [], d => { AC.list = d.list; AC.cur = d.cur; acRender(); });
+}
+function acPaintOpts(list) {
+  const sl = [...new Set(list.map(x => x.sales).filter(Boolean))].sort();
+  const bl = [...new Set(list.map(x => x.bulan).filter(Boolean))].sort().reverse();
+  if (AC.sales && !sl.includes(AC.sales)) AC.sales = '';
+  if (AC.bulan && !bl.includes(AC.bulan)) AC.bulan = '';
+  $('acSales').innerHTML = `<option value="">${tx('Semua sales')}</option>` + sl.map(s => `<option value="${esc(s)}"${s === AC.sales ? ' selected' : ''}>${esc(s)}</option>`).join('');
+  $('acBulan').innerHTML = `<option value="">${tx('Semua bulan')}</option>` + bl.map(m => `<option value="${m}"${m === AC.bulan ? ' selected' : ''}>${monLong(m)}</option>`).join('');
+}
+function acSt(s) { AC.st = s; acLim = 100; beep('tap'); acRender(); }
+function acMore() { acLim += 100; acRender(); }
+function acRender() {
+  if (!AC.list) return;
+  const all = AC.list; acPaintOpts(all);
+  const q = ($('acQ').value || '').toLowerCase().trim();
+  const f1 = $('acFrom').value, f2 = $('acTo').value;
+  const base = all.filter(x => (!AC.sales || x.sales === AC.sales) && (!AC.bulan || x.bulan === AC.bulan)
+    && (!f1 || (x.tglSelesai && x.tglSelesai >= f1)) && (!f2 || (x.tglSelesai && x.tglSelesai <= f2))
+    && (!q || (x.nama + ' ' + x.sales + ' ' + x.hp + ' ' + x.produk).toLowerCase().includes(q)));
+  const cnt = {}; base.forEach(x => cnt[x.status] = (cnt[x.status] || 0) + 1);
+  const order = ['Closing', 'Batal', 'Baru', 'Dihubungi', 'Tertarik', 'Negosiasi'];
+  Object.keys(cnt).forEach(s => { if (!order.includes(s)) order.push(s); });
+  $('acChips').innerHTML = `<button class="chip${AC.st === 'ALL' ? ' on' : ''}" onclick="acSt('ALL')">${tx('Semua')} (${base.length})</button>`
+    + order.filter(s => cnt[s] || s === AC.st).map(s => `<button class="chip${AC.st === s ? ' on' : ''}" onclick="acSt('${esc(s)}')">${esc(stL(s))} (${cnt[s] || 0})</button>`).join('');
+  const v = AC.st === 'ALL' ? base : base.filter(x => x.status === AC.st);
+  AC.view = v;
+  const cl = v.filter(x => x.status === 'Closing'), bt = v.filter(x => x.status === 'Batal');
+  $('acCount').textContent = tx('{0} dari {1} customer', v.length, all.length);
+  $('acSum').innerHTML = `<div class="mini mini3" style="grid-template-columns:repeat(3,1fr);margin:10px 0 4px"><div><b>${v.length}</b><span>${tx('Ditampilkan')}</span></div><div><b>${cl.length}</b><span>Closing &bull; Rp ${rpc(cl.reduce((a, x) => a + x.nilai, 0))}</span></div><div><b>${bt.length}</b><span>${esc(stL('Batal'))}</span></div></div>`;
+  const row = x => {
+    const done = acDone(x.status), ok = hpOk(x.hp);
+    return `<div class="item acit"><div style="min-width:0">
+      <div><b translate="no">${esc(x.nama)}</b> <span class="badge" style="background:${colorOf(x.status)}">${esc(stL(x.status))}</span></div>
+      <small translate="no">${esc(x.sales) || '-'} &bull; ${esc(x.produk) || '-'}${x.sumber ? ' &bull; ' + esc(x.sumber) : ''}${x.hp ? ' &bull; ' + esc(x.hp) : ''}</small>
+      <small>${tx('Masuk')} ${fmtDate(x.tglInput)}${x.tglSelesai ? ' &bull; ' + tx('Selesai') + ' ' + fmtDate(x.tglSelesai) : ''}${x.status === 'Closing' && x.nilai ? ' &bull; <b>' + rp(x.nilai) + '</b>' : ''}</small>
+      ${x.catatan ? `<small translate="no">${esc(x.catatan)}</small>` : ''}
+      <div class="acbtn">
+        ${ok ? `<button class="btn sm soft" onclick="acWa('${esc(x.k)}')" title="WhatsApp">${ic('phone-chat', 14)} WA</button><button class="btn sm soft" onclick="acCall('${esc(x.k)}')" title="${tx('Telepon')}">${ic('phone', 14)}</button>` : ''}
+        ${done ? `<button class="btn sm" onclick="acFollow('${esc(x.k)}')">${ic('refresh', 14)} ${tx('Follow Up Lagi')}</button>` : `<button class="btn sm" onclick="acOpen('${esc(x.id)}')">${tx('Buka')}</button>`}
+      </div></div></div>`;
+  };
+  $('acList').innerHTML = v.length
+    ? v.slice(0, acLim).map(row).join('') + (v.length > acLim ? `<button class="btn soft block" style="margin-top:10px" onclick="acMore()">${tx('Tampilkan lebih banyak ({0})', v.length - acLim)}</button>` : '')
+    : emptyBox('folder', 'Belum ada customer yang cocok dengan filter.');
+}
+/* ---- ekspor Excel (.xlsx) tanpa library: ZIP tanpa kompresi ---- */
+const XL_H = 'http:/' + '/schemas.openxmlformats.org/';
+let XL_CRC = null;
+function xlCrc(b) {
+  if (!XL_CRC) { XL_CRC = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; XL_CRC[n] = c >>> 0; } }
+  let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = XL_CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0;
+}
+function xlZip(files) {
+  const enc = new TextEncoder(), parts = [], cen = []; let off = 0;
+  files.forEach(f => {
+    const nm = enc.encode(f[0]), d = enc.encode(f[1]), crc = xlCrc(d);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
+    lh.setUint16(10, 0, true); lh.setUint16(12, 0x21, true); lh.setUint32(14, crc, true); lh.setUint32(18, d.length, true); lh.setUint32(22, d.length, true);
+    lh.setUint16(26, nm.length, true); lh.setUint16(28, 0, true);
+    parts.push(new Uint8Array(lh.buffer), nm, d);
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+    ch.setUint16(12, 0, true); ch.setUint16(14, 0x21, true); ch.setUint32(16, crc, true); ch.setUint32(20, d.length, true); ch.setUint32(24, d.length, true);
+    ch.setUint16(28, nm.length, true); ch.setUint32(42, off, true);
+    cen.push(new Uint8Array(ch.buffer), nm);
+    off += 30 + nm.length + d.length;
+  });
+  let cl = 0; cen.forEach(p => cl += p.length);
+  const e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, cl, true); e.setUint32(16, off, true);
+  const all = parts.concat(cen, [new Uint8Array(e.buffer)]); let n = 0; all.forEach(p => n += p.length);
+  const out = new Uint8Array(n); let o = 0; all.forEach(p => { out.set(p, o); o += p.length; }); return out;
+}
+function xlsxBase64(rows, sheetName) {
+  const col = i => { let s = '', n = i + 1; while (n > 0) { const m = (n - 1) % 26; s = String.fromCharCode(65 + m) + s; n = Math.floor((n - 1) / 26); } return s; };
+  const x = s => String(s).replace(/[&<>]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '');
+  const sd = rows.map((r, ri) => '<row r="' + (ri + 1) + '">' + r.map((v, ci) => {
+    const ref = col(ci) + (ri + 1);
+    if (typeof v === 'number') return '<c r="' + ref + '" s="2"><v>' + v + '</v></c>';
+    return '<c r="' + ref + '"' + (ri === 0 ? ' s="1"' : '') + ' t="inlineStr"><is><t xml:space="preserve">' + x(v) + '</t></is></c>';
+  }).join('') + '</row>').join('');
+  const cols = rows[0].map((_, i) => '<col min="' + (i + 1) + '" max="' + (i + 1) + '" width="' + (i === 10 ? 40 : 18) + '" customWidth="1"/>').join('');
+  const R = XL_H + 'officeDocument/2006/relationships', M = XL_H + 'spreadsheetml/2006/main', P = XL_H + 'package/2006/relationships';
+  const files = [
+    ['[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="' + XL_H + 'package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+    ['_rels/.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="' + P + '"><Relationship Id="rId1" Type="' + R + '/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+    ['xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="' + M + '" xmlns:r="' + R + '"><sheets><sheet name="' + x(sheetName) + '" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="' + P + '"><Relationship Id="rId1" Type="' + R + '/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="' + R + '/styles" Target="styles.xml"/></Relationships>'],
+    ['xl/styles.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="' + M + '"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0F172A"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="3" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>'],
+    ['xl/worksheets/sheet1.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="' + M + '"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>' + cols + '</cols><sheetData>' + sd + '</sheetData><autoFilter ref="A1:' + col(rows[0].length - 1) + rows.length + '"/></worksheet>']
+  ];
+  const u8 = xlZip(files); let bin = '';
+  for (let i = 0; i < u8.length; i += 0x8000) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+function acExport() {
+  const v = AC.view || []; if (!v.length) { toast(tx('Tidak ada data untuk diunduh.'), 'err'); return; }
+  const en = LANG === 'en';
+  const head = en ? ['Name', 'Phone', 'Sales', 'Product', 'Source', 'Status', 'Date added', 'Date finished', 'Closing value', 'Estimate', 'Notes', 'Data origin']
+                  : ['Nama Customer', 'No HP', 'Sales', 'Produk', 'Sumber', 'Status', 'Tanggal Masuk', 'Tanggal Selesai', 'Nilai Closing', 'Estimasi', 'Catatan', 'Asal Data'];
+  const rows = [head].concat(v.map(x => [x.nama, x.hp, x.sales, x.produk, x.sumber, stL(x.status), x.tglInput || '', x.tglSelesai || '', Number(x.nilai) || 0, Number(x.est) || 0, x.catatan || '', x.src === 'arsip' ? (en ? 'Archive' : 'Arsip') : (en ? 'Active' : 'Aktif')]));
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  const name = 'semua-customer-' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '.xlsx';
+  dlBase64(xlsxBase64(rows, en ? 'All Customers' : 'Semua Customer'), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', name);
+  toast(tx('{0} customer diunduh', v.length), 'ok');
+}
+function acReset() { AC.st = 'ALL'; AC.sales = ''; AC.bulan = ''; $('acQ').value = ''; $('acFrom').value = ''; $('acTo').value = ''; acLim = 100; beep('tap'); acRender(); }
+const acFind = k => (AC.list || []).find(r => r.k === k);
+function acWa(k) {
+  const x = acFind(k); if (!x || hpWarn(x.hp)) return;
+  const t = 'Halo Kak ' + x.nama + ', saya ' + (x.sales || '') + '. Apakah Kakak masih membutuhkan ' + (x.produk || 'produk kami') + '?';
+  beep('tap'); window.open(PS_WA + waNum(x.hp) + '?text=' + encodeURIComponent(t), '_blank');
+}
+function acCall(k) {
+  const x = acFind(k); if (!x || hpWarn(x.hp)) return;
+  const num = String(x.hp).replace(/[^\d+]/g, '');
+  beep('tap'); toast(tx('Menelepon {0} ({1})', x.nama, num), 'ok');
+  try { navigator.clipboard.writeText(num).catch(function () {}); } catch (e) {}
+  window.open('tel:' + num, '_blank');
+}
+function acOpen(id) {                       // customer yang masih berjalan: buka form follow up-nya
+  show('cust'); let n = 0;
+  const t = setInterval(() => { n++; if (findCust(id)) { clearInterval(t); openFU(id); } else if (n > 25) clearInterval(t); }, 200);
+}
+function acFollow(k) {                      // customer selesai (Closing/Batal): bawa datanya ke form Tambah sebagai follow up baru
+  const x = acFind(k); if (!x) return;
+  show('add');
+  $('fNama').value = x.nama; $('fHp').value = x.hp; $('fProduk').value = x.produk;
+  const setSel = (id, v) => { if (v && [...$(id).options].some(o => o.value === v)) $(id).value = v; };
+  setSel('fSales', x.sales); setSel('fSumber', x.sumber);
+  $('fCatatan').value = tx('Follow up ulang. Sebelumnya: {0}', stL(x.status) + (x.status === 'Closing' && x.nilai ? ' ' + rp(x.nilai) : '') + (x.tglSelesai ? ' (' + fmtDate(x.tglSelesai) + ')' : '') + (x.catatan ? '. ' + x.catatan : ''));
+  clearErrs(['fNama', 'fHp', 'fProduk', 'fSumber', 'fCatatan']); paintAllSel();
+  toast('Data customer dibawa ke form. Periksa lalu simpan.', 'ok');
 }
 
 /* ============ PROJECT: QUOTATION ============ */
