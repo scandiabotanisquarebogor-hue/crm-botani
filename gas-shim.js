@@ -13,7 +13,7 @@
     return true;
   }
   window.crmSetup = function () { if (setup()) location.reload(); };
-  function call(fn, args, ok, fail) {
+  function call(fn, args, ok, fail, retried) {
     var c = cfg();
     if (!/^https:/.test(c.url)) { if (setup('URL server belum diatur.')) c = cfg(); }
     if (!/^https:/.test(c.url)) { fail && fail(new Error('URL server belum diatur.')); return; }
@@ -21,6 +21,10 @@
       .then(function (r) { return r.text(); })
       .then(function (t) {
         var j; try { j = JSON.parse(t); } catch (e) { throw new Error('Respons server tidak valid. Pastikan Web App di-deploy: Execute as "Me", akses "Anyone".'); }
+        if (!j.ok && !retried && /Kunci akses/.test(j.error || '')) {      // kunci salah/kosong: tanyakan lalu coba lagi
+          var k = prompt('Kunci akses (PWA_KEY) salah atau belum diisi.\nMasukkan kunci yang sama dengan Script property PWA_KEY:', '');
+          if (k) { try { localStorage.setItem('crm_api_key', k.trim()); } catch (e) {} window.CRM_CONFIG = window.CRM_CONFIG || {}; window.CRM_CONFIG.apiKey = k.trim(); return call(fn, args, ok, fail, true); }
+        }
         if (!j.ok) throw new Error(j.error || 'Server error');
         ok && ok(j.data);
       })
