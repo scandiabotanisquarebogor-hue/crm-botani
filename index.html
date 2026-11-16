@@ -212,6 +212,34 @@ nav button{font-size:10.5px;padding:9px 0 8px}
 .grid2>*{min-width:0}.chart-box{position:relative;max-width:100%}
 .acs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 4px}.acs>div{border-radius:16px;padding:13px 8px 11px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:92px}.acs .l{font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#64748b}.acs b{font-size:26px;line-height:1.05;font-weight:800;color:#0f172a}.acs small{font-size:11.5px;color:#64748b;line-height:1.25;min-height:14px}.acs .all{background:#f1f5f9}.acs .ok{background:#ecfdf5}.acs .ok b{color:#047857}.acs .ok .l,.acs .ok small{color:#059669}.acs .bad{background:#fef2f2}.acs .bad b{color:#b91c1c}.acs .bad .l,.acs .bad small{color:#dc2626}
 .acc-h{cursor:pointer;user-select:none;-webkit-user-select:none;margin-bottom:0!important}.acc-h .chev{flex:none;transition:transform .2s;color:#64748b}.card.acc-open>.acc-h .chev{transform:rotate(180deg)}.card>.accb{display:none;margin-top:14px}.card.acc-open>.accb{display:block}
+
+.lgov{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:18px;z-index:150;overflow:auto;-webkit-overflow-scrolling:touch}
+.lgov.show{display:flex}
+#loginOv{background:radial-gradient(900px 520px at 12% 0%,rgba(20,184,166,.38),transparent 60%),linear-gradient(160deg,#0f172a,#134e4a)}
+#pwOv{background:rgba(15,23,42,.6);z-index:140}
+body.lg-open{overflow:hidden}
+.lgw{width:100%;max-width:410px;margin:auto}
+.lgtop{display:flex;justify-content:flex-end;margin-bottom:10px}
+.lgbrand{text-align:center;color:#fff;margin-bottom:16px}
+.lgbrand img{width:66px;height:66px;border-radius:19px;background:linear-gradient(135deg,#0f172a,#134e4a);border:1px solid rgba(255,255,255,.18);padding:8px;box-shadow:0 10px 26px rgba(0,0,0,.35);object-fit:contain}
+.lgbrand h1{font-size:21px;margin:12px 0 2px}.lgbrand small{color:rgba(255,255,255,.72);font-size:12.5px}
+.lgcard{background:#fff;border-radius:22px;padding:20px;box-shadow:0 22px 54px rgba(0,0,0,.38)}
+.lgseg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--bg);border-radius:14px}
+.lgseg button{border:0;background:none;border-radius:11px;padding:10px 6px;font-weight:700;font-size:12.5px;line-height:1.2;font-family:inherit;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.lgseg button.on{background:#fff;color:var(--accent3);box-shadow:0 2px 8px rgba(15,23,42,.14)}
+.lgh{font-size:16px;font-weight:800;margin:16px 0 2px}
+.lgs{font-size:12.5px;color:var(--muted);margin:0 0 2px;line-height:1.45}
+.lgpw{position:relative}.lgpw input{padding-right:92px}
+.lgpw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--accent3);font-weight:700;font-size:11.5px;font-family:inherit;cursor:pointer;padding:8px}
+.lgcard .btn{margin-top:16px}
+.lglink{text-align:center;margin-top:14px;font-size:12.5px;color:var(--muted)}
+.lglink a{color:var(--accent3);font-weight:700;text-decoration:none}
+#lgPw2Box{display:none}
+.mechip{display:flex;align-items:center;gap:10px;padding:10px 10px 12px;margin:-2px 0 4px;border-bottom:1px solid var(--line)}
+.mechip .mav{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
+.mechip b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mechip small{display:block;color:var(--muted);font-size:11px}
+.role-sales .admin-only,.role-sales .sales-filter{display:none!important}
+#toast{z-index:400}
 .hm-hide{display:none!important}.acit{display:block!important}.acbtn{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.acit small{display:block}
 #tgl{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.3}
 @media(min-width:1024px),(orientation:landscape) and (min-width:640px){
@@ -366,10 +394,13 @@ nav button{font-size:10.5px;padding:9px 0 8px}
       <div class="menuwrap">
         <button class="hbtn" id="btnMenu" onclick="toggleMenu(event)" title="Menu" aria-haspopup="true" aria-expanded="false"><svg class="ic" width="18" height="18"><use href="#i-more"/></svg></button>
         <div class="hmenu" id="hMenu" role="menu">
+          <div class="mechip"><span class="mav" id="meAv"></span><div style="min-width:0"><b id="meName" translate="no"></b><small id="meRole"></small></div></div>
           <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat ulang</span></button>
           <button role="menuitem" id="btnSound" onclick="toggleSound()"><span id="sndIco"></span><span id="sndLbl">Suara</span><i class="sw" id="sndSw"></i></button>
           <div class="hsep"></div>
-          <button role="menuitem" id="btnAdmin" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-e</div>
+          <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
+          <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-f</div>
         </div>
       </div>
     </div>
@@ -441,8 +472,8 @@ nav button{font-size:10.5px;padding:9px 0 8px}
   <!-- CUSTOMER -->
   <section id="tab-cust" class="tab">
     <div class="card">
-      <label style="margin-top:0">Pilih Sales</label>
-      <select id="selSales" onchange="loadCust()"></select>
+      <div class="sales-filter"><label style="margin-top:0">Pilih Sales</label>
+      <select id="selSales" onchange="loadCust()"></select></div>
       <label>Cari customer</label>
       <div class="search"><svg class="ic" width="16" height="16"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Nama / HP / produk..." oninput="renderCust()"></div>
       <div class="chips" id="chips"></div>
@@ -480,7 +511,7 @@ nav button{font-size:10.5px;padding:9px 0 8px}
       <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-database"/></svg></i>Database Semua Customer<small id="acCount"></small></h2>
       <div class="search"><svg class="ic" width="16" height="16"><use href="#i-search"/></svg><input id="acQ" type="search" placeholder="Cari nama / nomor HP / sales..." oninput="acLim=100;acRender()"></div>
       <div class="row" style="margin-top:8px">
-        <div><label>Sales</label><select id="acSales" translate="no" onchange="AC.sales=this.value;acLim=100;acRender()"></select></div>
+        <div class="sales-filter"><label>Sales</label><select id="acSales" translate="no" onchange="AC.sales=this.value;acLim=100;acRender()"></select></div>
         <div><label>Bulan masuk</label><select id="acBulan" onchange="AC.bulan=this.value;acLim=100;acRender()"></select></div>
       </div>
       <div class="chips" id="acChips"></div>
@@ -620,6 +651,29 @@ nav button{font-size:10.5px;padding:9px 0 8px}
   <button data-t="hist" onclick="show('hist')"><svg class="ic" width="21" height="21"><use href="#i-history"/></svg>Riwayat</button>
   <button data-t="proj" onclick="show('proj')"><svg class="ic" width="21" height="21"><use href="#i-file"/></svg>Penawaran</button>
 </nav>
+<div id="loginOv" class="lgov" role="dialog" aria-modal="true"><div class="lgw">
+  <div class="lgtop"><div class="lang" role="group" aria-label="Bahasa / Language"><button id="lgI2" onclick="setLang('id')">ID</button><button id="lgE2" onclick="setLang('en')">EN</button></div></div>
+  <div class="lgbrand"><img id="lgLogo" alt="Scandia"><h1>CRM Follow Up</h1><small>Scandia Lifestyle &amp; Home</small></div>
+  <div class="lgcard">
+    <div class="lgseg" role="tablist"><button id="lgRoleS" onclick="lgRole('sales')"><svg class="ic" width="16" height="16"><use href="#i-user"/></svg>Sales</button><button id="lgRoleA" onclick="lgRole('admin')"><svg class="ic" width="16" height="16"><use href="#i-gear"/></svg>Admin / Store Leader</button></div>
+    <div class="lgh" id="lgTitle"></div><p class="lgs" id="lgSub"></p>
+    <form onsubmit="lgSubmit();return false" autocomplete="on">
+      <div id="lgUserBox"><label>Username</label><select id="lgUser" translate="no"></select></div>
+      <label>Password</label>
+      <div class="lgpw"><input id="lgPw" type="password" autocomplete="current-password"><button type="button" onclick="lgEye('lgPw',this)">Tampilkan</button></div>
+      <div id="lgPw2Box"><label>Ulangi password</label><input id="lgPw2" type="password" autocomplete="new-password"></div>
+      <button class="btn block" id="lgBtn" type="submit"></button>
+    </form>
+    <div class="lglink" id="lgSwitch"></div>
+  </div></div></div>
+<div id="pwOv" class="lgov" role="dialog" aria-modal="true" onclick="if(event.target===this)closePw()"><div class="lgw"><div class="lgcard">
+  <div class="lgh" style="margin-top:0">Ubah Password</div>
+  <label>Password lama</label><input id="pmOld" type="password" autocomplete="current-password">
+  <label>Password baru (min. 6 karakter)</label><input id="pmNew" type="password" autocomplete="new-password">
+  <label>Ulangi password baru</label><input id="pmNew2" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')savePw()">
+  <button class="btn block" onclick="savePw()">Simpan Password</button>
+  <button class="btn block dark" style="margin-top:8px" onclick="closePw()">Batal</button>
+</div></div></div>
 <div id="toast"></div>
 
 <script>
@@ -873,7 +927,7 @@ const EN = {
  "Arsipkan & reset sekarang": "Archive & reset now",
  "Ketuk lagi untuk konfirmasi": "Tap again to confirm",
  "\"Arsipkan & reset sekarang\" ikut memindahkan Closing/Batal bulan berjalan, jadi dashboard kembali kosong. Ketuk dua kali untuk konfirmasi.": "\"Archive & reset now\" also moves the current month's Closing/Cancelled customers, so the dashboard becomes empty. Tap twice to confirm.",
- "Ubah Password Admin": "Change Admin Password",
+ "Ubah Password Admin": "Change Password",
  "Password lama": "Old password",
  "Password baru (min. 6 karakter)": "New password (min. 6 characters)",
  "Ubah Password": "Change Password",
@@ -918,10 +972,10 @@ const EN = {
  "ID penawaran kosong.": "Quotation ID is empty.",
  "Penawaran tidak ditemukan (mungkin sudah dihapus).": "Quotation not found (it may have been deleted).",
  "Password admin belum diatur. Tambahkan ADMIN_PASSWORD di Script Properties.": "Admin password has not been set. Add ADMIN_PASSWORD in Script Properties.",
- "Terlalu banyak percobaan salah. Coba lagi 10 menit lagi.": "Too many failed attempts. Try again in 10 minutes.",
- "Password salah.": "Incorrect password.",
+ "Terlalu banyak percobaan salah. Coba lagi 10 menit lagi.": "Too many wrong attempts. Try again in 10 minutes.",
+ "Password salah.": "Wrong password.",
  "Sesi admin berakhir. Silakan login lagi.": "Admin session expired. Please log in again.",
- "Password lama salah.": "Old password is incorrect.",
+ "Password lama salah.": "Old password is wrong.",
  "Password baru minimal 6 karakter.": "New password must be at least 6 characters.",
  "Data kosong.": "Data is empty.",
  "Jumlah Sales harus 1 sampai 10.": "The number of Sales must be between 1 and 10.",
@@ -1039,6 +1093,56 @@ const EN = {
  "dari {0} customer": "of {0} customers",
  "Potensi Rp {0}": "Potential Rp {0}",
  "Ketuk judul untuk membuka atau menutup pengaturan.": "Tap a title to open or close its settings.",
+ "Sesi berakhir. Silakan login lagi.": "Session expired. Please log in again.",
+ "Daftar Akun Sales": "Sales Account Sign-up",
+ "Masuk sebagai Admin / Store Leader": "Log in as Admin / Store Leader",
+ "Masuk sebagai Sales": "Log in as Sales",
+ "Pilih username Anda dari daftar Sales, lalu buat password.": "Choose your username from the Sales list, then create a password.",
+ "Akses penuh termasuk menu Admin.": "Full access, including the Admin menu.",
+ "Anda hanya melihat daftar customer milik Anda.": "You only see your own customers.",
+ "Daftar & Masuk": "Sign up & Log in",
+ "Masuk ke aplikasi": "Log in",
+ "Sudah punya akun?": "Already have an account?",
+ "Belum punya akun?": "No account yet?",
+ "Daftar akun": "Sign up",
+ "Pilih username": "Select username",
+ "sudah terdaftar": "already registered",
+ "belum terdaftar": "not registered",
+ "terdaftar": "registered",
+ "belum daftar": "not signed up",
+ "Belum ada daftar Sales. Admin perlu menambahkan Sales di menu Admin terlebih dulu.": "No Sales yet. The admin must add Sales in the Admin menu first.",
+ "Masuk di sini": "Log in here",
+ "Tampilkan": "Show",
+ "Sembunyikan": "Hide",
+ "Username": "Username",
+ "Ulangi password": "Repeat password",
+ "Pilih username terlebih dulu.": "Please select a username first.",
+ "Password wajib diisi.": "Password is required.",
+ "Password minimal 6 karakter.": "Password must be at least 6 characters.",
+ "Konfirmasi password tidak sama.": "Password confirmation does not match.",
+ "Akun berhasil dibuat": "Account created",
+ "Login berhasil": "Logged in",
+ "Anda sudah keluar": "You have been logged out",
+ "Admin / Store Leader": "Admin / Store Leader",
+ "Sales": "Sales",
+ "Pilih akun": "Select account",
+ "Ulangi password baru": "Repeat new password",
+ "Mengubah password akun Anda sendiri: password lama diperlukan.": "Changing your own password: the old password is required.",
+ "Sebagai admin, Anda dapat mengubah password akun ini tanpa password lama. Jika akun Sales belum terdaftar, akunnya dibuatkan.": "As admin you can change this account's password without the old one. If the Sales account is not registered yet, it will be created.",
+ "Isi password lama": "Enter the old password",
+ "Akun Pengguna": "User Accounts",
+ "Reset akun": "Reset account",
+ "Akun direset": "Account reset",
+ "Belum ada Sales.": "No Sales yet.",
+ "Username Sales mengikuti daftar Sales di atas. Sales mendaftar sendiri lewat halaman login. Reset akun jika Sales lupa password atau ingin daftar ulang.": "Sales usernames follow the Sales list above. Sales sign up themselves on the login page. Reset an account if a Sales forgets the password or needs to sign up again.",
+ "Simpan Password": "Save Password",
+ "Username tidak ditemukan di daftar Sales.": "Username not found in the Sales list.",
+ "Akun belum terdaftar. Silakan daftar akun dulu.": "Account not registered yet. Please sign up first.",
+ "Username harus dipilih dari daftar Sales.": "Username must be chosen from the Sales list.",
+ "Akses ditolak: khusus admin.": "Access denied: admin only.",
+ "Customer ini bukan milik Anda.": "This customer is not yours.",
+ "Username tidak ditemukan.": "Username not found.",
+ "Akun admin tidak bisa dihapus.": "The admin account cannot be deleted.",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1131,7 +1235,8 @@ function setLang(l) {
   if (l === 'en') trTree(document.body); else untrTree(document.body);
   beep('tap'); applyLang();
 }
-function applyLang() {            // gambar ulang bagian yang berisi data dinamis dari cache (tanpa memuat ulang server)
+function applyLang() {
+  try { authPaint(); } catch (er) {}            // gambar ulang bagian yang berisi data dinamis dari cache (tanpa memuat ulang server)
   paintLangSw(); paintSound(); paintDate();
   ['fStatus', 'mStatus'].forEach(id => { const el = $(id); if (el) [...el.options].forEach(o => o.textContent = stL(o.value)); });
   if (LAST) renderDash(LAST);
@@ -1177,16 +1282,30 @@ const monLong = ym => { const p = String(ym).split('-'); return new Date(+p[0], 
 const numVal = v => Number(String(v || '').replace(/\D/g, '')) || 0;
 function fmtNum(el) { const d = String(el.value).replace(/\D/g, ''); el.value = d ? Number(d).toLocaleString(LOC()) : ''; }
 
-function run(fn, args, ok, fail) {
-  loading(true);
+let AUTH = {token: null, role: null, name: null};
+try { const a = JSON.parse(localStorage.getItem('crmAuth') || 'null'); if (a && a.token) AUTH = a; } catch (e) {}
+function setAuth(r) {
+  AUTH = r ? {token: r.token, role: r.role, name: r.name} : {token: null, role: null, name: null};
+  try { r ? localStorage.setItem('crmAuth', JSON.stringify(AUTH)) : localStorage.removeItem('crmAuth'); } catch (e) {}
+}
+const PUB_FN = {loginInfo: 1, login: 1, register: 1};
+const isExp = e => /AUTH_EXPIRED/.test((e && e.message) || String(e || ''));
+function run(fn, args, ok, fail, quiet) {
+  if (!quiet) loading(true);
   try {
     const g = google.script.run
-      .withSuccessHandler(r => { loading(false); ok && ok(r); })
-      .withFailureHandler(e => { loading(false); toast((e && e.message) || String(e), 'err'); fail && fail(e); });
-    if (typeof g[fn] !== 'function') throw new Error(tx('Fitur "{0}" belum ada di server. Deploy Code.gs terbaru sebagai versi baru, lalu muat ulang halaman.', fn));
-    g[fn](...(args || []));
-  } catch (e) { loading(false); toast((e && e.message) || String(e), 'err'); fail && fail(e); }
+      .withSuccessHandler(r => { if (!quiet) loading(false); ok && ok(r); })
+      .withFailureHandler(e => {
+        if (!quiet) loading(false);
+        if (isExp(e)) { goLogin(tx('Sesi berakhir. Silakan login lagi.')); return; }
+        if (!quiet) toast((e && e.message) || String(e), 'err');
+        fail && fail(e);
+      });
+    if (typeof g.apiCall !== 'function') throw new Error(tx('Fitur "{0}" belum ada di server. Deploy Code.gs terbaru sebagai versi baru, lalu muat ulang halaman.', fn));
+    g.apiCall(fn, args || [], PUB_FN[fn] ? '' : (AUTH.token || ''));
+  } catch (e) { if (!quiet) loading(false); toast((e && e.message) || String(e), 'err'); fail && fail(e); }
 }
+const grun = (fn, args, ok, fail) => run(fn, args, ok, fail || (() => {}), true);
 window.addEventListener('error', e => { try { loading(false); if (e && e.target && e.target !== window) return; toast('Error: ' + (e.message || e), 'err'); } catch (x) {} });
 window.addEventListener('unhandledrejection', e => { try { loading(false); toast('Error: ' + ((e.reason && e.reason.message) || e.reason), 'err'); } catch (x) {} });
 function loading(on) { $('loader').style.display = on ? 'block' : 'none'; }
@@ -1287,6 +1406,7 @@ function paintAllSel() { ['mChannel', 'mStatus', 'fStatus', 'fSales', 'pSales', 
 document.addEventListener('change', e => { if (e.target && e.target.tagName === 'SELECT') paintSel(e.target.id); });
 
 function show(t) {
+  if (t === 'admin' && AUTH.role !== 'admin') t = 'dash';
   paintAllSel();
   document.querySelectorAll('.tab').forEach(e => e.classList.remove('active'));
   $('tab-' + t).classList.add('active');
@@ -1296,10 +1416,17 @@ function show(t) {
   if (t === 'dash') loadDash(); if (t === 'cust') loadCust(); if (t === 'hist') { initBulan(); if (AC.mode === 'all') acLoad(true); } if (t === 'proj') initProj(); if (t === 'admin') showAdmin();
 }
 let BOOTED = false;
+function enterApp() {
+  $('loginOv').classList.remove('show'); document.body.classList.remove('lg-open');
+  BOOTOK = false; applyRole();
+  run('getInitData', [], d => { INIT = d; BOOTOK = true; fillSelects(); show('dash'); });
+}
 function boot() {
   if (BOOTED) return; BOOTED = true; window.__booted = true;
   document.documentElement.lang = LANG; paintDate(); paintLangSw(); paintSound(); startTr();
-  run('getInitData', [], d => { INIT = d; BOOTOK = true; fillSelects(); loadDash(); });
+  $('lgLogo').src = document.querySelector('.brand .logo').src;
+  if (!AUTH.token) { goLogin(); return; }
+  enterApp();
   setTimeout(() => { if (!BOOTOK) fatal(tx('Data belum termuat. Periksa koneksi internet, lalu muat ulang. Jika tetap gagal, pastikan Code.gs terbaru sudah di-deploy sebagai versi baru.')); }, 15000);
 }
 let BOOTOK = false;
@@ -1325,6 +1452,7 @@ function fillSelects() {
   $('btnLapSrv').style.display = INIT.waServer ? 'flex' : 'none';
   toggleFields('f');
   paintAllSel();
+  applyRole();
 }
 function refreshAll() {
   run('getInitData', [], d => { INIT = d; fillSelects(); loadDash(); loadCust(); toast('Data diperbarui', 'ok'); });
@@ -1413,7 +1541,7 @@ function sendServer() {
   $('btnSrv').disabled = true;
   run('kirimWA', [{id: curCust.id, pesan: $('mMsg').value}], () => {
     $('btnSrv').disabled = false; beep('send'); toast('Pesan WhatsApp terkirim', 'ok');
-    google.script.run.withSuccessHandler(renderHist).getLog(curCust.id);
+    grun('getLog', [curCust.id], renderHist);
   }, () => $('btnSrv').disabled = false);
 }
 function remindSales(i) {
@@ -1576,7 +1704,7 @@ function submitAdd() {
   run('addCustomer', [d], () => {
     $('btnAdd').disabled = false; toast('Customer tersimpan', 'ok'); if (PS.link) { PS.link = null; PS.db = null; psBar(); }
     ['fNama','fHp','fProduk','fEst','fCatatan','fNilai','fNext'].forEach(i => $(i).value = '');
-    $('fSales').value = ''; $('fSumber').value = ''; $('fStatus').selectedIndex = 0; toggleFields('f'); paintAllSel();
+    $('fSales').value = AUTH.role === 'sales' ? AUTH.name : ''; $('fSumber').value = ''; $('fStatus').selectedIndex = 0; toggleFields('f'); paintAllSel();
     $('selSales').value = d.sales; show('cust');
   }, () => $('btnAdd').disabled = false);
 }
@@ -1600,7 +1728,7 @@ function openFU(id, from) {
   $('mMsg').value = fillTpl(INIT.templates[c.status], c);
   $('srvHint').textContent = INIT.waServer ? 'Kirim Otomatis: pesan dikirim dari nomor toko & tercatat di riwayat.' : 'Kirim Otomatis belum aktif. "Buka WhatsApp" tetap bisa dipakai.';
   $('mHist').textContent = 'Memuat...'; $('modal').classList.add('show');
-  google.script.run.withSuccessHandler(renderHist).getLog(id);
+  grun('getLog', [id], renderHist);
 }
 function closeModal() { $('modal').classList.remove('show'); }
 function submitFU() {
@@ -2059,7 +2187,7 @@ function pSkuInput(i, v) {
   clearTimeout(pTimer);
   if (String(v).trim().length < 2) { $('pSug_' + i).innerHTML = ''; return; }
   pTimer = setTimeout(() => {
-    google.script.run.withSuccessHandler(r => pShowSug(i, r)).withFailureHandler(() => {}).cariProduk(v);
+    grun('cariProduk', [v], r => pShowSug(i, r));
   }, 300);
 }
 function pShowSug(i, list) {
@@ -2073,7 +2201,7 @@ function pPick(i, k) {
   const x = (P.sug[i] || [])[k]; if (!x) return;
   Object.assign(P.items[i], {sku: x.sku, desk: x.desk, normal: x.normal, promo: x.promo, fotoId: ''});
   P.sug = {}; pRender(); beep('ok');
-  google.script.run.withSuccessHandler(r => { if (r && r.fotoId && P.items[i]) { P.items[i].fotoId = r.fotoId; pRender(); } }).getProduk(x.sku);
+  grun('getProduk', [x.sku], r => { if (r && r.fotoId && P.items[i]) { P.items[i].fotoId = r.fotoId; pRender(); } });
 }
 /* --- Foto produk: unggah langsung dari HP --- */
 function thumbHTML(it) {
@@ -2087,7 +2215,7 @@ function pMuatFoto() {
   if (!ids.length) return;
   ids.forEach(id => P.pending[id] = true);
   const selesai = m => { ids.forEach(id => { delete P.pending[id]; P.fotos[id] = (m && m[id]) || ''; }); pThumbs(); };
-  google.script.run.withSuccessHandler(selesai).withFailureHandler(() => selesai({})).getFotoData(ids);
+  grun('getFotoData', [ids], selesai, () => selesai({}));
 }
 function kompresFoto(file, maxSide, quality, cb) {
   const rd = new FileReader();
@@ -2251,35 +2379,12 @@ function pQuick(id, fmt) {
 }
 
 /* ============ ADMIN (LOGIN + EDIT MASTER) ============ */
-let ADM = {token: null, data: null};
-try { ADM.token = sessionStorage.getItem('crmAdm') || null; } catch (e) {}
-function saveTok(t) { ADM.token = t; try { t ? sessionStorage.setItem('crmAdm', t) : sessionStorage.removeItem('crmAdm'); } catch (e) {} }
-function showAdmin() { ADM.token ? loadAdmin() : renderLogin(); }
-function arun(fn, args, ok, fail) {
-  run(fn, [ADM.token].concat(args || []), ok, e => {
-    if (e && /Sesi admin/.test(e.message || '')) { saveTok(null); renderLogin(); }
-    fail && fail(e);
-  });
+let ADM = {data: null, users: []};
+function showAdmin() { AUTH.role === 'admin' ? loadAdmin() : show('dash'); }
+function arun(fn, args, ok, fail) { run(fn, [AUTH.token].concat(args || []), ok, fail); }
+function loadAdmin() {
+  arun('adminGetMaster', [], d => { ADM.data = d; arun('adminListUsers', [], u => { ADM.users = u; renderAdmin(); }); });
 }
-function renderLogin() {
-  $('adminBox').innerHTML = `<div class="card">
-    <h2><i class="hi">${ic('lock', 17)}</i>Login Admin</h2>
-    <p class="sub" style="margin:0 0 4px">Khusus untuk mengubah data Master: Sales, Status, Template WhatsApp, Sumber dan Pengaturan Toko.</p>
-    ${INIT.adminReady ? '' : '<div class="note bad">Password admin belum diatur. Tambahkan <b>ADMIN_PASSWORD</b> di Apps Script &gt; Project Settings &gt; Script properties.</div>'}
-    <label>Password Admin</label>
-    <input id="admPw" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-    <button class="btn block" onclick="doLogin()">${ic('lock', 16)}Masuk</button></div>`;
-}
-function doLogin() {
-  const pw = $('admPw').value; if (!pw) { toast('Isi password admin', 'err'); return; }
-  run('adminLogin', [pw], t => { saveTok(t); toast('Login admin berhasil', 'ok'); loadAdmin(); });
-}
-function doLogout() {
-  const t = ADM.token; saveTok(null); ADM.data = null; renderLogin();
-  if (t) google.script.run.adminLogout(t);
-  toast('Anda sudah keluar dari admin', 'ok');
-}
-function loadAdmin() { arun('adminGetMaster', [], d => { ADM.data = d; renderAdmin(); }); }
 
 const fixedSt = n => n === 'Closing' || n === 'Batal';
 const salesRow = s => `<div class="arow" data-old="${esc(s.old || '')}"><input class="sn" placeholder="Nama Sales" value="${esc(s.nama || '')}"><input class="sw" type="tel" placeholder="No WA 08xx" value="${esc(s.wa || '')}"><button class="xbtn" title="Hapus" onclick="this.parentNode.remove()">${ic('trash', 16)}</button></div>`;
@@ -2306,7 +2411,7 @@ function renderAdmin() {
   const d = ADM.data;
   $('adminBox').innerHTML = `
   <div class="card">
-    <h2><i class="hi">${ic('settings', 17)}</i>Pengaturan Toko<small><a href="#" onclick="doLogout();return false" style="color:var(--bad);text-decoration:none;font-weight:700">Keluar</a></small></h2>
+    <h2><i class="hi">${ic('settings', 17)}</i>Pengaturan Toko</h2>
     <label style="margin-top:0">Nama Toko</label><input id="aToko" value="${esc(d.toko)}">
     <label>No WA Leader (penerima laporan mingguan)</label><input id="aLeader" type="tel" placeholder="08xxxxxxxxxx" value="${esc(d.leaderWa)}">
   </div>
@@ -2346,12 +2451,25 @@ function renderAdmin() {
   </div>
 
   <div class="card">
-    <h2><i class="hi">${ic('lock', 17)}</i>Ubah Password Admin</h2>
-    <label style="margin-top:0">Password lama</label><input id="pwOld" type="password" autocomplete="current-password">
+    <h2><i class="hi">${ic('lock', 17)}</i>Ubah Password</h2>
+    <label style="margin-top:0">Pilih akun</label>
+    <select id="pwUser" translate="no" onchange="pwUserChg()">${ADM.users.map(u => `<option value="${esc(u.nama)}"${u.nama === AUTH.name ? ' selected' : ''}>${esc(u.nama)}${u.role === 'admin' ? ' (Admin / Store Leader)' : u.registered ? '' : ' - ' + tx('belum terdaftar')}</option>`).join('')}</select>
+    <div id="pwOldBox"><label>Password lama</label><input id="pwOld" type="password" autocomplete="current-password"></div>
     <label>Password baru (min. 6 karakter)</label><input id="pwNew" type="password" autocomplete="new-password">
+    <label>Ulangi password baru</label><input id="pwNew2" type="password" autocomplete="new-password">
+    <div class="note" id="pwNote" style="margin-top:10px"></div>
     <button class="btn sm dark block" onclick="changePw()">Ubah Password</button>
+  </div>
+
+  <div class="card">
+    <h2><i class="hi">${ic('users', 17)}</i>Akun Pengguna</h2>
+    <p class="sub" style="margin:0 0 8px">Username Sales mengikuti daftar Sales di atas. Sales mendaftar sendiri lewat halaman login. Reset akun jika Sales lupa password atau ingin daftar ulang.</p>
+    ${ADM.users.filter(u => u.role === 'sales').map(u => `<div class="arow" style="align-items:center;gap:8px"><b translate="no" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(u.nama)}</b>
+      <span class="badge-lock" style="${u.registered ? 'background:#d1fae5;color:#047857' : ''}">${u.registered ? tx('terdaftar') : tx('belum daftar')}</span>
+      ${u.registered ? `<button class="btn sm dark" data-u="${esc(u.nama)}" onclick="arm(this,'ru'+this.dataset.u,()=>resetUser(this.dataset.u))">Reset akun</button>` : ''}</div>`).join('') || '<div class="sub">Belum ada Sales.</div>'}
   </div>`;
   accInit($('adminBox'));
+  pwUserChg();
 }
 function addSalesRow() {
   const box = $('aSales');
@@ -2384,10 +2502,97 @@ function tutup(incl) {
     loadDash();
   });
 }
+function pwUserChg() {
+  const me = $('pwUser').value === AUTH.name;
+  $('pwOldBox').style.display = me ? 'block' : 'none';
+  $('pwNote').textContent = me ? tx('Mengubah password akun Anda sendiri: password lama diperlukan.') : tx('Sebagai admin, Anda dapat mengubah password akun ini tanpa password lama. Jika akun Sales belum terdaftar, akunnya dibuatkan.');
+}
 function changePw() {
-  const o = $('pwOld').value, n = $('pwNew').value;
-  if (!o || !n) { toast('Isi password lama dan baru', 'err'); return; }
-  arun('adminChangePassword', [o, n], () => { $('pwOld').value = ''; $('pwNew').value = ''; toast('Password diubah', 'ok'); });
+  const u = $('pwUser').value, o = $('pwOld').value, n = $('pwNew').value;
+  const me = u === AUTH.name;
+  if (me && !o) { toast('Isi password lama', 'err'); return; }
+  if (n.length < 6) { toast('Password baru minimal 6 karakter.', 'err'); return; }
+  if (n !== $('pwNew2').value) { toast('Konfirmasi password tidak sama.', 'err'); return; }
+  const done = r => { if (r && r.token) setAuth(r); ['pwOld', 'pwNew', 'pwNew2'].forEach(i => $(i).value = ''); toast('Password diubah', 'ok'); loadAdmin(); };
+  me ? run('changeMyPassword', [o, n], done) : arun('adminSetPassword', [u, n], done);
+}
+function resetUser(u) { arun('adminResetUser', [u], () => { toast('Akun direset', 'ok'); loadAdmin(); }); }
+
+/* ============ LOGIN, DAFTAR AKUN & PERAN ============ */
+const LG = {role: 'sales', mode: 'login', info: null};
+function goLogin(msg) {
+  setAuth(null); BOOTOK = true; ADM.data = null; ADM.users = [];
+  try { CUST = []; LAST = null; HIST = null; $('custList').innerHTML = ''; } catch (e) {}
+  document.body.classList.remove('role-sales', 'role-admin');
+  $('pwOv').classList.remove('show');
+  $('loginOv').classList.add('show'); document.body.classList.add('lg-open');
+  LG.mode = 'login'; lgPaint();
+  run('loginInfo', [], d => { LG.info = d; lgPaint(); });
+  if (msg) toast(msg, 'err');
+}
+function lgRole(r) { LG.role = r; if (r === 'admin') LG.mode = 'login'; lgPaint(); beep('tap'); }
+function lgMode(m) { LG.mode = m; lgPaint(); beep('tap'); }
+function lgPaint() {
+  const adm = LG.role === 'admin', reg = LG.mode === 'daftar' && !adm;
+  $('lgRoleS').classList.toggle('on', !adm); $('lgRoleA').classList.toggle('on', adm);
+  $('lgI2').classList.toggle('on', LANG === 'id'); $('lgE2').classList.toggle('on', LANG === 'en');
+  $('lgTitle').textContent = reg ? tx('Daftar Akun Sales') : adm ? tx('Masuk sebagai Admin / Store Leader') : tx('Masuk sebagai Sales');
+  $('lgSub').textContent = reg ? tx('Pilih username Anda dari daftar Sales, lalu buat password.') : adm ? tx('Akses penuh termasuk menu Admin.') : tx('Anda hanya melihat daftar customer milik Anda.');
+  $('lgUserBox').style.display = adm ? 'none' : 'block';
+  $('lgPw2Box').style.display = reg ? 'block' : 'none';
+  $('lgBtn').innerHTML = '<svg class="ic" width="16" height="16"><use href="#i-' + (reg ? 'user-plus' : 'lock') + '"/></svg>' + esc(reg ? tx('Daftar & Masuk') : tx('Masuk ke aplikasi'));
+  $('lgSwitch').style.display = adm ? 'none' : 'block';
+  $('lgSwitch').innerHTML = reg ? tx('Sudah punya akun?') + ' <a href="#" onclick="lgMode(\'login\');return false">' + esc(tx('Masuk di sini')) + '</a>' : tx('Belum punya akun?') + ' <a href="#" onclick="lgMode(\'daftar\');return false">' + esc(tx('Daftar akun')) + '</a>';
+  $('lgPw').setAttribute('autocomplete', reg ? 'new-password' : 'current-password');
+  const cur = $('lgUser').value, sl = (LG.info && LG.info.sales) || [];
+  $('lgUser').innerHTML = '<option value="">' + esc(tx('Pilih username')) + '</option>' + sl.map(x =>
+    `<option value="${esc(x.nama)}"${reg && x.registered ? ' disabled' : ''}>${esc(x.nama)}${reg && x.registered ? ' - ' + esc(tx('sudah terdaftar')) : ''}</option>`).join('');
+  if (cur && !(reg && sl.some(x => x.nama === cur && x.registered))) $('lgUser').value = cur;
+  if (LG.info && !sl.length && !adm) $('lgSub').textContent = tx('Belum ada daftar Sales. Admin perlu menambahkan Sales di menu Admin terlebih dulu.');
+}
+function lgEye(id, btn) {
+  const el = $(id), on = el.type === 'password'; el.type = on ? 'text' : 'password';
+  $('lgPw2').type = $('lgPw').type; btn.textContent = tx(on ? 'Sembunyikan' : 'Tampilkan');
+}
+function lgSubmit() {
+  const adm = LG.role === 'admin', reg = LG.mode === 'daftar' && !adm;
+  const user = adm ? 'admin' : $('lgUser').value, pw = $('lgPw').value;
+  if (!user) { toast('Pilih username terlebih dulu.', 'err'); return; }
+  if (!pw) { toast('Password wajib diisi.', 'err'); return; }
+  if (reg) {
+    if (pw.length < 6) { toast('Password minimal 6 karakter.', 'err'); return; }
+    if (pw !== $('lgPw2').value) { toast('Konfirmasi password tidak sama.', 'err'); return; }
+  }
+  $('lgBtn').disabled = true;
+  const done = r => {
+    $('lgBtn').disabled = false; ['lgPw', 'lgPw2'].forEach(i => { $(i).value = ''; $(i).type = 'password'; });
+    setAuth(r); toast(reg ? 'Akun berhasil dibuat' : 'Login berhasil', 'ok'); enterApp();
+  };
+  const fail = () => { $('lgBtn').disabled = false; if (reg) run('loginInfo', [], d => { LG.info = d; lgPaint(); }, null, true); };
+  reg ? run('register', [user, pw], done, fail) : run('login', [LG.role, user, pw], done, fail);
+}
+function doLogout() { closeMenu(); setAuth(null); goLogin(); toast('Anda sudah keluar', 'ok'); }
+function applyRole() {
+  const sales = AUTH.role === 'sales';
+  document.body.classList.toggle('role-sales', sales); document.body.classList.toggle('role-admin', AUTH.role === 'admin');
+  if (!AUTH.token) return;
+  $('meName').textContent = AUTH.role === 'admin' ? 'admin' : AUTH.name;
+  $('meRole').textContent = tx(sales ? 'Sales' : 'Admin / Store Leader');
+  $('meAv').textContent = (AUTH.name || '?').trim().charAt(0).toUpperCase();
+  const f = $('fSales');
+  if (sales) { if (![...f.options].some(o => o.value === AUTH.name)) f.insertAdjacentHTML('beforeend', `<option value="${esc(AUTH.name)}">${esc(AUTH.name)}</option>`); f.value = AUTH.name; f.disabled = true; }
+  else f.disabled = false;
+  try { paintSel('fSales'); } catch (e) {}
+}
+function authPaint() { lgPaint(); applyRole(); }
+function openPw() { closeMenu(); ['pmOld', 'pmNew', 'pmNew2'].forEach(i => $(i).value = ''); $('pwOv').classList.add('show'); setTimeout(() => $('pmOld').focus(), 50); }
+function closePw() { $('pwOv').classList.remove('show'); }
+function savePw() {
+  const o = $('pmOld').value, n = $('pmNew').value;
+  if (!o) { toast('Isi password lama', 'err'); return; }
+  if (n.length < 6) { toast('Password baru minimal 6 karakter.', 'err'); return; }
+  if (n !== $('pmNew2').value) { toast('Konfirmasi password tidak sama.', 'err'); return; }
+  run('changeMyPassword', [o, n], r => { setAuth(r); closePw(); toast('Password diubah', 'ok'); });
 }
 </script>
 <style>
