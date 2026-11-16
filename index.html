@@ -240,6 +240,19 @@ body.lg-open{overflow:hidden}
 .mechip b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mechip small{display:block;color:var(--muted);font-size:11px}
 .role-sales .admin-only,.role-sales .sales-filter{display:none!important}
 #toast{z-index:400}
+#cmpChips{flex-wrap:wrap!important;overflow:visible!important}
+.cmplg{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-bottom:8px}.cmplg span{display:flex;align-items:center;gap:6px}
+.cmplg i,.cmpbar i.a,.cmpbar i.b{display:inline-block;border-radius:6px}.cmplg i{width:10px;height:10px}
+.cmplg i.a,.cmpbar i.a{background:#cbd5e1}.cmplg i.b,.cmpbar i.b{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.cmpr{padding:10px 0;border-top:1px solid var(--line)}.cmpr:first-of-type{border-top:0}
+.cmpr.tot{background:var(--bg);border:0;border-radius:12px;padding:10px 12px;margin-bottom:4px}
+.cmph{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;font-size:13px}
+.cmpbar{position:relative;height:20px;margin-top:4px;border-radius:6px;background:rgba(148,163,184,.12);overflow:hidden}
+.cmpbar i{position:absolute;left:0;top:0;bottom:0;height:auto}
+.cmpbar span{position:relative;z-index:1;font-size:11.5px;font-weight:700;line-height:20px;padding-left:8px;color:var(--ink)}
+.cmpd{font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.cmpd.up{background:#d1fae5;color:#047857}.cmpd.down{background:#fee2e2;color:#b91c1c}.cmpd.flat{background:#f1f5f9;color:#64748b}
+input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
 .hm-hide{display:none!important}.acit{display:block!important}.acbtn{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.acit small{display:block}
 #tgl{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.3}
 @media(min-width:1024px),(orientation:landscape) and (min-width:640px){
@@ -265,16 +278,13 @@ body.lg-open{overflow:hidden}
   .tab.active>*{grid-column:1/-1;min-width:0}
   .tab.active>.card{margin:0}
   .card{padding:22px 24px;border-radius:22px}
-  #tab-dash.active{align-items:stretch}
-  #tab-dash.active>.card:nth-child(1){grid-column:1;grid-row:1}
-  #tab-dash.active>.card:nth-child(2){grid-column:2;grid-row:1/span 3}
-  #tab-dash.active>.card:nth-child(3){grid-column:1;grid-row:2}
-  #tab-dash.active>.card:nth-child(4){grid-column:1;grid-row:3}
   #tab-cust.active #custList{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px;align-items:start}
   #tab-cust.active #custList>:not(.cust){grid-column:1/-1}
   #tab-cust.active #custList>.cust{margin:0}
   #tab-add.active,#tab-proj.active,#tab-admin.active{display:block;max-width:980px;margin-left:auto;margin-right:auto}
-  #tab-dash .grid2{grid-template-columns:minmax(0,1fr);gap:22px}
+  #tab-dash.active{display:block;column-count:2;column-gap:20px;orphans:1;widows:1}
+  #tab-dash.active .grid2{display:contents}
+  #tab-dash.active .card{margin:0 0 20px!important;break-inside:avoid;-webkit-column-break-inside:avoid;page-break-inside:avoid}
   #tab-dash .chart-box{height:270px!important}
   #tab-hist.active{display:block;max-width:1100px;margin-left:auto;margin-right:auto}
   #tab-hist.active>*{margin-bottom:18px}
@@ -298,7 +308,7 @@ body.lg-open{overflow:hidden}
   nav button .ic{width:18px;height:18px}
   .card{padding:16px 18px;border-radius:18px}
   .tab.active{grid-template-columns:minmax(0,1fr);gap:14px}
-  #tab-dash.active>.card{grid-column:1!important;grid-row:auto!important}
+  #tab-dash.active{column-count:1}
   #tab-dash .chart-box{height:230px!important}
 }
 @media(min-width:1500px){
@@ -400,7 +410,7 @@ body.lg-open{overflow:hidden}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-f</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-i</div>
         </div>
       </div>
     </div>
@@ -448,7 +458,21 @@ body.lg-open{overflow:hidden}
       <button class="btn sm dark block" id="btnRemAll" style="display:none" onclick="remindAll()"><svg class="ic" width="15" height="15"><use href="#i-send"/></svg>Kirim Pengingat WA ke Semua Sales</button>
     </div>
 
-    <div class="card">
+    <div class="card admin-only">
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Perbandingan per Sales<small>bulan lalu vs bulan ini</small></h2>
+      <div class="chips" id="cmpChips" style="margin-bottom:10px"></div>
+      <div id="cmpBox"><div class="sub">Memuat...</div></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Status per Sales</h2><div class="chart-box"><canvas id="chSales"></canvas></div></div>
+      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="chart-box"><canvas id="chStatus"></canvas></div></div>
+    </div>
+
+    <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-alarm"/></svg></i>Perlu Follow Up Sekarang</h2><div id="reminders"></div></div>
+    <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-list"/></svg></i>Rekap Detail</h2><div class="wrap-x"><table id="tbRekap"></table></div></div>
+
+    <div class="card admin-only">
       <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-file"/></svg></i>Laporan Mingguan<small>7 hari terakhir</small></h2>
       <div class="row">
         <button class="btn sm soft" onclick="buatLaporan()">Buat Laporan</button>
@@ -459,14 +483,6 @@ body.lg-open{overflow:hidden}
         <button class="btn sm wa block" style="margin-top:10px" onclick="laporanWA()"><svg class="ic" width="16" height="16"><use href="#i-phone-chat"/></svg>Buka WhatsApp</button>
       </div>
     </div>
-
-    <div class="grid2">
-      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Status per Sales</h2><div class="chart-box"><canvas id="chSales"></canvas></div></div>
-      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="chart-box"><canvas id="chStatus"></canvas></div></div>
-    </div>
-
-    <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-alarm"/></svg></i>Perlu Follow Up Sekarang</h2><div id="reminders"></div></div>
-    <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-list"/></svg></i>Rekap Detail</h2><div class="wrap-x"><table id="tbRekap"></table></div></div>
   </section>
 
   <!-- CUSTOMER -->
@@ -1143,6 +1159,10 @@ const EN = {
  "Customer ini bukan milik Anda.": "This customer is not yours.",
  "Username tidak ditemukan.": "Username not found.",
  "Akun admin tidak bisa dihapus.": "The admin account cannot be deleted.",
+ "Perbandingan per Sales": "Comparison per Sales",
+ "bulan lalu vs bulan ini": "last month vs this month",
+ "Belum ada data pembanding.": "No comparison data yet.",
+ "baru": "new",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1394,7 +1414,7 @@ function paintSel(id) {
   const v = el.value; let name = 'globe', color = '#0d9488';
   if (id === 'mChannel') name = CH_ICON[v] || 'dots';
   else if (id === 'mStatus' || id === 'fStatus') { name = ST_ICON[v] || 'sparkle'; color = COLORS[v] || '#0d9488'; }
-  else if (id === 'fSales' || id === 'pSales') { name = 'user'; if (!v) color = '#94a3b8'; }
+  else if (id === 'fSales' || id === 'pSales' || id === 'lgUser' || id === 'pwUser') { name = 'user'; if (!v) color = '#94a3b8'; }
   else if (id === 'selSales') name = v === 'ALL' || !v ? 'users' : 'user';
   else if (id === 'fSumber') { name = v ? srcIcon(v) : 'globe'; if (!v) color = '#94a3b8'; }
   else if (id === 'selBulan' || id === 'acBulan') name = 'calendar';
@@ -1569,7 +1589,7 @@ function laporanServer() { run('kirimLaporanMingguan', [LANG], () => { beep('sen
 
 /* ============ DASHBOARD ============ */
 const emptyBox = (icon, txt) => `<div class="empty"><div class="ei">${ic(icon, 26)}</div>${txt}</div>`;
-function loadDash() { run('getRekap', [], r => { LAST = r; renderDash(r); if (r.overdue.length) beep('warn'); }); }
+function loadDash() { run('getRekap', [], r => { LAST = r; renderDash(r); if (r.overdue.length) beep('warn'); }); loadCmp(); }
 function renderDash(r) {
   {
     $('kTotal').textContent = r.total; $('kClose').textContent = r.closing; $('kRate').textContent = r.rate + '%';
@@ -2469,7 +2489,7 @@ function renderAdmin() {
       ${u.registered ? `<button class="btn sm dark" data-u="${esc(u.nama)}" onclick="arm(this,'ru'+this.dataset.u,()=>resetUser(this.dataset.u))">Reset akun</button>` : ''}</div>`).join('') || '<div class="sub">Belum ada Sales.</div>'}
   </div>`;
   accInit($('adminBox'));
-  pwUserChg();
+  pwUserChg(); paintSel('pwUser');
 }
 function addSalesRow() {
   const box = $('aSales');
@@ -2518,6 +2538,33 @@ function changePw() {
 }
 function resetUser(u) { arun('adminResetUser', [u], () => { toast('Akun direset', 'ok'); loadAdmin(); }); }
 
+/* ============ PERBANDINGAN PER SALES (ADMIN) ============ */
+let CMP = null, cmpMet = 'fu';
+const CMP_M = {fu: 'Follow Up', closing: 'Closing', baru: 'Customer Baru', nilai: 'Nilai Closing'};
+function loadCmp() { if (AUTH.role !== 'admin') return; run('adminBandingSales', [AUTH.token], d => { CMP = d; renderCmp(); }, () => { $('cmpBox').innerHTML = '<div class="sub">' + esc(tx('Belum ada data pembanding.')) + '</div>'; }, true); }
+function setCmp(m) { cmpMet = m; beep('tap'); renderCmp(); }
+function cmpDelta(a, b) {
+  if (!a && !b) return '<span class="cmpd flat">-</span>';
+  if (!a) return '<span class="cmpd up">&#9650; ' + esc(tx('baru')) + '</span>';
+  const p = Math.round((b - a) / a * 100);
+  return '<span class="cmpd ' + (p > 0 ? 'up' : p < 0 ? 'down' : 'flat') + '">' + (p > 0 ? '&#9650; +' : p < 0 ? '&#9660; ' : '= ') + p + '%</span>';
+}
+function renderCmp() {
+  const d = CMP; if (!d || !$('cmpBox')) return;
+  $('cmpChips').innerHTML = Object.keys(CMP_M).map(k => `<button class="chip${k === cmpMet ? ' on' : ''}" onclick="setCmp('${k}')">${esc(tx(CMP_M[k]))}</button>`).join('');
+  const fm = v => cmpMet === 'nilai' ? rp(v) : String(v);
+  const A = {}, B = {}; d.a.ringkasan.forEach(o => A[o.sales] = o[cmpMet] || 0); d.b.ringkasan.forEach(o => B[o.sales] = o[cmpMet] || 0);
+  const names = (d.sales || []).slice(); Object.keys(A).concat(Object.keys(B)).forEach(n => { if (names.indexOf(n) < 0) names.push(n); });
+  const rows = names.map(n => ({n: n, a: A[n] || 0, b: B[n] || 0}));
+  const ta = d.a.total[cmpMet] || 0, tb = d.b.total[cmpMet] || 0;
+  const max = Math.max(1, ...rows.map(r => Math.max(r.a, r.b)), 0);
+  const bar = (v, c, mx) => `<div class="cmpbar"><i class="${c}" style="width:${Math.max(v ? 3 : 0, Math.round(v / mx * 100))}%"></i><span>${fm(v)}</span></div>`;
+  let h = `<div class="cmplg"><span><i class="a"></i>${esc(monLong(d.prev))}</span><span><i class="b"></i>${esc(monLong(d.cur))}</span></div>`;
+  h += `<div class="cmpr tot"><div class="cmph"><b>${esc(tx('Total'))}</b>${cmpDelta(ta, tb)}</div>${bar(ta, 'a', Math.max(ta, tb, 1))}${bar(tb, 'b', Math.max(ta, tb, 1))}</div>`;
+  h += rows.map(r => `<div class="cmpr"><div class="cmph"><b translate="no">${esc(r.n)}</b>${cmpDelta(r.a, r.b)}</div>${bar(r.a, 'a', max)}${bar(r.b, 'b', max)}</div>`).join('');
+  $('cmpBox').innerHTML = rows.length ? h : '<div class="sub">' + esc(tx('Belum ada data pembanding.')) + '</div>';
+}
+
 /* ============ LOGIN, DAFTAR AKUN & PERAN ============ */
 const LG = {role: 'sales', mode: 'login', info: null};
 function goLogin(msg) {
@@ -2545,9 +2592,11 @@ function lgPaint() {
   $('lgSwitch').innerHTML = reg ? tx('Sudah punya akun?') + ' <a href="#" onclick="lgMode(\'login\');return false">' + esc(tx('Masuk di sini')) + '</a>' : tx('Belum punya akun?') + ' <a href="#" onclick="lgMode(\'daftar\');return false">' + esc(tx('Daftar akun')) + '</a>';
   $('lgPw').setAttribute('autocomplete', reg ? 'new-password' : 'current-password');
   const cur = $('lgUser').value, sl = (LG.info && LG.info.sales) || [];
+  setTimeout(() => paintSel('lgUser'), 0);
   $('lgUser').innerHTML = '<option value="">' + esc(tx('Pilih username')) + '</option>' + sl.map(x =>
     `<option value="${esc(x.nama)}"${reg && x.registered ? ' disabled' : ''}>${esc(x.nama)}${reg && x.registered ? ' - ' + esc(tx('sudah terdaftar')) : ''}</option>`).join('');
   if (cur && !(reg && sl.some(x => x.nama === cur && x.registered))) $('lgUser').value = cur;
+  paintSel('lgUser');
   if (LG.info && !sl.length && !adm) $('lgSub').textContent = tx('Belum ada daftar Sales. Admin perlu menambahkan Sales di menu Admin terlebih dulu.');
 }
 function lgEye(id, btn) {
@@ -2584,7 +2633,7 @@ function applyRole() {
   else f.disabled = false;
   try { paintSel('fSales'); } catch (e) {}
 }
-function authPaint() { lgPaint(); applyRole(); }
+function authPaint() { lgPaint(); applyRole(); renderCmp(); }
 function openPw() { closeMenu(); ['pmOld', 'pmNew', 'pmNew2'].forEach(i => $(i).value = ''); $('pwOv').classList.add('show'); setTimeout(() => $('pmOld').focus(), 50); }
 function closePw() { $('pwOv').classList.remove('show'); }
 function savePw() {
