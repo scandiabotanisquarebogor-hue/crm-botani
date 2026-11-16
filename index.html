@@ -210,6 +210,8 @@ nav button.on .ic{color:var(--accent)}
 nav button{font-size:10.5px;padding:9px 0 8px}
 /* ===== DESKTOP (>=1024px): menu di sisi kiri, area konten lebar & rapi ===== */
 .grid2>*{min-width:0}.chart-box{position:relative;max-width:100%}
+.acs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0 4px}.acs>div{border-radius:16px;padding:13px 8px 11px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:92px}.acs .l{font-size:10.5px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#64748b}.acs b{font-size:26px;line-height:1.05;font-weight:800;color:#0f172a}.acs small{font-size:11.5px;color:#64748b;line-height:1.25;min-height:14px}.acs .all{background:#f1f5f9}.acs .ok{background:#ecfdf5}.acs .ok b{color:#047857}.acs .ok .l,.acs .ok small{color:#059669}.acs .bad{background:#fef2f2}.acs .bad b{color:#b91c1c}.acs .bad .l,.acs .bad small{color:#dc2626}
+.acc-h{cursor:pointer;user-select:none;-webkit-user-select:none;margin-bottom:0!important}.acc-h .chev{flex:none;transition:transform .2s;color:#64748b}.card.acc-open>.acc-h .chev{transform:rotate(180deg)}.card>.accb{display:none;margin-top:14px}.card.acc-open>.accb{display:block}
 .hm-hide{display:none!important}.acit{display:block!important}.acbtn{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.acit small{display:block}
 #tgl{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.3}
 @media(min-width:1024px),(orientation:landscape) and (min-width:640px){
@@ -309,7 +311,7 @@ nav button{font-size:10.5px;padding:9px 0 8px}
 <body>
 <!-- ===== SET IKON (garis, konsisten) ===== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
- <symbol id="i-phone-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.7-5.4A8.4 8.4 0 1 1 21 11.5z"/><path d="M9.3 8.8c0 2.8 2.1 4.9 4.9 4.9l.9-1.3-1.7-.9-.8.7a3.3 3.3 0 0 1-1.7-1.7l.7-.8-.9-1.7z"/></symbol>
+ <symbol id="i-phone-chat" viewBox="0 0 64 64"><defs><linearGradient id="waG" gradientUnits="userSpaceOnUse" x1="0" y1="6" x2="0" y2="56"><stop offset="0" stop-color="#66d570"/><stop offset="1" stop-color="#1fae38"/></linearGradient></defs><g stroke="none"><g fill="#e3e7eb" stroke="#e3e7eb" stroke-width="1.5" stroke-linejoin="round"><circle cx="32" cy="31" r="28.6"/><path d="M2.5 61.5L9.5 38l16.5 15z"/></g><g fill="#fff"><circle cx="32" cy="31" r="28.6"/><path d="M2.5 61.5L9.5 38l16.5 15z"/></g><circle cx="32" cy="31" r="24.6" fill="url(#waG)"/><path d="M8.2 55.2L12.4 40.5l11.2 8.6z" fill="url(#waG)"/><path fill="#fff" transform="translate(17 16) scale(1.25)" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></g></symbol>
  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></symbol>
  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
@@ -367,7 +369,7 @@ nav button{font-size:10.5px;padding:9px 0 8px}
           <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat ulang</span></button>
           <button role="menuitem" id="btnSound" onclick="toggleSound()"><span id="sndIco"></span><span id="sndLbl">Suara</span><i class="sw" id="sndSw"></i></button>
           <div class="hsep"></div>
-          <button role="menuitem" id="btnAdmin" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-b</div>
+          <button role="menuitem" id="btnAdmin" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-c</div>
         </div>
       </div>
     </div>
@@ -480,10 +482,6 @@ nav button{font-size:10.5px;padding:9px 0 8px}
       <div class="row" style="margin-top:8px">
         <div><label>Sales</label><select id="acSales" translate="no" onchange="AC.sales=this.value;acLim=100;acRender()"></select></div>
         <div><label>Bulan masuk</label><select id="acBulan" onchange="AC.bulan=this.value;acLim=100;acRender()"></select></div>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <div><label>Selesai dari</label><input type="date" id="acFrom" onchange="acLim=100;acRender()"></div>
-        <div><label>Sampai</label><input type="date" id="acTo" onchange="acLim=100;acRender()"></div>
       </div>
       <div class="chips" id="acChips"></div>
       <div id="acSum"></div>
@@ -1038,6 +1036,9 @@ const EN = {
  "Unduh Excel": "Download Excel",
  "Tidak ada data untuk diunduh.": "No data to download.",
  "{0} customer diunduh": "{0} customers downloaded",
+ "dari {0} customer": "of {0} customers",
+ "Potensi Rp {0}": "Potential Rp {0}",
+ "Ketuk judul untuk membuka atau menutup pengaturan.": "Tap a title to open or close its settings.",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1263,7 +1264,9 @@ function srcIcon(v) {
   if (/event|pameran|expo/.test(t)) return 'calendar';
   return 'globe';
 }
+const WA_INNER = '<defs><linearGradient id="waG" gradientUnits="userSpaceOnUse" x1="0" y1="6" x2="0" y2="56"><stop offset="0" stop-color="#66d570"/><stop offset="1" stop-color="#1fae38"/></linearGradient></defs><g stroke="none"><g fill="#e3e7eb" stroke="#e3e7eb" stroke-width="1.5" stroke-linejoin="round"><circle cx="32" cy="31" r="28.6"/><path d="M2.5 61.5L9.5 38l16.5 15z"/></g><g fill="#fff"><circle cx="32" cy="31" r="28.6"/><path d="M2.5 61.5L9.5 38l16.5 15z"/></g><circle cx="32" cy="31" r="24.6" fill="url(#waG)"/><path d="M8.2 55.2L12.4 40.5l11.2 8.6z" fill="url(#waG)"/><path fill="#fff" transform="translate(17 16) scale(1.25)" d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></g>';
 function icoURL(name, color) {
+  if (name === 'phone-chat') return 'url("data:image/svg+xml,' + encodeURIComponent("<svg xmlns='" + 'http:/' + "/www.w3.org/2000/svg' viewBox='0 0 64 64'>" + WA_INNER + '</svg>') + '")';
   const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='" + color + "' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'>" + (IP[name] || IP.globe) + "</svg>";
   return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
 }
@@ -1275,7 +1278,8 @@ function paintSel(id) {
   else if (id === 'fSales' || id === 'pSales') { name = 'user'; if (!v) color = '#94a3b8'; }
   else if (id === 'selSales') name = v === 'ALL' || !v ? 'users' : 'user';
   else if (id === 'fSumber') { name = v ? srcIcon(v) : 'globe'; if (!v) color = '#94a3b8'; }
-  else if (id === 'selBulan') name = 'calendar';
+  else if (id === 'selBulan' || id === 'acBulan') name = 'calendar';
+  else if (id === 'acSales') name = v ? 'user' : 'users';
   else if (id === 'psKat') name = 'pin';
   el.style.backgroundImage = icoURL(name, color);
 }
@@ -1693,6 +1697,7 @@ function acPaintOpts(list) {
   if (AC.bulan && !bl.includes(AC.bulan)) AC.bulan = '';
   $('acSales').innerHTML = `<option value="">${tx('Semua sales')}</option>` + sl.map(s => `<option value="${esc(s)}"${s === AC.sales ? ' selected' : ''}>${esc(s)}</option>`).join('');
   $('acBulan').innerHTML = `<option value="">${tx('Semua bulan')}</option>` + bl.map(m => `<option value="${m}"${m === AC.bulan ? ' selected' : ''}>${monLong(m)}</option>`).join('');
+  paintSel('acSales'); paintSel('acBulan');
 }
 function acSt(s) { AC.st = s; acLim = 100; beep('tap'); acRender(); }
 function acMore() { acLim += 100; acRender(); }
@@ -1700,9 +1705,7 @@ function acRender() {
   if (!AC.list) return;
   const all = AC.list; acPaintOpts(all);
   const q = ($('acQ').value || '').toLowerCase().trim();
-  const f1 = $('acFrom').value, f2 = $('acTo').value;
   const base = all.filter(x => (!AC.sales || x.sales === AC.sales) && (!AC.bulan || x.bulan === AC.bulan)
-    && (!f1 || (x.tglSelesai && x.tglSelesai >= f1)) && (!f2 || (x.tglSelesai && x.tglSelesai <= f2))
     && (!q || (x.nama + ' ' + x.sales + ' ' + x.hp + ' ' + x.produk).toLowerCase().includes(q)));
   const cnt = {}; base.forEach(x => cnt[x.status] = (cnt[x.status] || 0) + 1);
   const order = ['Closing', 'Batal', 'Baru', 'Dihubungi', 'Tertarik', 'Negosiasi'];
@@ -1713,7 +1716,11 @@ function acRender() {
   AC.view = v;
   const cl = v.filter(x => x.status === 'Closing'), bt = v.filter(x => x.status === 'Batal');
   $('acCount').textContent = tx('{0} dari {1} customer', v.length, all.length);
-  $('acSum').innerHTML = `<div class="mini mini3" style="grid-template-columns:repeat(3,1fr);margin:10px 0 4px"><div><b>${v.length}</b><span>${tx('Ditampilkan')}</span></div><div><b>${cl.length}</b><span>Closing &bull; Rp ${rpc(cl.reduce((a, x) => a + x.nilai, 0))}</span></div><div><b>${bt.length}</b><span>${esc(stL('Batal'))}</span></div></div>`;
+  const sumN = a => a.reduce((t, x) => t + (Number(x.nilai) || 0), 0), sumE = a => a.reduce((t, x) => t + (Number(x.est) || 0), 0);
+  $('acSum').innerHTML = `<div class="acs">
+    <div class="all"><span class="l">${tx('Ditampilkan')}</span><b>${v.length}</b><small>${tx('dari {0} customer', all.length)}</small></div>
+    <div class="ok"><span class="l">${esc(stL('Closing'))}</span><b>${cl.length}</b><small>Rp ${rpc(sumN(cl))}</small></div>
+    <div class="bad"><span class="l">${esc(stL('Batal'))}</span><b>${bt.length}</b><small>${tx('Potensi Rp {0}', rpc(sumE(bt)))}</small></div></div>`;
   const row = x => {
     const done = acDone(x.status), ok = hpOk(x.hp);
     return `<div class="item acit"><div style="min-width:0">
@@ -1792,7 +1799,7 @@ function acExport() {
   dlBase64(xlsxBase64(rows, en ? 'All Customers' : 'Semua Customer'), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', name);
   toast(tx('{0} customer diunduh', v.length), 'ok');
 }
-function acReset() { AC.st = 'ALL'; AC.sales = ''; AC.bulan = ''; $('acQ').value = ''; $('acFrom').value = ''; $('acTo').value = ''; acLim = 100; beep('tap'); acRender(); }
+function acReset() { AC.st = 'ALL'; AC.sales = ''; AC.bulan = ''; $('acQ').value = ''; acLim = 100; beep('tap'); acRender(); }
 const acFind = k => (AC.list || []).find(r => r.k === k);
 function acWa(k) {
   const x = acFind(k); if (!x || hpWarn(x.hp)) return;
@@ -2278,6 +2285,23 @@ const fixedSt = n => n === 'Closing' || n === 'Batal';
 const salesRow = s => `<div class="arow" data-old="${esc(s.old || '')}"><input class="sn" placeholder="Nama Sales" value="${esc(s.nama || '')}"><input class="sw" type="tel" placeholder="No WA 08xx" value="${esc(s.wa || '')}"><button class="xbtn" title="Hapus" onclick="this.parentNode.remove()">${ic('trash', 16)}</button></div>`;
 const stRow = s => `<div class="arow2" data-old="${esc(s.old || '')}"><input class="stn" value="${esc(s.nama)}" ${fixedSt(s.nama) ? 'disabled' : ''}>${fixedSt(s.nama) ? '<span class="badge-lock">dikunci</span>' : ''}<textarea class="stt" placeholder="Template pesan WhatsApp">${esc(s.template)}</textarea></div>`;
 
+/* panel admin berbentuk dropdown: judul diketuk baru isinya terbuka */
+const ACC_OPEN = new Set();
+function accInit(box) {
+  [...box.children].filter(c => c.classList.contains('card')).forEach((card, i) => {
+    const h = card.querySelector('h2'); if (!h) return;
+    const key = (h.textContent || '').trim().slice(0, 30) + i;
+    const body = document.createElement('div'); body.className = 'accb';
+    while (h.nextSibling) body.appendChild(h.nextSibling);
+    card.appendChild(body);
+    h.classList.add('acc-h'); h.setAttribute('role', 'button'); h.setAttribute('tabindex', '0');
+    h.insertAdjacentHTML('beforeend', '<svg class="ic chev" width="18" height="18" viewBox="0 0 24 24" style="margin-left:' + (h.querySelector('small') ? '8px' : 'auto') + '"><path d="M6 9l6 6 6-6"/></svg>');
+    const set = on => { card.classList.toggle('acc-open', on); h.setAttribute('aria-expanded', on ? 'true' : 'false'); on ? ACC_OPEN.add(key) : ACC_OPEN.delete(key); };
+    h.addEventListener('click', e => { if (e.target.closest('a')) return; beep('tap'); set(!card.classList.contains('acc-open')); });
+    h.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); h.click(); } });
+    set(ACC_OPEN.has(key));
+  });
+}
 function renderAdmin() {
   const d = ADM.data;
   $('adminBox').innerHTML = `
@@ -2327,6 +2351,7 @@ function renderAdmin() {
     <label>Password baru (min. 6 karakter)</label><input id="pwNew" type="password" autocomplete="new-password">
     <button class="btn sm dark block" onclick="changePw()">Ubah Password</button>
   </div>`;
+  accInit($('adminBox'));
 }
 function addSalesRow() {
   const box = $('aSales');
