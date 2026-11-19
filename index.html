@@ -415,7 +415,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-k</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-m</div>
         </div>
       </div>
     </div>
@@ -478,8 +478,15 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
     <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-list"/></svg></i>Rekap Detail</h2><div class="wrap-x"><table id="tbRekap"></table></div></div>
 
     <div class="card adm-open">
-      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-file"/></svg></i>Laporan Mingguan<small>7 hari terakhir</small></h2>
-      <div class="row">
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-file"/></svg></i>Laporan Mingguan<small>pilih periode</small></h2>
+      <div class="chips" style="padding-top:0;margin-bottom:8px;flex-wrap:wrap">
+        <button class="chip on" data-lp="7" onclick="lapPreset('7')">7 hari terakhir</button>
+        <button class="chip" data-lp="week" onclick="lapPreset('week')">Minggu ini</button>
+        <button class="chip" data-lp="month" onclick="lapPreset('month')">Bulan ini</button>
+        <button class="chip" data-lp="prev" onclick="lapPreset('prev')">Bulan lalu</button>
+      </div>
+      <div class="row"><div><label style="margin-top:0">Dari tanggal</label><input id="lapFrom" type="date" onchange="lapManual()"></div><div><label style="margin-top:0">Sampai tanggal</label><input id="lapTo" type="date" onchange="lapManual()"></div></div>
+      <div class="row" style="margin-top:12px">
         <button class="btn sm soft" onclick="buatLaporan()">Buat Laporan</button>
         <button class="btn sm dark" id="btnLapSrv" style="display:none" onclick="laporanServer()">Kirim Otomatis</button>
       </div>
@@ -513,7 +520,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <label>Estimasi Nilai Closing (Rp) <span class="req">*</span></label><input id="fEst" inputmode="numeric" placeholder="Perkiraan nilai pembelian" oninput="fmtNum(this)">
       <div class="row"><div><label>Sumber <span class="req">*</span></label><select id="fSumber"></select></div><div><label>Sales <span class="req">*</span></label><select id="fSales"></select></div></div>
       <div class="row"><div><label>Status <span class="req">*</span></label><select id="fStatus" onchange="toggleFields('f')"></select></div><div id="fNextBox"><label>Follow Up Berikutnya <span class="req">*</span></label><input id="fNext" type="date"></div></div>
-      <div id="fNilaiBox" style="display:none"><label>Nilai Closing (Rp) <span class="req">*</span></label><input id="fNilai" inputmode="numeric" placeholder="0" oninput="fmtNum(this)"></div>
+      <div id="fNilaiBox" style="display:none"><div class="row"><div><label>Nilai Closing (Rp) <span class="req">*</span></label><input id="fNilai" inputmode="numeric" placeholder="0" oninput="fmtNum(this)"></div><div><label>Tanggal Closing <span class="req">*</span></label><input id="fTglClose" type="date"></div></div></div>
       <label>Catatan <span class="req">*</span></label><textarea id="fCatatan" placeholder="Catatan awal..."></textarea>
       <p class="hint"><span class="req">*</span> Semua kolom wajib diisi. Tanggal follow up tidak diperlukan untuk status Closing atau Batal.</p>
       <button class="btn block" id="btnAdd" onclick="submitAdd()">Simpan Customer</button>
@@ -645,7 +652,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <div><label>Channel <span class="req">*</span></label><select id="mChannel"><option value="WhatsApp">WhatsApp</option><option value="Telepon">Telepon</option><option value="Walk In">Walk In</option><option value="Lainnya">Lainnya</option></select></div>
       <div><label>Status Baru <span class="req">*</span></label><select id="mStatus" onchange="applyTpl();toggleFields('m')"></select></div>
     </div>
-    <div id="mNilaiBox" style="display:none"><label>Nilai Closing (Rp) <span class="req">*</span></label><input id="mNilai" inputmode="numeric" placeholder="0" oninput="fmtNum(this)"></div>
+    <div id="mNilaiBox" style="display:none"><div class="row"><div><label>Nilai Closing (Rp) <span class="req">*</span></label><input id="mNilai" inputmode="numeric" placeholder="0" oninput="fmtNum(this)"></div><div><label>Tanggal Closing <span class="req">*</span></label><input id="mTglClose" type="date"></div></div></div>
     <div id="mEstBox"><label>Estimasi Nilai Closing (Rp) <span class="req">*</span></label><input id="mEst" inputmode="numeric" placeholder="Perbarui bila ada perubahan" oninput="fmtNum(this)"></div>
     <div id="mNextBox"><label>Follow Up Berikutnya <span class="req">*</span></label><input id="mNext" type="date"></div>
     <label id="mNoteLbl">Hasil / Catatan <span class="req">*</span></label><textarea id="mNote" style="min-height:70px" placeholder="Apa hasil follow up hari ini?"></textarea>
@@ -737,7 +744,7 @@ const EN = {
  "ketuk nama untuk lihat customer": "tap a name to view customers",
  "Kirim Pengingat WA ke Semua Sales": "Send WhatsApp Reminder to All Sales",
  "Laporan Mingguan": "Weekly Report",
- "7 hari terakhir": "last 7 days",
+ "7 hari terakhir": "Last 7 days",
  "Buat Laporan": "Create Report",
  "Kirim Otomatis": "Send Automatically",
  "Buka WhatsApp": "Open WhatsApp",
@@ -1175,6 +1182,21 @@ const EN = {
  "Jika aktif, semua akun Sales bisa: melihat semua customer & Sales (daftar, database, dashboard, riwayat), menambah/follow up customer Sales lain, memakai tombol Cari Customer di tab Penawaran, dan Laporan Mingguan. Menu Admin tetap tertutup untuk Sales.": "When on, every Sales account can: see all customers & Sales (list, database, dashboard, history), add/follow up other Sales' customers, use the Find Customers button in the Quotation tab, and the Weekly Report. The Admin menu stays closed to Sales.",
  "Akses penuh Sales diaktifkan": "Full Sales access enabled",
  "Akses penuh Sales dinonaktifkan": "Full Sales access disabled",
+ "pilih periode": "choose period",
+ "Minggu ini": "This week",
+ "Bulan ini": "This month",
+ "Bulan lalu": "Last month",
+ "Dari tanggal": "From date",
+ "Sampai tanggal": "To date",
+ "Tanggal \"Sampai\" tidak boleh sebelum tanggal \"Dari\".": "The \"To\" date cannot be before the \"From\" date.",
+ "Format tanggal tidak valid.": "Invalid date format.",
+ "Periode maksimal 1 tahun.": "Maximum period is 1 year.",
+ "Tanggal Closing": "Closing Date",
+ "Tgl Closing": "Closing date",
+ "Tgl Batal": "Cancelled on",
+ "Tanggal closing wajib diisi": "Closing date is required",
+ "Tanggal closing tidak boleh di masa depan.": "Closing date cannot be in the future.",
+ "Format tanggal closing tidak valid.": "Invalid closing date format.",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1493,6 +1515,9 @@ function toggleFields(p) {
   const st = $(p === 'm' ? 'mStatus' : 'fStatus').value;
   const done = st === 'Closing' || st === 'Batal';
   $(p + 'NilaiBox').style.display = st === 'Closing' ? 'block' : 'none';
+  $(p + 'TglClose').max = isoD(new Date());
+  if (st === 'Closing' && !$(p + 'TglClose').value) $(p + 'TglClose').value = isoD(new Date());
+  if (st !== 'Closing') { $(p + 'TglClose').value = ''; clearErr($(p + 'TglClose')); }
   $(p + 'NextBox').style.display = done ? 'none' : 'block';
   if (done) { $(p + 'Next').value = ''; clearErr($(p + 'Next')); }
   if (st !== 'Closing') clearErr($(p + 'Nilai'));
@@ -1589,15 +1614,35 @@ function remindSales(i) {
 function remindAll() { run('kirimReminderHarian', [LANG], n => toast(tx('Pengingat terkirim ke {0} Sales', n), 'ok')); }
 
 /* ============ LAPORAN MINGGUAN ============ */
+const isoD = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+function lapPreset(k) {
+  const n = new Date(); let a = new Date(n), b = new Date(n);
+  if (k === '7') a.setDate(n.getDate() - 7);
+  else if (k === 'week') a.setDate(n.getDate() - ((n.getDay() + 6) % 7));
+  else if (k === 'month') a = new Date(n.getFullYear(), n.getMonth(), 1);
+  else { a = new Date(n.getFullYear(), n.getMonth() - 1, 1); b = new Date(n.getFullYear(), n.getMonth(), 0); }
+  $('lapFrom').value = isoD(a); $('lapTo').value = isoD(b);
+  document.querySelectorAll('[data-lp]').forEach(x => x.classList.toggle('on', x.dataset.lp === k));
+  $('lapBox').style.display = 'none'; beep('tap');
+}
+function lapManual() { document.querySelectorAll('[data-lp]').forEach(x => x.classList.remove('on')); $('lapBox').style.display = 'none'; }
+function lapRange() {
+  if (!$('lapFrom').value && !$('lapTo').value) lapPreset('7');
+  const a = $('lapFrom').value || $('lapTo').value, b = $('lapTo').value || a;
+  if (b < a) { toast('Tanggal "Sampai" tidak boleh sebelum tanggal "Dari".', 'err'); return null; }
+  const is7 = document.querySelector('[data-lp="7"].on');
+  return is7 ? ['', ''] : [a, b];
+}
 function buatLaporan() {
-  run('getLaporanMingguan', [LANG], r => { LAP = r; $('lapTxt').value = r.teks; $('lapBox').style.display = 'block'; beep('ok'); });
+  const pr = lapRange(); if (!pr) return;
+  run('getLaporanMingguan', [LANG, pr[0], pr[1]], r => { LAP = r; $('lapTxt').value = r.teks; $('lapBox').style.display = 'block'; beep('ok'); });
 }
 function laporanWA() {
   const t = $('lapTxt').value; if (!t.trim()) return;
   beep('send');
   window.open(LAP.leaderWa ? waLink(LAP.leaderWa, t) : 'https://wa.me/?text=' + encodeURIComponent(t), '_blank');
 }
-function laporanServer() { run('kirimLaporanMingguan', [LANG], () => { beep('send'); toast('Laporan mingguan terkirim ke WA leader', 'ok'); }); }
+function laporanServer() { const pr = lapRange(); if (!pr) return; run('kirimLaporanMingguan', [LANG, pr[0], pr[1]], () => { beep('send'); toast('Laporan mingguan terkirim ke WA leader', 'ok'); }); }
 
 /* ============ DASHBOARD ============ */
 const emptyBox = (icon, txt) => `<div class="empty"><div class="ei">${ic(icon, 26)}</div>${txt}</div>`;
@@ -1726,16 +1771,17 @@ function submitAdd() {
     ['fStatus', 'Pilih status', st !== ''],
     ['fNext', 'Tanggal follow up berikutnya wajib diisi', done || $('fNext').value !== ''],
     ['fNilai', 'Nilai closing wajib diisi (lebih dari 0)', st !== 'Closing' || numVal($('fNilai').value) > 0],
+    ['fTglClose', 'Tanggal closing wajib diisi', st !== 'Closing' || !!$('fTglClose').value],
     ['fCatatan', 'Catatan wajib diisi', $('fCatatan').value.trim() !== '']
   ]);
   if (!ok) return;
   const d = {nama: $('fNama').value.trim(), hp: $('fHp').value.trim(), produk: $('fProduk').value.trim(), estimasi: numVal($('fEst').value), sumber: $('fSumber').value,
              sales: $('fSales').value, status: st, nextFU: done ? '' : $('fNext').value, catatan: $('fCatatan').value.trim(),
-             nilai: st === 'Closing' ? numVal($('fNilai').value) : 0, prospekId: PS.link ? PS.link.id : ''};
+             nilai: st === 'Closing' ? numVal($('fNilai').value) : 0, tglClosing: st === 'Closing' ? $('fTglClose').value : '', prospekId: PS.link ? PS.link.id : ''};
   $('btnAdd').disabled = true;
   run('addCustomer', [d], () => {
     $('btnAdd').disabled = false; toast('Customer tersimpan', 'ok'); if (PS.link) { PS.link = null; PS.db = null; psBar(); }
-    ['fNama','fHp','fProduk','fEst','fCatatan','fNilai','fNext'].forEach(i => $(i).value = '');
+    ['fNama','fHp','fProduk','fEst','fCatatan','fNilai','fNext','fTglClose'].forEach(i => $(i).value = '');
     $('fSales').value = AUTH.role === 'sales' ? AUTH.name : ''; $('fSumber').value = ''; $('fStatus').selectedIndex = 0; toggleFields('f'); paintAllSel();
     $('selSales').value = d.sales; show('cust');
   }, () => $('btnAdd').disabled = false);
@@ -1755,6 +1801,7 @@ function openFU(id, from) {
   $('mChannel').selectedIndex = 0;
   $('mStatus').value = c.status; $('mNext').value = ''; $('mNote').value = '';
   $('mNilai').value = c.nilai ? Number(c.nilai).toLocaleString(LOC()) : '';
+  $('mTglClose').value = c.status === 'Closing' && c.tglSelesai ? String(c.tglSelesai).slice(0, 10) : '';
   $('mEst').value = c.estimasi ? Number(c.estimasi).toLocaleString(LOC()) : '';
   toggleFields('m'); paintAllSel();
   $('mMsg').value = fillTpl(INIT.templates[c.status], c);
@@ -1772,11 +1819,12 @@ function submitFU() {
     ['mEst', 'Estimasi nilai closing wajib diisi (lebih dari 0)', done || numVal($('mEst').value) > 0],
     ['mNext', 'Tanggal follow up berikutnya wajib diisi', done || $('mNext').value !== ''],
     ['mNilai', 'Nilai closing wajib diisi (lebih dari 0)', st !== 'Closing' || numVal($('mNilai').value) > 0],
+    ['mTglClose', 'Tanggal closing wajib diisi', st !== 'Closing' || !!$('mTglClose').value],
     ['mNote', st === 'Batal' ? 'Alasan batal wajib diisi' : 'Hasil / catatan wajib diisi', $('mNote').value.trim() !== '']
   ]);
   if (!ok) return;
   const d = {id: curCust.id, status: st, nextFU: done ? '' : $('mNext').value, channel: $('mChannel').value, catatan: $('mNote').value.trim(),
-             nilai: st === 'Closing' ? numVal($('mNilai').value) : 0, estimasi: done ? 0 : numVal($('mEst').value)};
+             nilai: st === 'Closing' ? numVal($('mNilai').value) : 0, tglClosing: st === 'Closing' ? $('mTglClose').value : '', estimasi: done ? 0 : numVal($('mEst').value)};
   $('btnFu').disabled = true;
   run('saveFollowUp', [d], () => {
     $('btnFu').disabled = false; closeModal();
@@ -1886,7 +1934,7 @@ function acRender() {
     return `<div class="item acit"><div style="min-width:0">
       <div><b translate="no">${esc(x.nama)}</b> <span class="badge" style="background:${colorOf(x.status)}">${esc(stL(x.status))}</span></div>
       <small translate="no">${esc(x.sales) || '-'} &bull; ${esc(x.produk) || '-'}${x.sumber ? ' &bull; ' + esc(x.sumber) : ''}${x.hp ? ' &bull; ' + esc(x.hp) : ''}</small>
-      <small>${tx('Masuk')} ${fmtDate(x.tglInput)}${x.tglSelesai ? ' &bull; ' + tx('Selesai') + ' ' + fmtDate(x.tglSelesai) : ''}${x.status === 'Closing' && x.nilai ? ' &bull; <b>' + rp(x.nilai) + '</b>' : ''}</small>
+      <small>${tx('Masuk')} ${fmtDate(x.tglInput)}${x.tglSelesai ? ' &bull; ' + tx(x.status === 'Closing' ? 'Tgl Closing' : x.status === 'Batal' ? 'Tgl Batal' : 'Selesai') + ' ' + fmtDate(x.tglSelesai) : ''}${x.status === 'Closing' && x.nilai ? ' &bull; <b>' + rp(x.nilai) + '</b>' : ''}</small>
       ${x.catatan ? `<small translate="no">${esc(x.catatan)}</small>` : ''}
       <div class="acbtn">
         ${ok ? `<button class="btn sm soft" onclick="acWa('${esc(x.k)}')" title="WhatsApp">${ic('phone-chat', 14)} WA</button><button class="btn sm soft" onclick="acCall('${esc(x.k)}')" title="${tx('Telepon')}">${ic('phone', 14)}</button>` : ''}
