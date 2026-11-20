@@ -448,7 +448,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-n</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-o</div>
         </div>
       </div>
     </div>
@@ -1236,6 +1236,11 @@ const EN = {
  "Terang": "Light",
  "Tampilan": "Appearance",
  "Sistem mengikuti pengaturan terang/gelap di perangkat Anda.": "System follows your device light/dark setting.",
+ "Jenis kontak": "Contact type",
+ "Semua jenis kontak": "All contact types",
+ "Telepon (bukan WhatsApp)": "Phone (non-WhatsApp)",
+ "Punya website": "Has website",
+ "Tanpa nomor telepon": "No phone number",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -2180,6 +2185,12 @@ function dbOpts(l, f, all, cur) {      // daftar pilihan unik (tanpa beda huruf 
   const ks = Object.keys(m).sort((a, b) => m[a].t.localeCompare(m[b].t));
   return `<option value="">${all} (${l.length})</option>` + ks.map(k => `<option value="${esc(k)}"${cur === k ? ' selected' : ''}>${esc(m[k].t)} (${m[k].n})</option>`).join('');
 }
+const psWeb = x => !!(x.web && /^https?:/i.test(x.web));
+const kontakTipe = x => { const t = [], h = psHp(x.telp); if (psMobile(x.telp)) t.push('wa'); if (h && !psMobile(x.telp)) t.push('tel'); if (!h) t.push('none'); if (psWeb(x)) t.push('web'); return t; };
+function dbKontakOpts(l, cur) {
+  const O = [['wa', 'WhatsApp'], ['tel', 'Telepon (bukan WhatsApp)'], ['web', 'Punya website'], ['none', 'Tanpa nomor telepon']];
+  return '<option value="">' + esc(tx('Semua jenis kontak')) + ' (' + l.length + ')</option>' + O.map(o => `<option value="${o[0]}"${cur === o[0] ? ' selected' : ''}>${esc(tx(o[1]))} (${l.filter(x => kontakTipe(x).includes(o[0])).length})</option>`).join('');
+}
 function dbRender() {
   const box = $('dbList'); if (!box) return;
   const l = PS.db; if (!l) { box.innerHTML = ''; return; }
@@ -2190,9 +2201,10 @@ function dbRender() {
   if (PS.fk && !l.some(x => String(x.kategori || '').trim().toLowerCase() === PS.fk)) PS.fk = '';
   if (PS.fl && !l.some(x => String(x.lokasi || '').trim().toLowerCase() === PS.fl)) PS.fl = '';
   $('dbSel').innerHTML = `<select translate="no" aria-label="${tx('Jenis usaha')}" onchange="PS.fk=this.value;dbRender()">${dbOpts(l, x => x.kategori, tx('Semua jenis usaha'), PS.fk)}</select>
-    <select translate="no" aria-label="${tx('Lokasi')}" onchange="PS.fl=this.value;dbRender()">${dbOpts(l, x => x.lokasi, tx('Semua lokasi'), PS.fl)}</select>`;
+    <select translate="no" aria-label="${tx('Lokasi')}" onchange="PS.fl=this.value;dbRender()">${dbOpts(l, x => x.lokasi, tx('Semua lokasi'), PS.fl)}</select>
+    <select translate="no" aria-label="${tx('Jenis kontak')}" style="grid-column:1/-1" onchange="PS.fc=this.value;dbRender()">${dbKontakOpts(l, PS.fc)}</select>`;
   const q = $('dbQ').value.trim().toLowerCase();
-  const v = l.filter(x => (!PS.fk || String(x.kategori || '').trim().toLowerCase() === PS.fk) && (!PS.fl || String(x.lokasi || '').trim().toLowerCase() === PS.fl)
+  const v = l.filter(x => (!PS.fk || String(x.kategori || '').trim().toLowerCase() === PS.fk) && (!PS.fl || String(x.lokasi || '').trim().toLowerCase() === PS.fl) && (!PS.fc || kontakTipe(x).includes(PS.fc))
     && (PS.filter === 'ALL' || (PS.filter === 'SUDAH') === (x.status === 'Sudah Follow Up'))
     && (!q || (x.nama + ' ' + x.alamat + ' ' + x.telp + ' ' + x.kategori).toLowerCase().includes(q)));
   if (!v.length) { box.innerHTML = emptyBox('database', l.length ? tx('Tidak ada data yang cocok.') : tx('Database masih kosong. Cari customer di menu "Cari Customer" lalu simpan hasilnya.')); return; }
