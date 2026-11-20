@@ -14,6 +14,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script src="config.js"></script>
 <script src="gas-shim.js"></script>
+<script>try{var _t=localStorage.getItem("crmTheme")||"system";var _d=_t==="dark"||(_t==="system"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.setAttribute("data-theme",_d?"dark":"light")}catch(e){}</script>
 <title>CRM Follow Up</title>
 <script>
 (function () {
@@ -108,8 +109,8 @@ main{position:relative;z-index:1;max-width:920px;margin:-36px auto 0;padding:0 1
 .hi{width:30px;height:30px;border-radius:10px;background:var(--soft);color:var(--accent3);display:grid;place-items:center;flex:none}
 /* PERFORMA */
 .perf{display:flex;gap:16px;align-items:center}
-.ring{--p:0%;width:104px;height:104px;border-radius:50%;background:conic-gradient(var(--accent) var(--p),#e8eef4 0);display:grid;place-items:center;flex:none}
-.ring>div{width:82px;height:82px;border-radius:50%;background:#fff;display:grid;place-content:center;text-align:center}
+.ring{--p:0%;width:104px;height:104px;border-radius:50%;background:conic-gradient(var(--accent) var(--p),var(--track,#e8eef4) 0);display:grid;place-items:center;flex:none}
+.ring>div{width:82px;height:82px;border-radius:50%;background:var(--card);display:grid;place-content:center;text-align:center}
 .ring b{font-size:21px;line-height:1;font-weight:800}.ring small{font-size:10px;color:var(--muted)}
 .mini{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .mini div{background:#f6f8fb;border-radius:14px;padding:10px 12px}
@@ -203,7 +204,7 @@ input.err,select.err,textarea.err{border-color:var(--bad)!important;background-c
 .mini3 b{font-size:15px!important}
 .est{color:#b45309!important;font-weight:600}
 /* NAV */
-nav{position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-radius:22px;display:flex;padding:7px;box-shadow:0 10px 30px rgba(15,23,42,.18);z-index:30}
+nav{position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;background:var(--navbg,rgba(255,255,255,.96));backdrop-filter:blur(10px);border-radius:22px;display:flex;padding:7px;box-shadow:0 10px 30px rgba(15,23,42,.18);z-index:30}
 nav button{flex:1;border:0;background:none;padding:9px 2px 8px;font-size:10.5px;color:var(--muted);cursor:pointer;border-radius:16px;font-family:inherit;font-weight:600;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:3px}
 nav button.on{background:var(--ink);color:#fff;box-shadow:0 4px 12px rgba(15,23,42,.3)}
 nav button.on .ic{color:var(--accent)}
@@ -241,6 +242,37 @@ body.lg-open{overflow:hidden}
 .role-sales .admin-only{display:none!important}
 .role-sales:not(.open-access) .adm-open,.role-sales:not(.open-access) .sales-filter{display:none!important}
 #toast{z-index:400}
+.themerow{padding:8px 10px 10px;border-bottom:1px solid var(--line);margin-bottom:2px;font-size:12px;font-weight:700;color:var(--muted)}
+.hmenu .tseg{display:grid;grid-template-columns:repeat(3,1fr);margin:6px 0 0}.hmenu .tseg button{display:block;width:auto;padding:7px 4px;font-size:11.5px;text-align:center;gap:0;border-radius:9px}
+html[data-theme=dark]{color-scheme:dark;--bg:#0b1220;--card:#121b2d;--text:#e6edf7;--muted:#97a6bd;--line:#26334a;--soft:rgba(20,184,166,.16);--shadow:0 4px 18px rgba(0,0,0,.45);--accent3:#5eead4;--navbg:rgba(19,29,49,.96);--track:#2a3a57}
+html[data-theme=dark] input,html[data-theme=dark] select,html[data-theme=dark] textarea{background-color:#16213a}
+html[data-theme=dark] input:focus,html[data-theme=dark] select:focus,html[data-theme=dark] textarea:focus{background-color:#1b2a46}
+html[data-theme=dark] input:disabled{background-color:#1b2640}
+html[data-theme=dark] .seg,html[data-theme=dark] .chip,html[data-theme=dark] .medal,html[data-theme=dark] .lgseg{background:#1c2940}
+html[data-theme=dark] .seg button.on,html[data-theme=dark] .lgseg button.on{background:#2c3e5f;color:#fff}
+html[data-theme=dark] .chip.on{background:var(--accent2);color:#fff}
+html[data-theme=dark] .tag.ok{background:rgba(16,185,129,.18);color:#6ee7b7}
+html[data-theme=dark] .tag.pu,html[data-theme=dark] .pbar{background:rgba(139,92,246,.2);color:#c4b5fd}
+html[data-theme=dark] .hmenu,html[data-theme=dark] .hmenu:before,html[data-theme=dark] .sheet,html[data-theme=dark] .lgcard{background:#131d31}
+html[data-theme=dark] .ring>div{background:var(--card)}
+html[data-theme=dark] .mini div,html[data-theme=dark] .arow2,html[data-theme=dark] .fthumb{background:#18243b}
+html[data-theme=dark] .fthumb{border-color:#2c3e5f}
+html[data-theme=dark] .bar{background:#243049}
+html[data-theme=dark] .btn.danger,html[data-theme=dark] .xbtn,html[data-theme=dark] .pill,html[data-theme=dark] .note.bad,html[data-theme=dark] .cmpd.down{background:rgba(239,68,68,.18);color:#fca5a5}
+html[data-theme=dark] .pill.t,html[data-theme=dark] .note{background:rgba(245,158,11,.16);color:#fcd34d}
+html[data-theme=dark] .cmpd.up{background:rgba(16,185,129,.18);color:#6ee7b7}
+html[data-theme=dark] .cmpd.flat{background:#1c2940;color:#97a6bd}
+html[data-theme=dark] .sug,html[data-theme=dark] .sug button{background:#18243b}
+html[data-theme=dark] .paperwrap{background:#0b1322}
+html[data-theme=dark] .grab{background:#2c3e5f}
+html[data-theme=dark] .wabox{background:rgba(37,211,102,.08);border-color:rgba(37,211,102,.28)}
+html[data-theme=dark] .wabox textarea{background:#16213a;border-color:rgba(37,211,102,.28)}
+html[data-theme=dark] .cmpr.tot{background:#18243b}
+html[data-theme=dark] .cmpbar span,html[data-theme=dark] .hmenu button{color:var(--text)}
+html[data-theme=dark] .hmenu .sw,html[data-theme=dark] .sw span{background:#3b4b68}
+html[data-theme=dark] .sw input:checked+span{background:linear-gradient(135deg,var(--accent2),var(--accent))}
+html[data-theme=dark] #loginOv .lgcard label,html[data-theme=dark] .lgcard .lgh{color:var(--text)}
+html[data-theme=dark] .tag.pu,html[data-theme=dark] .badge-lock{filter:none}
 .sw{position:relative;display:inline-block;width:50px;height:28px;flex:none}.sw input{opacity:0;width:0;height:0;position:absolute}
 .sw span{position:absolute;inset:0;border-radius:99px;background:#cbd5e1;transition:.2s;cursor:pointer}
 .sw span:before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(15,23,42,.3);transition:.2s}
@@ -409,13 +441,14 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <div class="menuwrap">
         <button class="hbtn" id="btnMenu" onclick="toggleMenu(event)" title="Menu" aria-haspopup="true" aria-expanded="false"><svg class="ic" width="18" height="18"><use href="#i-more"/></svg></button>
         <div class="hmenu" id="hMenu" role="menu">
+          <div class="themerow"><span>Tema</span><div class="seg tseg"><button data-th="system" onclick="setTheme('system')">Sistem</button><button data-th="dark" onclick="setTheme('dark')">Gelap</button><button data-th="light" onclick="setTheme('light')">Terang</button></div></div>
           <div class="mechip"><span class="mav" id="meAv"></span><div style="min-width:0"><b id="meName" translate="no"></b><small id="meRole"></small></div></div>
           <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat ulang</span></button>
           <button role="menuitem" id="btnSound" onclick="toggleSound()"><span id="sndIco"></span><span id="sndLbl">Suara</span><i class="sw" id="sndSw"></i></button>
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-m</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-n</div>
         </div>
       </div>
     </div>
@@ -1197,6 +1230,12 @@ const EN = {
  "Tanggal closing wajib diisi": "Closing date is required",
  "Tanggal closing tidak boleh di masa depan.": "Closing date cannot be in the future.",
  "Format tanggal closing tidak valid.": "Invalid closing date format.",
+ "Tema": "Theme",
+ "Sistem": "System",
+ "Gelap": "Dark",
+ "Terang": "Light",
+ "Tampilan": "Appearance",
+ "Sistem mengikuti pengaturan terang/gelap di perangkat Anda.": "System follows your device light/dark setting.",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1688,12 +1727,12 @@ function drawCharts(r) {
   if (typeof Chart === 'undefined') { console.error('Chart.js belum termuat'); return; }
   Object.values(charts).forEach(c => c.destroy());
   Chart.defaults.font.family = "'Plus Jakarta Sans',system-ui,sans-serif";
-  Chart.defaults.color = '#64748b';
+  Chart.defaults.color = themeNow() === 'dark' ? '#97a6bd' : '#64748b';
   const leg = {position: 'bottom', labels: {boxWidth: 10, usePointStyle: true}};
   charts.sales = new Chart($('chSales'), {
     type: 'bar',
     data: { labels: r.sales, datasets: r.statuses.map((st, i) => ({label: stL(st), data: r.sales.map(s => r.matrix[s][st]), backgroundColor: colorOf(st, i), borderRadius: 4})) },
-    options: { responsive: true, maintainAspectRatio: false, scales: {x: {stacked: true, grid: {display: false}}, y: {stacked: true, beginAtZero: true, ticks: {precision: 0}, grid: {color: '#eef2f6'}}}, plugins: {legend: leg} }
+    options: { responsive: true, maintainAspectRatio: false, scales: {x: {stacked: true, grid: {display: false}}, y: {stacked: true, beginAtZero: true, ticks: {precision: 0}, grid: {color: gridC()}}}, plugins: {legend: leg} }
   });
   charts.status = new Chart($('chStatus'), {
     type: 'doughnut',
@@ -1707,7 +1746,7 @@ function drawCharts(r) {
       {label: tx('Estimasi'), data: r.sales.map(s => (r.estimasiBySales || {})[s] || 0), backgroundColor: '#cbd5e1', borderRadius: 5},
       {label: tx('Realisasi'), data: r.sales.map(s => r.nilaiBySales[s] || 0), backgroundColor: '#14b8a6', borderRadius: 5}] },
     options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      scales: {x: {beginAtZero: true, ticks: {callback: v => rpc(v)}, grid: {color: '#eef2f6'}}, y: {grid: {display: false}}},
+      scales: {x: {beginAtZero: true, ticks: {callback: v => rpc(v)}, grid: {color: gridC()}}, y: {grid: {display: false}}},
       plugins: {legend: leg, tooltip: {callbacks: {label: lbl}}} }
   });
   const t = r.tren || [];
@@ -1717,7 +1756,7 @@ function drawCharts(r) {
       {label: tx('Estimasi'), data: t.map(x => x.estimasi || 0), backgroundColor: '#cbd5e1', borderRadius: 5},
       {label: tx('Realisasi'), data: t.map(x => x.nilai), backgroundColor: '#14b8a6', borderRadius: 5}] },
     options: { responsive: true, maintainAspectRatio: false,
-      scales: {y: {beginAtZero: true, ticks: {callback: v => rpc(v)}, grid: {color: '#eef2f6'}}, x: {grid: {display: false}}},
+      scales: {y: {beginAtZero: true, ticks: {callback: v => rpc(v)}, grid: {color: gridC()}}, x: {grid: {display: false}}},
       plugins: {legend: leg, tooltip: {callbacks: {label: lbl}}} }
   });
 }
@@ -2543,6 +2582,13 @@ function renderAdmin() {
   </div>
 
   <div class="card">
+    <h2><i class="hi">${ic('gear', 17)}</i>Tampilan</h2>
+    <label style="margin-top:0">Tema</label>
+    <div class="seg"><button data-th="system" onclick="setTheme('system')">Sistem</button><button data-th="dark" onclick="setTheme('dark')">Gelap</button><button data-th="light" onclick="setTheme('light')">Terang</button></div>
+    <div class="note" style="margin-top:10px;background:var(--soft);color:var(--accent3)">Sistem mengikuti pengaturan terang/gelap di perangkat Anda.</div>
+  </div>
+
+  <div class="card">
     <h2><i class="hi">${ic('lock', 17)}</i>Akses Sales</h2>
     <div class="arow" style="align-items:center;gap:12px"><div style="flex:1;min-width:0"><b>Buka semua akses untuk Sales</b><div class="sub" style="margin:3px 0 0">${(INIT && INIT.openAccess) ? tx('AKTIF - semua Sales mendapat akses penuh.') : tx('Nonaktif - Sales hanya melihat data miliknya.')}</div></div>
       <label class="sw"><input type="checkbox" id="openAcc" ${(INIT && INIT.openAccess) ? 'checked' : ''} onchange="setOpen(this.checked)"><span></span></label></div>
@@ -2557,7 +2603,7 @@ function renderAdmin() {
       ${u.registered ? `<button class="btn sm dark" data-u="${esc(u.nama)}" onclick="arm(this,'ru'+this.dataset.u,()=>resetUser(this.dataset.u))">Reset akun</button>` : ''}</div>`).join('') || '<div class="sub">Belum ada Sales.</div>'}
   </div>`;
   accInit($('adminBox'));
-  pwUserChg(); paintSel('pwUser');
+  pwUserChg(); paintSel('pwUser'); paintTheme();
 }
 function addSalesRow() {
   const box = $('aSales');
@@ -2608,6 +2654,24 @@ function setOpen(on) {
   arun('adminSetOpenAccess', [on], r => { INIT.openAccess = !!(r && r.openAccess); toast(INIT.openAccess ? 'Akses penuh Sales diaktifkan' : 'Akses penuh Sales dinonaktifkan', 'ok'); renderAdmin(); }, () => { $('openAcc').checked = !on; });
 }
 function resetUser(u) { arun('adminResetUser', [u], () => { toast('Akun direset', 'ok'); loadAdmin(); }); }
+
+/* ============ TEMA ============ */
+let THEME = 'system';
+try { THEME = localStorage.getItem('crmTheme') || 'system'; } catch (e) {}
+const mqDark = window.matchMedia ? matchMedia('(prefers-color-scheme: dark)') : null;
+const themeNow = () => THEME === 'dark' || (THEME === 'system' && mqDark && mqDark.matches) ? 'dark' : 'light';
+const gridC = () => themeNow() === 'dark' ? '#26334a' : '#eef2f6';
+function paintTheme() { document.querySelectorAll('[data-th]').forEach(b => b.classList.toggle('on', b.dataset.th === THEME)); }
+function applyTheme(redraw) {
+  const t = themeNow();
+  document.documentElement.setAttribute('data-theme', t);
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', t === 'dark' ? '#0b1220' : '#0f172a');
+  paintTheme();
+  if (redraw !== false) { try { Chart.defaults.color = t === 'dark' ? '#97a6bd' : '#64748b'; if (typeof LAST !== 'undefined' && LAST && $('tab-dash').classList.contains('active')) renderDash(LAST); } catch (e) {} }
+}
+function setTheme(m) { THEME = m; try { localStorage.setItem('crmTheme', m); } catch (e) {} applyTheme(); beep('tap'); }
+if (mqDark) { const _f = () => { if (THEME === 'system') applyTheme(); }; mqDark.addEventListener ? mqDark.addEventListener('change', _f) : mqDark.addListener(_f); }
+applyTheme(false);
 
 /* ============ PERBANDINGAN PER SALES (ADMIN) ============ */
 let CMP = null, cmpMet = 'fu';
