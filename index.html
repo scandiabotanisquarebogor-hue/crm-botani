@@ -448,7 +448,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-p</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-q</div>
         </div>
       </div>
     </div>
@@ -656,6 +656,8 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
         <div class="bigval"><div><small>Total harga normal</small><b id="pTotN" style="font-size:19px">Rp 0</b></div><div class="bv2"><span id="pTotP">Rp 0</span><small>total harga promo</small></div></div>
         <label>Syarat & ketentuan</label><textarea id="pSyarat" style="min-height:104px"></textarea>
         <label>Catatan (Note)</label><textarea id="pCatatan" style="min-height:62px"></textarea>
+        <label>Disetujui oleh (Approved by)</label><input id="pApproved" maxlength="80" placeholder="Contoh: Scandia Botani">
+        <p class="hint" style="margin:6px 0 0">Nama ini tampil di dalam tanda kurung ( ) pada kolom tanda tangan, di Preview dan PDF. Kosongkan jika ingin diisi tulisan tangan.</p>
       </div>
       <div class="row"><button class="btn" onclick="pPreview()">Preview</button><button class="btn soft" onclick="pSimpan()">Simpan Draft</button></div>
     </div>
@@ -1241,6 +1243,9 @@ const EN = {
  "Telepon (bukan WhatsApp)": "Phone (non-WhatsApp)",
  "Punya website": "Has website",
  "Tanpa nomor telepon": "No phone number",
+ "Disetujui oleh (Approved by)": "Approved by",
+ "Contoh: Scandia Botani": "Example: Scandia Botani",
+ "Nama ini tampil di dalam tanda kurung ( ) pada kolom tanda tangan, di Preview dan PDF. Kosongkan jika ingin diisi tulisan tangan.": "This name appears inside the parentheses ( ) of the signature block, in the Preview and PDF. Leave empty to fill it in by hand.",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -2264,7 +2269,7 @@ function projView(v) {
 function pReset() {
   P.id = ''; P.items = [pEmptyItem()]; P.sug = {};
   $('pKepada').value = ''; $('pTgl').value = todayStr(); $('pSales').value = '';
-  $('pNo').value = P.init ? P.init.nomor : ''; $('pSyarat').value = P.init ? P.init.syarat : ''; $('pCatatan').value = P.init ? P.init.catatan : '';
+  $('pNo').value = P.init ? P.init.nomor : ''; $('pSyarat').value = P.init ? P.init.syarat : ''; $('pCatatan').value = P.init ? P.init.catatan : ''; $('pApproved').value = '';
   clearErrs(['pKepada', 'pTgl', 'pNo', 'pSales']);
   pRender(); paintAllSel();
 }
@@ -2388,7 +2393,7 @@ function pFotoHapus(i) { if (P.items[i]) { P.items[i].fotoId = ''; pRender(); } 
 
 function pCollect() {
   return {id: P.id, bahasa: LANG, nomor: $('pNo').value.trim(), tanggal: $('pTgl').value, kepada: $('pKepada').value.trim(), sales: $('pSales').value,
-          syarat: $('pSyarat').value, catatan: $('pCatatan').value, items: P.items.map(it => Object.assign({}, it))};
+          syarat: $('pSyarat').value, catatan: $('pCatatan').value, approved: $('pApproved').value.trim(), items: P.items.map(it => Object.assign({}, it))};
 }
 function pValidate() {
   const rules = [
@@ -2440,7 +2445,7 @@ function paperHTML(q) {
       <tr><td colspan="4" style="background:#ffff00;border:1px solid #000;padding:5px"></td><td style="background:#ffff00;border:1px solid #000;padding:5px;text-align:right;font-weight:bold">${fmtC(tn)}</td><td style="background:#ffff00;border:1px solid #000;padding:5px;text-align:right;font-weight:bold">${tp ? fmtC(tp) : ''}</td><td style="background:#ffff00;border:1px solid #000"></td></tr>
     </table>
     <div style="border:1.5px solid #000;padding:8px 8px 16px;margin-top:14px;font-size:10px;font-weight:bold;line-height:1.5;min-height:90px">${syarat}${note}
-      <div style="margin-top:14px;text-align:right;font-weight:bold"><div>${en ? 'Approved by,' : 'Disetujui oleh,'}</div><div style="height:48px"></div><div style="font-weight:normal">(&nbsp; ..............................................&nbsp; )</div><div style="font-weight:normal;font-size:8px">${en ? 'Name, Signature &amp; Date' : 'Nama, Tanda Tangan &amp; Tanggal'}</div></div></div>`;
+      <div style="margin-top:14px;display:flex;justify-content:flex-end"><div style="min-width:230px;text-align:center;font-weight:bold"><div>${en ? 'Approved by,' : 'Disetujui oleh,'}</div><div style="height:48px"></div><div style="font-weight:normal">${q.approved ? '(' + esc(q.approved) + ')' : '(&nbsp; ......................................&nbsp; )'}</div><div style="font-weight:normal;font-size:8px">${en ? 'Name, Signature &amp; Date' : 'Nama, Tanda Tangan &amp; Tanggal'}</div></div></div>`;
 }
 function pvFit() {
   const w = $('pvWrap').clientWidth - 16, sc = Math.min(1, w / 794) || 1;
@@ -2499,7 +2504,7 @@ function pLoad(q, baru) {
   P.id = baru ? '' : q.id; P.sug = {};
   P.items = (q.items && q.items.length ? q.items : [pEmptyItem()]).map(it => Object.assign(pEmptyItem(), it));
   $('pKepada').value = q.kepada; $('pTgl').value = baru ? todayStr() : q.tanggal; $('pNo').value = baru ? P.init.nomor : q.nomor;
-  $('pSales').value = q.sales; $('pSyarat').value = q.syarat; $('pCatatan').value = q.catatan;
+  $('pSales').value = q.sales; $('pSyarat').value = q.syarat; $('pCatatan').value = q.catatan; $('pApproved').value = q.approved || '';
   clearErrs(['pKepada', 'pTgl', 'pNo', 'pSales']); pRender(); paintAllSel();
 }
 function pEdit(id) { run('getProject', [id], q => { pLoad(q, false); projView('buat'); }); }
