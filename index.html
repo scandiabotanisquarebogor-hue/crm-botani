@@ -448,7 +448,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-r</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-s</div>
         </div>
       </div>
     </div>
@@ -519,6 +519,18 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
         <button class="chip" data-lp="prev" onclick="lapPreset('prev')">Bulan lalu</button>
       </div>
       <div class="row"><div><label style="margin-top:0">Dari tanggal</label><input id="lapFrom" type="date" onchange="lapManual()"></div><div><label style="margin-top:0">Sampai tanggal</label><input id="lapTo" type="date" onchange="lapManual()"></div></div>
+      <div id="lapChartWrap" style="margin-top:12px">
+        <div class="chips" style="padding-top:0;margin-bottom:6px;flex-wrap:wrap">
+          <button class="chip on" data-lm="fu" onclick="lapMetric('fu')">Follow Up</button>
+          <button class="chip" data-lm="closing" onclick="lapMetric('closing')">Closing</button>
+          <button class="chip" data-lm="baru" onclick="lapMetric('baru')">Customer Baru</button>
+          <button class="chip" data-lm="nilai" onclick="lapMetric('nilai')">Nilai Closing</button>
+        </div>
+        <div id="lapChSum" class="sub" style="margin:0 0 6px"></div>
+        <div style="position:relative;height:190px"><canvas id="lapChDay"></canvas></div>
+        <div class="sub" style="margin:10px 0 4px" id="lapChSalesT"></div>
+        <div style="position:relative;height:190px"><canvas id="lapChSales"></canvas></div>
+      </div>
       <div class="row" style="margin-top:12px">
         <button class="btn sm soft" onclick="buatLaporan()">Buat Laporan</button>
         <button class="btn sm dark" id="btnLapSrv" style="display:none" onclick="laporanServer()">Kirim Otomatis</button>
@@ -1246,6 +1258,7 @@ const EN = {
  "Disetujui oleh (Approved by)": "Approved by",
  "Contoh: Scandia Botani": "Example: Scandia Botani",
  "Nama ini tampil di dalam tanda kurung ( ) pada kolom tanda tangan, di Preview dan PDF. Kosongkan jika tidak memakai kolom tanda tangan.": "This name appears inside the parentheses ( ) of the signature block, in the Preview and PDF. Leave empty to omit the signature block.",
+ "Per Sales": "Per Sales",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1664,7 +1677,7 @@ function remindAll() { run('kirimReminderHarian', [LANG], n => toast(tx('Penging
 
 /* ============ LAPORAN MINGGUAN ============ */
 const isoD = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-function lapPreset(k) {
+function lapPreset(k, quiet) {
   const n = new Date(); let a = new Date(n), b = new Date(n);
   if (k === '7') a.setDate(n.getDate() - 7);
   else if (k === 'week') a.setDate(n.getDate() - ((n.getDay() + 6) % 7));
@@ -1672,16 +1685,53 @@ function lapPreset(k) {
   else { a = new Date(n.getFullYear(), n.getMonth() - 1, 1); b = new Date(n.getFullYear(), n.getMonth(), 0); }
   $('lapFrom').value = isoD(a); $('lapTo').value = isoD(b);
   document.querySelectorAll('[data-lp]').forEach(x => x.classList.toggle('on', x.dataset.lp === k));
-  $('lapBox').style.display = 'none'; beep('tap');
+  $('lapBox').style.display = 'none'; if (!quiet) beep('tap'); loadLapChart();
 }
-function lapManual() { document.querySelectorAll('[data-lp]').forEach(x => x.classList.remove('on')); $('lapBox').style.display = 'none'; }
+function lapManual() { document.querySelectorAll('[data-lp]').forEach(x => x.classList.remove('on')); $('lapBox').style.display = 'none'; clearTimeout(window._lapT); window._lapT = setTimeout(loadLapChart, 250); }
 function lapRange() {
-  if (!$('lapFrom').value && !$('lapTo').value) lapPreset('7');
+  if (!$('lapFrom').value && !$('lapTo').value) lapPreset('7', true);
   const a = $('lapFrom').value || $('lapTo').value, b = $('lapTo').value || a;
   if (b < a) { toast('Tanggal "Sampai" tidak boleh sebelum tanggal "Dari".', 'err'); return null; }
   const is7 = document.querySelector('[data-lp="7"].on');
   return is7 ? ['', ''] : [a, b];
 }
+let LAPG = null, LAPM = 'fu';
+const LAPMT = { fu: 'Follow Up', closing: 'Closing', baru: 'Customer Baru', nilai: 'Nilai Closing' };
+function lapMetric(m) { LAPM = m; document.querySelectorAll('[data-lm]').forEach(x => x.classList.toggle('on', x.dataset.lm === m)); drawLapChart(); }
+function loadLapChart() {
+  if (!$('lapFrom') || !AUTH || (AUTH.role === 'sales' && !(INIT && INIT.openAccess))) return;
+  if (!$('lapFrom').value && !$('lapTo').value) { lapPreset('7', true); return; }
+  const a = $('lapFrom').value || $('lapTo').value, b = $('lapTo').value || a;
+  if (!a || b < a) return;
+  const is7 = document.querySelector('[data-lp="7"].on'), tok = (window._lapTok = (window._lapTok || 0) + 1);
+  run('getGrafikLaporan', is7 ? ['', ''] : [a, b], r => { if (tok !== window._lapTok) return; LAPG = r; drawLapChart(); }, null, true);
+}
+function drawLapChart() {
+  const r = LAPG; if (!r || !window.Chart) return;
+  const m = LAPM, nm = tx(LAPMT[m]), isN = m === 'nilai', col = {fu: '#3b82f6', closing: '#14b8a6', baru: '#f59e0b', nilai: '#14b8a6'}[m];
+  let pts = r.days.map(d => ({ l: d.tgl, v: d[m] || 0 }));
+  if (pts.length > 45) { const w = []; pts.forEach((p, i) => { const k = Math.floor(i / 7); if (!w[k]) w[k] = { l: p.l, v: 0 }; w[k].v += p.v; }); pts = w; }
+  const tot = r.days.reduce((a, d) => a + (d[m] || 0), 0);
+  $('lapChSum').textContent = fmtDate(r.from) + ' – ' + fmtDate(r.to) + '  •  ' + nm + ': ' + (isN ? rp(tot) : tot);
+  $('lapChSalesT').textContent = tx('Per Sales') + ' – ' + nm;
+  ['lapDay', 'lapSales'].forEach(k => { if (charts[k]) { charts[k].destroy(); charts[k] = null; } });
+  const tick = isN ? { callback: v => rpc(v) } : { precision: 0 };
+  const lab = pts.map(p => p.l.slice(8) + '/' + p.l.slice(5, 7));
+  charts.lapDay = new Chart($('lapChDay'), {
+    type: pts.length > 20 ? 'line' : 'bar',
+    data: { labels: lab, datasets: [{ label: nm, data: pts.map(p => p.v), backgroundColor: col, borderColor: col, borderRadius: 4, tension: .3, fill: false, pointRadius: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => nm + ': ' + (isN ? rp(c.parsed.y) : c.parsed.y) } } },
+      scales: { x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } }, y: { beginAtZero: true, ticks: tick, grid: { color: gridC() } } } }
+  });
+  const ss = r.sales.slice().sort((a, b) => b[m] - a[m]);
+  charts.lapSales = new Chart($('lapChSales'), {
+    type: 'bar',
+    data: { labels: ss.map(x => x.nama), datasets: [{ label: nm, data: ss.map(x => x[m] || 0), backgroundColor: col, borderRadius: 4 }] },
+    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => nm + ': ' + (isN ? rp(c.parsed.x) : c.parsed.x) } } },
+      scales: { x: { beginAtZero: true, ticks: tick, grid: { color: gridC() } }, y: { grid: { display: false } } } }
+  });
+}
+{ const _ld = loadDash; loadDash = function () { _ld.apply(this, arguments); loadLapChart(); }; }
 function buatLaporan() {
   const pr = lapRange(); if (!pr) return;
   run('getLaporanMingguan', [LANG, pr[0], pr[1]], r => { LAP = r; $('lapTxt').value = r.teks; $('lapBox').style.display = 'block'; beep('ok'); });
