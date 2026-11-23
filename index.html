@@ -242,6 +242,18 @@ body.lg-open{overflow:hidden}
 .role-sales .admin-only{display:none!important}
 .role-sales:not(.open-access) .adm-open,.role-sales:not(.open-access) .sales-filter{display:none!important}
 #toast{z-index:400}
+.hbtn{position:relative}
+.ndot{display:none;width:9px;height:9px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 2px var(--card,#fff)}
+.ndot.on{display:block}
+.hbtn .ndot{position:absolute;top:5px;right:5px}
+.hmenu button .ndot.inl{margin-left:auto;flex:none}
+.stwrap{display:flex;align-items:center;gap:10px}
+#tab-dash .stwrap .chart-box{flex:0 0 108px;width:108px;height:108px!important}
+.stwrap .stlg{flex:1;min-width:0;margin-top:0;gap:5px;grid-template-columns:minmax(0,1fr)}
+.stwrap .stl{padding:5px 8px;font-size:12px;gap:6px;min-width:0}
+.stwrap .stl .stn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stwrap .stl .stv{min-width:0;white-space:nowrap}
+@media(min-width:900px){#tab-dash .stwrap .chart-box{flex-basis:170px;width:170px;height:170px!important}.stwrap .stl{font-size:13px}}
 .stlg{margin-top:10px;display:grid;gap:6px}
 .stl{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 10px;border-radius:10px;background:var(--soft,rgba(148,163,184,.12))}
 .stl i{width:10px;height:10px;border-radius:50%;flex:none}.stl .stn{flex:1;min-width:0}.stl b{min-width:22px;text-align:right}
@@ -443,16 +455,16 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
         <button id="lgEn" onclick="setLang('en')" aria-pressed="false" title="English">EN</button>
       </div>
       <div class="menuwrap">
-        <button class="hbtn" id="btnMenu" onclick="toggleMenu(event)" title="Menu" aria-haspopup="true" aria-expanded="false"><svg class="ic" width="18" height="18"><use href="#i-more"/></svg></button>
+        <button class="hbtn" id="btnMenu" onclick="toggleMenu(event)" title="Menu" aria-haspopup="true" aria-expanded="false"><svg class="ic" width="18" height="18"><use href="#i-more"/></svg><i class="ndot" id="ndotBtn"></i></button>
         <div class="hmenu" id="hMenu" role="menu">
           <div class="themerow"><span>Tema</span><div class="seg tseg"><button data-th="system" onclick="setTheme('system')">Sistem</button><button data-th="dark" onclick="setTheme('dark')">Gelap</button><button data-th="light" onclick="setTheme('light')">Terang</button></div></div>
           <div class="mechip"><span class="mav" id="meAv"></span><div style="min-width:0"><b id="meName" translate="no"></b><small id="meRole"></small></div></div>
           <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat ulang</span></button>
-          <button role="menuitem" id="btnSound" onclick="toggleSound()"><span id="sndIco"></span><span id="sndLbl">Suara</span><i class="sw" id="sndSw"></i></button>
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
+          <button role="menuitem" id="btnNotif" onclick="openNotif()"><svg class="ic" width="18" height="18"><use href="#i-bell"/></svg><span>Pemberitahuan</span><i class="ndot inl" id="ndotMenu"></i></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-t</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-u</div>
         </div>
       </div>
     </div>
@@ -508,10 +520,9 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
 
     <div class="grid2">
       <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Status per Sales</h2><div class="chart-box"><canvas id="chSales"></canvas></div></div>
-      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="chart-box"><canvas id="chStatus"></canvas></div><div id="stLegend" class="stlg"></div></div>
+      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="stwrap"><div class="chart-box"><canvas id="chStatus"></canvas></div><div id="stLegend" class="stlg"></div></div></div>
     </div>
 
-    <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-alarm"/></svg></i>Perlu Follow Up Sekarang</h2><div id="reminders"></div></div>
     <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-list"/></svg></i>Rekap Detail</h2><div class="wrap-x"><table id="tbRekap"></table></div></div>
 
     <div class="card adm-open">
@@ -685,6 +696,17 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
   <section id="tab-admin" class="tab"><div id="adminBox"></div></section>
 </main>
 
+<!-- PEMBERITAHUAN -->
+<div class="modal" id="ntModal" onclick="if(event.target===this)closeNotif()">
+  <div class="sheet">
+    <div class="grab"></div>
+    <h2><svg class="ic" width="20" height="20" style="vertical-align:-3px;margin-right:6px"><use href="#i-bell"/></svg>Pemberitahuan</h2>
+    <p class="sub" id="ntSub"></p>
+    <div id="reminders"></div>
+    <div class="row" style="margin-top:14px"><button class="btn soft" onclick="closeNotif()">Tutup</button></div>
+  </div>
+</div>
+
 <!-- MODAL FOLLOW UP -->
 <div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
   <div class="sheet">
@@ -779,16 +801,16 @@ const EN = {
  "Follow Up Hari Ini": "Follow-ups Due Today",
  "Terlambat": "Overdue",
  "Hari ini": "Today",
- "Nilai Closing": "Closing Value",
+ "Nilai Deal": "Deal Value",
  "bulan berjalan": "current month",
- "Realisasi nilai closing": "Actual closing value",
+ "Realisasi nilai deal": "Actual deal value",
  "estimasi bulan ini": "estimate this month",
  "Capaian vs estimasi": "Achievement vs estimate",
  "Potensi penjualan": "Sales potential",
- "Rata-rata / closing": "Average / closing",
+ "Rata-rata / deal": "Average / deal",
  "Estimasi vs realisasi per Sales": "Estimate vs actual per Sales",
  "Estimasi vs realisasi tiap bulan": "Estimate vs actual per month",
- "Estimasi = total perkiraan nilai dari customer yang diinput di bulan itu; potensi penjualan = total estimasi customer yang masih diproses (belum Closing/Batal). Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet": "Estimate = total expected value of customers entered that month; sales potential = total estimate of customers still in progress (not yet Closed/Cancelled). Figures reset automatically at the start of every month. Last month's data is saved in the sheet",
+ "Estimasi = total perkiraan nilai dari customer yang diinput di bulan itu; potensi penjualan = total estimasi customer yang masih diproses (belum Deal/Batal). Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet": "Estimate = total expected value of customers entered that month; sales potential = total estimate of customers still in progress (not yet Closed/Cancelled). Figures reset automatically at the start of every month. Last month's data is saved in the sheet",
  "dan": "and",
  "pada Google Sheets untuk dianalisa.": "in Google Sheets for analysis.",
  "Peringkat Sales": "Sales Ranking",
@@ -807,7 +829,7 @@ const EN = {
  "Realisasi": "Actual",
  "{0} follow up menunggu tindakan": "{0} {0|follow-up|follow-ups} awaiting action",
  "Semua follow up on track": "All follow-ups on track",
- "{0} customer • {1} closing • {2}": "{0} {0|customer|customers} • {1} closed • {2}",
+ "{0} customer • {1} deal • {2}": "{0} {0|customer|customers} • {1} closed • {2}",
  "Isi nama Sales di menu Admin.": "Enter Sales names in the Admin menu.",
  "Tidak ada follow up tertunda.": "No pending follow-ups.",
  "Pilih Sales": "Select Sales",
@@ -816,7 +838,7 @@ const EN = {
  "Semua": "All",
  "Nama / HP / produk...": "Name / phone / product...",
  "Belum ada data customer.": "No customer data yet.",
- "Closing {0}": "Closing {0}",
+ "Deal {0}": "Deal {0}",
  "Estimasi {0}": "Estimate {0}",
  "Follow Up": "Follow Up",
  "Phone": "Phone",
@@ -825,27 +847,27 @@ const EN = {
  "Nama Customer": "Customer Name",
  "No WhatsApp": "WhatsApp No.",
  "Produk Diminati": "Product of Interest",
- "Estimasi Nilai Closing (Rp)": "Estimated Closing Value (Rp)",
+ "Estimasi Nilai Deal (Rp)": "Estimated Deal Value (Rp)",
  "Sumber": "Source",
  "Follow Up Berikutnya": "Next Follow-up",
- "Nilai Closing (Rp)": "Closing Value (Rp)",
+ "Nilai Deal (Rp)": "Deal Value (Rp)",
  "Catatan": "Notes",
  "Pilih sumber": "Select source",
  "Nama lengkap": "Full name",
  "Contoh: Sofa 3 seater": "e.g. 3-seater sofa",
  "Perkiraan nilai pembelian": "Expected purchase value",
  "Catatan awal...": "Initial notes...",
- "Semua kolom wajib diisi. Tanggal follow up tidak diperlukan untuk status Closing atau Batal.": "All fields are required. A follow-up date is not needed for Closing or Cancelled status.",
+ "Semua kolom wajib diisi. Tanggal follow up tidak diperlukan untuk status Deal atau Batal.": "All fields are required. A follow-up date is not needed for Deal or Cancelled status.",
  "Simpan Customer": "Save Customer",
  "Nama customer wajib diisi": "Customer name is required",
  "No WhatsApp wajib diisi": "WhatsApp number is required",
  "No WhatsApp tidak valid (angka saja, 9-15 digit)": "Invalid WhatsApp number (digits only, 9-15 digits)",
  "Produk diminati wajib diisi": "Product of interest is required",
- "Estimasi nilai closing wajib diisi (lebih dari 0)": "Estimated closing value is required (greater than 0)",
+ "Estimasi nilai deal wajib diisi (lebih dari 0)": "Estimated deal value is required (greater than 0)",
  "Pilih sumber customer": "Select the customer source",
  "Pilih status": "Select a status",
  "Tanggal follow up berikutnya wajib diisi": "Next follow-up date is required",
- "Nilai closing wajib diisi (lebih dari 0)": "Closing value is required (greater than 0)",
+ "Nilai deal wajib diisi (lebih dari 0)": "Deal value is required (greater than 0)",
  "Catatan wajib diisi": "Notes are required",
  "Lengkapi kolom yang wajib diisi": "Please fill in the required fields",
  "Customer tersimpan": "Customer saved",
@@ -860,7 +882,7 @@ const EN = {
  "Alasan Batal": "Cancellation Reason",
  "Apa hasil follow up hari ini?": "What was the result of today's follow-up?",
  "Alasan batal...": "Reason for cancellation...",
- "Catatan closing...": "Closing notes...",
+ "Catatan deal...": "Deal notes...",
  "Batal": "Cancel",
  "Simpan": "Save",
  "Riwayat Follow Up": "Follow-up History",
@@ -871,7 +893,7 @@ const EN = {
  "Pilih status baru": "Select a new status",
  "Hasil / catatan wajib diisi": "Result / notes are required",
  "Alasan batal wajib diisi": "Cancellation reason is required",
- "Closing! {0}": "Closing! {0}",
+ "Deal! {0}": "Deal! {0}",
  "Selamat!": "Congratulations!",
  "Follow up tersimpan": "Follow-up saved",
  "Nomor HP tidak lengkap/tersensor ({0}). Lengkapi di data customer.": "Phone number is incomplete/masked ({0}). Complete it in the customer data.",
@@ -888,20 +910,20 @@ const EN = {
  "berjalan": "current",
  "dari arsip": "from archive",
  "dihitung langsung": "calculated live",
- "Total nilai closing": "Total closing value",
- "{0} closing": "{0} closed",
+ "Total nilai deal": "Total deal value",
+ "{0} deal": "{0} closed",
  "Win rate {0}%": "Win rate {0}%",
  "Ringkasan {0}": "Summary {0}",
  "Customer baru": "New customers",
  "Follow up": "Follow-ups",
  "Estimasi nilai": "Estimated value",
- "Bulan berjalan: angka bertambah seiring follow up dan closing. Customer yang masih berjalan ada di menu Customer.": "Current month: figures grow as follow-ups and closings happen. Customers still in progress are in the Customer menu.",
+ "Bulan berjalan: angka bertambah seiring follow up dan deal. Customer yang masih berjalan ada di menu Customer.": "Current month: figures grow as follow-ups and deals happen. Customers still in progress are in the Customer menu.",
  "Belum ada data untuk bulan ini.": "No data for this month yet.",
  "Customer Selesai ({0})": "Completed Customers ({0})",
  "Aktivitas Follow Up ({0})": "Follow-up Activity ({0})",
  "Cari nama / sales...": "Search name / sales...",
  "selesai": "completed",
- "Belum ada customer Closing/Batal pada bulan ini.": "No Closed/Cancelled customers this month.",
+ "Belum ada customer Deal/Batal pada bulan ini.": "No Closed/Cancelled customers this month.",
  "Belum ada aktivitas follow up pada bulan ini.": "No follow-up activity this month.",
  "Menampilkan {0} terbaru dari {1} aktivitas. Data lengkap ada di sheet FollowUp.": "Showing the latest {0} of {1} activities. Full data is in the FollowUp sheet.",
  "Buat Penawaran": "Create Quotation",
@@ -994,18 +1016,18 @@ const EN = {
  "dikunci": "locked",
  "Template pesan WhatsApp": "WhatsApp message template",
  "Placeholder:": "Placeholders:",
- ". Status \"Closing\" dan \"Batal\" dikunci karena dipakai untuk perhitungan.": ". The \"Closing\" and \"Batal\" (Cancelled) statuses are locked because they are used in calculations.",
+ ". Status \"Deal\" dan \"Batal\" dikunci karena dipakai untuk perhitungan.": ". The \"Deal\" and \"Batal\" (Cancelled) statuses are locked because they are used in calculations.",
  "Sumber Customer": "Customer Sources",
  "satu per baris": "one per line",
  "Simpan Master": "Save Master",
  "Arsip & Reset Bulanan": "Monthly Archive & Reset",
- "Setiap awal bulan, customer Closing/Batal bulan lalu otomatis dipindah ke sheet": "At the start of each month, last month's Closing/Cancelled customers are automatically moved to the sheet",
+ "Setiap awal bulan, customer Deal/Batal bulan lalu otomatis dipindah ke sheet": "At the start of each month, last month's Deal/Cancelled customers are automatically moved to the sheet",
  ", ringkasannya masuk sheet": ", their summary goes into the sheet",
  ", lalu angka dashboard mulai dari nol. Customer yang masih berjalan tetap dibawa.": ", then the dashboard figures start from zero. Customers still in progress are carried over.",
  "Arsipkan bulan lalu": "Archive last month",
  "Arsipkan & reset sekarang": "Archive & reset now",
  "Ketuk lagi untuk konfirmasi": "Tap again to confirm",
- "\"Arsipkan & reset sekarang\" ikut memindahkan Closing/Batal bulan berjalan, jadi dashboard kembali kosong. Ketuk dua kali untuk konfirmasi.": "\"Archive & reset now\" also moves the current month's Closing/Cancelled customers, so the dashboard becomes empty. Tap twice to confirm.",
+ "\"Arsipkan & reset sekarang\" ikut memindahkan Deal/Batal bulan berjalan, jadi dashboard kembali kosong. Ketuk dua kali untuk konfirmasi.": "\"Archive & reset now\" also moves the current month's Deal/Cancelled customers, so the dashboard becomes empty. Tap twice to confirm.",
  "Ubah Password Admin": "Change Password",
  "Password lama": "Old password",
  "Password baru (min. 6 karakter)": "New password (min. 6 characters)",
@@ -1028,8 +1050,8 @@ const EN = {
  "Sales wajib dipilih.": "Sales must be selected.",
  "Status wajib dipilih.": "Status must be selected.",
  "Tanggal follow up berikutnya wajib diisi.": "Next follow-up date is required.",
- "Estimasi nilai closing wajib diisi.": "Estimated closing value is required.",
- "Nilai closing wajib diisi.": "Closing value is required.",
+ "Estimasi nilai deal wajib diisi.": "Estimated deal value is required.",
+ "Nilai deal wajib diisi.": "Deal value is required.",
  "Catatan wajib diisi.": "Notes are required.",
  "Data follow up tidak lengkap.": "Follow-up data is incomplete.",
  "Status baru wajib dipilih.": "New status must be selected.",
@@ -1063,7 +1085,7 @@ const EN = {
  "Jumlah Status harus 2 sampai 6.": "The number of Statuses must be between 2 and 6.",
  "Nama Status tidak boleh kosong.": "Status name cannot be empty.",
  "Nama Status tidak boleh sama.": "Status names must be unique.",
- "Status \"Closing\" dan \"Batal\" wajib ada dan namanya tidak boleh diubah.": "The \"Closing\" and \"Batal\" (Cancelled) statuses must exist and their names cannot be changed.",
+ "Status \"Deal\" dan \"Batal\" wajib ada dan namanya tidak boleh diubah.": "The \"Deal\" and \"Batal\" (Cancelled) statuses must exist and their names cannot be changed.",
  "Maksimal 10 Sumber.": "Maximum 10 Sources.",
  "Token WhatsApp (FONNTE_TOKEN) belum diisi di Script Properties.": "WhatsApp token (FONNTE_TOKEN) has not been set in Script Properties.",
  "Pesan kosong.": "Message is empty.",
@@ -1242,12 +1264,12 @@ const EN = {
  "Tanggal \"Sampai\" tidak boleh sebelum tanggal \"Dari\".": "The \"To\" date cannot be before the \"From\" date.",
  "Format tanggal tidak valid.": "Invalid date format.",
  "Periode maksimal 1 tahun.": "Maximum period is 1 year.",
- "Tanggal Closing": "Closing Date",
- "Tgl Closing": "Closing date",
+ "Tanggal Deal": "Deal Date",
+ "Tgl Deal": "Deal date",
  "Tgl Batal": "Cancelled on",
- "Tanggal closing wajib diisi": "Closing date is required",
- "Tanggal closing tidak boleh di masa depan.": "Closing date cannot be in the future.",
- "Format tanggal closing tidak valid.": "Invalid closing date format.",
+ "Tanggal deal wajib diisi": "Deal date is required",
+ "Tanggal deal tidak boleh di masa depan.": "Deal date cannot be in the future.",
+ "Format tanggal deal tidak valid.": "Invalid deal date format.",
  "Tema": "Theme",
  "Sistem": "System",
  "Gelap": "Dark",
@@ -1263,11 +1285,13 @@ const EN = {
  "Contoh: Scandia Botani": "Example: Scandia Botani",
  "Nama ini tampil di dalam tanda kurung ( ) pada kolom tanda tangan, di Preview dan PDF. Kosongkan jika tidak memakai kolom tanda tangan.": "This name appears inside the parentheses ( ) of the signature block, in the Preview and PDF. Leave empty to omit the signature block.",
  "Per Sales": "Per Sales",
+ "Pemberitahuan": "Notifications",
+ "Hari ini: {0} • Terlambat: {1}": "Today: {0} • Overdue: {1}",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
-const STEN = {Baru: 'New', Dihubungi: 'Contacted', Tertarik: 'Interested', Negosiasi: 'Negotiation', Closing: 'Closing', Batal: 'Cancelled'};
-const stL = s => LANG === 'en' ? (STEN[s] || s) : s;           // label status untuk tampilan (nilai asli tetap Indonesia)
+const STEN = {Baru: 'New', Dihubungi: 'Contacted', Tertarik: 'Interested', Negosiasi: 'Negotiation', Closing: 'Deal', Batal: 'Cancelled'};
+const stL = s => LANG === 'en' ? (STEN[s] || DL(s)) : DL(s);           // label status untuk tampilan (nilai asli tetap Indonesia)
 const fmtT = (s, a) => s.replace(/\{(\d+)\|([^|}]*)\|([^}]*)\}/g, (m, i, one, many) => Number(a[i]) === 1 ? one : many)   // {0|follow-up|follow-ups}: pilih bentuk tunggal/jamak
                        .replace(/\{(\d+)\}/g, (m, i) => a[i] == null ? '' : a[i]);
 const RXEN = [
@@ -1279,12 +1303,15 @@ const RXEN = [
   [/^Gagal kirim WA: (.+)$/, (m, a) => 'Failed to send WhatsApp: ' + a],
   [/^Nomor HP customer tidak lengkap\/tersensor \((.*)\)\.$/, (m, a) => 'The customer\'s phone number is incomplete/masked (' + a + ').']
 ];
-function lk(s) {                                               // cari terjemahan EN untuk teks Indonesia
+const DL = s => String(s).replace(/Closing/g, 'Deal').replace(/closing/g, 'deal');   // istilah tampilan: Closing -> Deal
+function trV(core) { const v = LANG === 'en' ? lk(core) : undefined; if (v !== undefined) return v; const d = DL(core); return d !== core ? d : undefined; }
+function lk(s) {
+  s = DL(s);                                               // cari terjemahan EN untuk teks Indonesia
   const v = EN[s]; if (v !== undefined) return v;
   for (const [re, fn] of RXEN) { const m = s.match(re); if (m) return fn(...m); }
   return undefined;
 }
-function tx(s, ...a) { const v = LANG === 'en' ? lk(s) : undefined; return fmtT(v !== undefined ? v : s, a); }
+function tx(s, ...a) { const v = LANG === 'en' ? lk(s) : undefined; return fmtT(v !== undefined ? v : DL(s), a); }
 
 /* --- Penerjemah DOM otomatis (teks + atribut), bisa dikembalikan ke Indonesia --- */
 const TR_ATTRS = ['placeholder', 'title', 'alt', 'aria-label'];
@@ -1294,7 +1321,7 @@ function trText(n) {
   const p = n.parentNode; if (!p || TR_SKIP[p.nodeName] || trLocked(p)) return;
   if (n.__t !== undefined && n.nodeValue === n.__t) return;     // sudah diterjemahkan
   const raw = n.nodeValue, core = raw.trim(); if (!core) return;
-  const v = lk(core); if (v === undefined || v === core) return;
+  const v = trV(core); if (v === undefined || v === core) return;
   if (p.nodeName === 'OPTION' && !p.hasAttribute('value')) p.setAttribute('value', core);   // nilai tetap Indonesia
   n.__o = raw; n.__t = raw.replace(core, () => v); n.nodeValue = n.__t;
 }
@@ -1304,7 +1331,7 @@ function trAttrs(el) {
     const cur = el.getAttribute(a); if (!cur) return;
     el.__ao = el.__ao || {}; el.__at = el.__at || {};
     if (el.__at[a] !== undefined && cur === el.__at[a]) return;
-    const core = cur.trim(), v = lk(core); if (v === undefined || v === core) return;
+    const core = cur.trim(), v = trV(core); if (v === undefined || v === core) return;
     el.__ao[a] = cur; el.__at[a] = v; el.setAttribute(a, v);
   });
 }
@@ -1318,7 +1345,7 @@ function attrEls(root) {
   return (root.matches && root.matches(sel) ? [root] : []).concat([...(root.querySelectorAll ? root.querySelectorAll(sel) : [])]);
 }
 function trTree(root) {
-  if (LANG !== 'en' || !root) return;
+  if (!root) return;
   if (root.nodeType === 3) { trText(root); return; }
   textNodes(root).forEach(trText); attrEls(root).forEach(trAttrs);
 }
@@ -1331,7 +1358,6 @@ function untrTree(root) {                                       // kembalikan se
   });
 }
 const trObs = new MutationObserver(ms => {
-  if (LANG !== 'en') return;
   ms.forEach(m => {
     if (m.type === 'characterData') trText(m.target);
     else if (m.type === 'attributes') trAttrs(m.target);
@@ -1352,12 +1378,12 @@ function setLang(l) {
   if (l === LANG) return;
   LANG = l; try { localStorage.setItem('crmLang', l); } catch (e) {}
   document.documentElement.lang = l;
-  if (l === 'en') trTree(document.body); else untrTree(document.body);
+  untrTree(document.body); trTree(document.body);
   beep('tap'); applyLang();
 }
 function applyLang() {
   try { authPaint(); } catch (er) {}            // gambar ulang bagian yang berisi data dinamis dari cache (tanpa memuat ulang server)
-  paintLangSw(); paintSound(); paintDate();
+  paintLangSw(); paintDate();
   ['fStatus', 'mStatus'].forEach(id => { const el = $(id); if (el) [...el.options].forEach(o => o.textContent = stL(o.value)); });
   if (LAST) renderDash(LAST);
   if (CUST.length || $('custList').innerHTML) { renderChips(); renderCust(); }
@@ -1437,40 +1463,8 @@ function toast(msg, type) {
   clearTimeout(toastT); toastT = setTimeout(() => t.className = '', 3200);
 }
 
-/* ============ WEB AUDIO API ============ */
-let audioCtx = null, soundOn = true;
-try { soundOn = localStorage.getItem('crmSound') !== 'off'; } catch (e) {}
-function beep(type) {
-  if (!soundOn) return;
-  try {
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-    const seqs = {
-      tap:  [[520, 0, .06]],
-      ok:   [[660, 0, .12], [880, .12, .2]],
-      send: [[523, 0, .1], [659, .1, .1], [784, .2, .22]],
-      warn: [[440, 0, .15], [440, .22, .15], [440, .44, .15]],
-      err:  [[220, 0, .18], [160, .18, .28]]
-    };
-    (seqs[type] || []).forEach(([f, t, d]) => {
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain(), s = audioCtx.currentTime + t;
-      o.type = 'sine'; o.frequency.value = f; o.connect(g); g.connect(audioCtx.destination);
-      g.gain.setValueAtTime(0.0001, s);
-      g.gain.exponentialRampToValueAtTime(0.25, s + 0.01);
-      g.gain.exponentialRampToValueAtTime(0.0001, s + d);
-      o.start(s); o.stop(s + d + 0.03);
-    });
-  } catch (e) {}
-}
-function paintSound() {
-  $('sndIco').innerHTML = ic(soundOn ? 'bell' : 'bell-off', 18);
-  $('sndLbl').textContent = tx(soundOn ? 'Suara aktif' : 'Suara mati');
-  $('sndSw').classList.toggle('on', soundOn);
-}
-function toggleSound() {
-  soundOn = !soundOn; try { localStorage.setItem('crmSound', soundOn ? 'on' : 'off'); } catch (e) {}
-  paintSound(); if (soundOn) beep('ok');
-}
+/* suara dihapus; beep() dibiarkan kosong agar pemanggil lama tetap aman */
+function beep() {}
 
 /* ============ NAVIGASI & INIT ============ */
 /* ============ IKON DROPDOWN (berubah sesuai pilihan) ============ */
@@ -1543,7 +1537,7 @@ function enterApp() {
 }
 function boot() {
   if (BOOTED) return; BOOTED = true; window.__booted = true;
-  document.documentElement.lang = LANG; paintDate(); paintLangSw(); paintSound(); startTr();
+  document.documentElement.lang = LANG; paintDate(); paintLangSw(); startTr();
   $('lgLogo').src = document.querySelector('.brand .logo').src;
   if (!AUTH.token) { goLogin(); return; }
   enterApp();
@@ -1785,8 +1779,18 @@ function renderDash(r) {
     cacheRem = all.map(x => x.c);
     $('reminders').innerHTML = all.length ? all.slice(0, 30).map(x => custCard(x.c, x.late ? 'late' : 'today', 'rem')).join('')
       : emptyBox('check', 'Tidak ada follow up tertunda.');
+    paintNotif(r);
   }
 }
+function paintNotif(r) {
+  const n = (r.overdue || []).length + (r.dueToday || []).length;
+  ['ndotBtn', 'ndotMenu'].forEach(id => { const e = $(id); if (e) e.classList.toggle('on', n > 0); });
+  const b = $('btnNotif'); if (b) b.setAttribute('aria-label', tx('Pemberitahuan') + (n ? ' (' + n + ')' : ''));
+  $('ntSub').textContent = n ? tx('Hari ini: {0} • Terlambat: {1}', (r.dueToday || []).length, (r.overdue || []).length) : '';
+}
+function openNotif() { closeMenu(); $('ntModal').classList.add('show'); }
+function closeNotif() { $('ntModal').classList.remove('show'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNotif(); });
 function drawCharts(r) {
   if (typeof Chart === 'undefined') { console.error('Chart.js belum termuat'); return; }
   Object.values(charts).forEach(c => c.destroy());
