@@ -242,6 +242,10 @@ body.lg-open{overflow:hidden}
 .role-sales .admin-only{display:none!important}
 .role-sales:not(.open-access) .adm-open,.role-sales:not(.open-access) .sales-filter{display:none!important}
 #toast{z-index:400}
+.stlg{margin-top:10px;display:grid;gap:6px}
+.stl{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 10px;border-radius:10px;background:var(--soft,rgba(148,163,184,.12))}
+.stl i{width:10px;height:10px;border-radius:50%;flex:none}.stl .stn{flex:1;min-width:0}.stl b{min-width:22px;text-align:right}
+.stl .stv{min-width:92px;text-align:right;color:var(--muted,#64748b);font-variant-numeric:tabular-nums}
 .themerow{padding:8px 10px 10px;border-bottom:1px solid var(--line);margin-bottom:2px;font-size:12px;font-weight:700;color:var(--muted)}
 .hmenu .tseg{display:grid;grid-template-columns:repeat(3,1fr);margin:6px 0 0}.hmenu .tseg button{display:block;width:auto;padding:7px 4px;font-size:11.5px;text-align:center;gap:0;border-radius:9px}
 html[data-theme=dark]{color-scheme:dark;--bg:#0b1220;--card:#121b2d;--text:#e6edf7;--muted:#97a6bd;--line:#26334a;--soft:rgba(20,184,166,.16);--shadow:0 4px 18px rgba(0,0,0,.45);--accent3:#5eead4;--navbg:rgba(19,29,49,.96);--track:#2a3a57}
@@ -448,7 +452,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-s</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-t</div>
         </div>
       </div>
     </div>
@@ -504,7 +508,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
 
     <div class="grid2">
       <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Status per Sales</h2><div class="chart-box"><canvas id="chSales"></canvas></div></div>
-      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="chart-box"><canvas id="chStatus"></canvas></div></div>
+      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="chart-box"><canvas id="chStatus"></canvas></div><div id="stLegend" class="stlg"></div></div>
     </div>
 
     <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-alarm"/></svg></i>Perlu Follow Up Sekarang</h2><div id="reminders"></div></div>
@@ -1797,8 +1801,10 @@ function drawCharts(r) {
   charts.status = new Chart($('chStatus'), {
     type: 'doughnut',
     data: { labels: r.statuses.map(stL), datasets: [{data: r.statuses.map(s => r.byStatus[s]), backgroundColor: r.statuses.map(colorOf), borderWidth: 3, borderColor: '#fff'}] },
-    options: { responsive: true, maintainAspectRatio: false, cutout: '64%', plugins: {legend: leg} }
+    options: { responsive: true, maintainAspectRatio: false, cutout: '64%', plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => { const st = r.statuses[c.dataIndex]; return stL(st) + ': ' + c.parsed + ' (' + rp((r.nilaiByStatus || {})[st] || 0) + ')'; }}}} }
   });
+  $('stLegend').innerHTML = r.statuses.map((st, i) => { const n = r.byStatus[st] || 0, v = (r.nilaiByStatus || {})[st] || 0;
+    return `<div class="stl"><i style="background:${colorOf(st, i)}"></i><span class="stn">${esc(stL(st))}</span><b>${n}</b><span class="stv">${rp(v)}</span></div>`; }).join('');
   const lbl = c => c.dataset.label + ': ' + rp(c.parsed.x !== undefined && c.chart.options.indexAxis === 'y' ? c.parsed.x : c.parsed.y);
   charts.nilai = new Chart($('chNilai'), {
     type: 'bar',
