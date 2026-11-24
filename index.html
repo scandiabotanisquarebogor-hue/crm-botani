@@ -246,18 +246,22 @@ body.lg-open{overflow:hidden}
 .ndot{display:none;width:9px;height:9px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 2px var(--card,#fff)}
 .ndot.on{display:block}
 .hbtn .ndot{position:absolute;top:5px;right:5px}
+.bellbtn{position:absolute;top:calc(100% + 8px);right:0}
+@media(min-width:1024px),(orientation:landscape) and (min-width:640px){header{padding-bottom:106px!important}.greet{padding-right:0}}
+.hmenu{z-index:70}
+.greet{padding-right:48px}
+@media(min-width:780px){.grid2.one{grid-template-columns:1fr}}
 .hmenu button .ndot.inl{margin-left:auto;flex:none}
 .stwrap{display:flex;align-items:center;gap:10px}
 #tab-dash .stwrap .chart-box{flex:0 0 108px;width:108px;height:108px!important}
 .stwrap .stlg{flex:1;min-width:0;margin-top:0;gap:5px;grid-template-columns:minmax(0,1fr)}
 .stwrap .stl{padding:5px 8px;font-size:12px;gap:6px;min-width:0}
-.stwrap .stl .stn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.stwrap .stl .stv{min-width:0;white-space:nowrap}
+@media(max-width:560px){.stwrap .stl{grid-template-columns:10px minmax(0,1fr) 20px 58px}.stwrap .stl .stv{min-width:58px}.stwrap .stl .stv .f{display:none}.stwrap .stl .stv .c{display:inline}}
 @media(min-width:900px){#tab-dash .stwrap .chart-box{flex-basis:170px;width:170px;height:170px!important}.stwrap .stl{font-size:13px}}
 .stlg{margin-top:10px;display:grid;gap:6px}
-.stl{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 10px;border-radius:10px;background:var(--soft,rgba(148,163,184,.12))}
-.stl i{width:10px;height:10px;border-radius:50%;flex:none}.stl .stn{flex:1;min-width:0}.stl b{min-width:22px;text-align:right}
-.stl .stv{min-width:92px;text-align:right;color:var(--muted,#64748b);font-variant-numeric:tabular-nums}
+.stl{display:grid;grid-template-columns:10px minmax(0,1fr) 24px auto;align-items:center;gap:8px;font-size:13px;padding:6px 10px;border-radius:10px;background:var(--soft,rgba(148,163,184,.12))}
+.stl i{width:10px;height:10px;border-radius:50%}.stl .stn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stl b{text-align:right}
+.stl .stv{min-width:100px;text-align:right;color:var(--muted,#64748b);font-variant-numeric:tabular-nums;white-space:nowrap}.stv .c{display:none}
 .themerow{padding:8px 10px 10px;border-bottom:1px solid var(--line);margin-bottom:2px;font-size:12px;font-weight:700;color:var(--muted)}
 .hmenu .tseg{display:grid;grid-template-columns:repeat(3,1fr);margin:6px 0 0}.hmenu .tseg button{display:block;width:auto;padding:7px 4px;font-size:11.5px;text-align:center;gap:0;border-radius:9px}
 html[data-theme=dark]{color-scheme:dark;--bg:#0b1220;--card:#121b2d;--text:#e6edf7;--muted:#97a6bd;--line:#26334a;--soft:rgba(20,184,166,.16);--shadow:0 4px 18px rgba(0,0,0,.45);--accent3:#5eead4;--navbg:rgba(19,29,49,.96);--track:#2a3a57}
@@ -455,16 +459,16 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
         <button id="lgEn" onclick="setLang('en')" aria-pressed="false" title="English">EN</button>
       </div>
       <div class="menuwrap">
-        <button class="hbtn" id="btnMenu" onclick="toggleMenu(event)" title="Menu" aria-haspopup="true" aria-expanded="false"><svg class="ic" width="18" height="18"><use href="#i-more"/></svg><i class="ndot" id="ndotBtn"></i></button>
+        <button class="hbtn" id="btnMenu" onclick="toggleMenu(event)" title="Menu" aria-haspopup="true" aria-expanded="false"><svg class="ic" width="18" height="18"><use href="#i-more"/></svg></button>
+        <button class="hbtn bellbtn" id="btnNotif" onclick="openNotif()" title="Pemberitahuan" aria-label="Pemberitahuan"><svg class="ic" width="18" height="18"><use href="#i-bell"/></svg><i class="ndot" id="ndotBtn"></i></button>
         <div class="hmenu" id="hMenu" role="menu">
           <div class="themerow"><span>Tema</span><div class="seg tseg"><button data-th="system" onclick="setTheme('system')">Sistem</button><button data-th="dark" onclick="setTheme('dark')">Gelap</button><button data-th="light" onclick="setTheme('light')">Terang</button></div></div>
           <div class="mechip"><span class="mav" id="meAv"></span><div style="min-width:0"><b id="meName" translate="no"></b><small id="meRole"></small></div></div>
           <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat ulang</span></button>
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
-          <button role="menuitem" id="btnNotif" onclick="openNotif()"><svg class="ic" width="18" height="18"><use href="#i-bell"/></svg><span>Pemberitahuan</span><i class="ndot inl" id="ndotMenu"></i></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-u</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-w</div>
         </div>
       </div>
     </div>
@@ -506,6 +510,8 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <p class="hint">Estimasi = total perkiraan nilai dari customer yang diinput di bulan itu; potensi penjualan = total estimasi customer yang masih diproses (belum Closing/Batal). Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet <b translate="no">Rekap YYYY-MM</b> dan <b translate="no">Riwayat</b> pada Google Sheets untuk dianalisa.</p>
     </div>
 
+    <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="stwrap"><div class="chart-box"><canvas id="chStatus"></canvas></div><div id="stLegend" class="stlg"></div></div></div>
+
     <div class="card">
       <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-trophy"/></svg></i>Peringkat Sales<small>ketuk nama untuk lihat customer</small></h2>
       <div id="leader"></div>
@@ -518,9 +524,8 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <div id="cmpBox"><div class="sub">Memuat...</div></div>
     </div>
 
-    <div class="grid2">
+    <div class="grid2 one">
       <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Status per Sales</h2><div class="chart-box"><canvas id="chSales"></canvas></div></div>
-      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="stwrap"><div class="chart-box"><canvas id="chStatus"></canvas></div><div id="stLegend" class="stlg"></div></div></div>
     </div>
 
     <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-list"/></svg></i>Rekap Detail</h2><div class="wrap-x"><table id="tbRekap"></table></div></div>
@@ -702,6 +707,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
     <div class="grab"></div>
     <h2><svg class="ic" width="20" height="20" style="vertical-align:-3px;margin-right:6px"><use href="#i-bell"/></svg>Pemberitahuan</h2>
     <p class="sub" id="ntSub"></p>
+    <button class="btn sm dark block admin-only" id="btnRemAll2" onclick="remindAll()" style="margin-bottom:12px"><svg class="ic" width="15" height="15"><use href="#i-send"/></svg>Kirim Pengingat WA ke Semua Sales</button>
     <div id="reminders"></div>
     <div class="row" style="margin-top:14px"><button class="btn soft" onclick="closeNotif()">Tutup</button></div>
   </div>
@@ -1287,10 +1293,12 @@ const EN = {
  "Per Sales": "Per Sales",
  "Pemberitahuan": "Notifications",
  "Hari ini: {0} • Terlambat: {1}": "Today: {0} • Overdue: {1}",
+ "Deal": "Deals",
+ "Kirim otomatis WhatsApp belum diaktifkan. Isi token WhatsApp di menu Pengaturan.": "Automatic WhatsApp sending is not enabled. Add the WhatsApp token in Settings.",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
-const STEN = {Baru: 'New', Dihubungi: 'Contacted', Tertarik: 'Interested', Negosiasi: 'Negotiation', Closing: 'Deal', Batal: 'Cancelled'};
+const STEN = {Baru: 'New', Dihubungi: 'Contacted', Tertarik: 'Interested', Negosiasi: 'Negotiation', Closing: 'Deal\u200b', Batal: 'Cancelled'};
 const stL = s => LANG === 'en' ? (STEN[s] || DL(s)) : DL(s);           // label status untuk tampilan (nilai asli tetap Indonesia)
 const fmtT = (s, a) => s.replace(/\{(\d+)\|([^|}]*)\|([^}]*)\}/g, (m, i, one, many) => Number(a[i]) === 1 ? one : many)   // {0|follow-up|follow-ups}: pilih bentuk tunggal/jamak
                        .replace(/\{(\d+)\}/g, (m, i) => a[i] == null ? '' : a[i]);
@@ -1303,10 +1311,11 @@ const RXEN = [
   [/^Gagal kirim WA: (.+)$/, (m, a) => 'Failed to send WhatsApp: ' + a],
   [/^Nomor HP customer tidak lengkap\/tersensor \((.*)\)\.$/, (m, a) => 'The customer\'s phone number is incomplete/masked (' + a + ').']
 ];
-const DL = s => String(s).replace(/Closing/g, 'Deal').replace(/closing/g, 'deal');   // istilah tampilan: Closing -> Deal
+const NK = s => String(s).replace(/Closing/g, 'Deal').replace(/closing/g, 'deal');   // kunci kamus (kanonik)
+const DL = s => LANG === 'en' ? NK(s) : String(s).replace(/Closing Rate/g, 'Rasio Transaksi').replace(/Closing/g, 'Transaksi').replace(/closing/g, 'transaksi');   // istilah tampilan
 function trV(core) { const v = LANG === 'en' ? lk(core) : undefined; if (v !== undefined) return v; const d = DL(core); return d !== core ? d : undefined; }
 function lk(s) {
-  s = DL(s);                                               // cari terjemahan EN untuk teks Indonesia
+  s = NK(s);                                               // cari terjemahan EN untuk teks Indonesia
   const v = EN[s]; if (v !== undefined) return v;
   for (const [re, fn] of RXEN) { const m = s.match(re); if (m) return fn(...m); }
   return undefined;
@@ -1562,7 +1571,7 @@ function fillSelects() {
   $('fStatus').innerHTML = opts(INIT.statuses, false, true);
   $('fSumber').innerHTML = '<option value="">Pilih sumber</option>' + opts(INIT.sumber);
   $('mStatus').innerHTML = opts(INIT.statuses, false, true);
-  $('btnRemAll').style.display = INIT.waServer ? 'flex' : 'none';
+  $('btnRemAll').style.display = 'none';
   $('btnLapSrv').style.display = INIT.waServer ? 'flex' : 'none';
   toggleFields('f');
   paintAllSel();
@@ -1671,7 +1680,7 @@ function remindSales(i) {
   m += (en ? '\n\nOverdue (' : '\n\nTerlambat (') + od.length + '):\n' + (od.map(c => '• ' + c.nama + (en ? ' - due ' : ' - jadwal ') + fmtDate(c.nextFU)).join('\n') || '-');
   beep('send'); window.open(waLink(s.wa, m), '_blank');
 }
-function remindAll() { run('kirimReminderHarian', [LANG], n => toast(tx('Pengingat terkirim ke {0} Sales', n), 'ok')); }
+function remindAll() { if (!INIT.waServer) { toast('Kirim otomatis WhatsApp belum diaktifkan. Isi token WhatsApp di menu Pengaturan.', 'err'); return; } run('kirimReminderHarian', [LANG], n => toast(tx('Pengingat terkirim ke {0} Sales', n), 'ok')); }
 
 /* ============ LAPORAN MINGGUAN ============ */
 const isoD = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
@@ -1714,18 +1723,35 @@ function drawLapChart() {
   $('lapChSalesT').textContent = tx('Per Sales') + ' – ' + nm;
   ['lapDay', 'lapSales'].forEach(k => { if (charts[k]) { charts[k].destroy(); charts[k] = null; } });
   const tick = isN ? { callback: v => rpc(v) } : { precision: 0 };
+  const lblP = (fmt, skip) => ({ id: 'lapLbl', afterDatasetsDraw(ch) {
+    if (skip || ch.config.type === 'line') return;
+    const meta = ch.getDatasetMeta(0), ctx = ch.ctx, hz = ch.options.indexAxis === 'y', txt = Chart.defaults.color || '#64748b';
+    ctx.save(); ctx.font = '600 11px system-ui,sans-serif'; ctx.textBaseline = 'middle';
+    meta.data.forEach((bar, i) => {
+      const v = ch.data.datasets[0].data[i]; if (v == null) return;
+      const t = fmt(v), w = ctx.measureText(t).width;
+      if (hz) { const len = Math.abs(bar.x - bar.base);
+        if (len >= w + 12) { ctx.fillStyle = '#fff'; ctx.textAlign = 'right'; ctx.fillText(t, bar.x - 6, bar.y); }
+        else { ctx.fillStyle = txt; ctx.textAlign = 'left'; ctx.fillText(t, bar.x + 5, bar.y); } }
+      else { const len = Math.abs(bar.base - bar.y);
+        if (len >= 22 && w + 4 <= bar.width) { ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.fillText(t, bar.x, bar.y + 10); }
+        else { ctx.fillStyle = txt; ctx.textAlign = 'center'; ctx.fillText(t, bar.x, bar.y - 9); } }
+    });
+    ctx.restore(); } });
   const lab = pts.map(p => p.l.slice(8) + '/' + p.l.slice(5, 7));
   charts.lapDay = new Chart($('lapChDay'), {
     type: pts.length > 20 ? 'line' : 'bar',
     data: { labels: lab, datasets: [{ label: nm, data: pts.map(p => p.v), backgroundColor: col, borderColor: col, borderRadius: 4, tension: .3, fill: false, pointRadius: 2 }] },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => nm + ': ' + (isN ? rp(c.parsed.y) : c.parsed.y) } } },
+    plugins: [lblP(v => isN ? rpc(v) : String(v), pts.length > 16)],
+    options: { layout: { padding: { top: 16 } }, responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => nm + ': ' + (isN ? rp(c.parsed.y) : c.parsed.y) } } },
       scales: { x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 12 } }, y: { beginAtZero: true, ticks: tick, grid: { color: gridC() } } } }
   });
   const ss = r.sales.slice().sort((a, b) => b[m] - a[m]);
   charts.lapSales = new Chart($('lapChSales'), {
     type: 'bar',
     data: { labels: ss.map(x => x.nama), datasets: [{ label: nm, data: ss.map(x => x[m] || 0), backgroundColor: col, borderRadius: 4 }] },
-    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => nm + ': ' + (isN ? rp(c.parsed.x) : c.parsed.x) } } },
+    plugins: [lblP(v => isN ? rp(v) : String(v), false)],
+    options: { indexAxis: 'y', layout: { padding: { right: isN ? 78 : 30 } }, responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => nm + ': ' + (isN ? rp(c.parsed.x) : c.parsed.x) } } },
       scales: { x: { beginAtZero: true, ticks: tick, grid: { color: gridC() } }, y: { grid: { display: false } } } }
   });
 }
@@ -1808,7 +1834,7 @@ function drawCharts(r) {
     options: { responsive: true, maintainAspectRatio: false, cutout: '64%', plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => { const st = r.statuses[c.dataIndex]; return stL(st) + ': ' + c.parsed + ' (' + rp((r.nilaiByStatus || {})[st] || 0) + ')'; }}}} }
   });
   $('stLegend').innerHTML = r.statuses.map((st, i) => { const n = r.byStatus[st] || 0, v = (r.nilaiByStatus || {})[st] || 0;
-    return `<div class="stl"><i style="background:${colorOf(st, i)}"></i><span class="stn">${esc(stL(st))}</span><b>${n}</b><span class="stv">${rp(v)}</span></div>`; }).join('');
+    return `<div class="stl" title="${esc(rp(v))}"><i style="background:${colorOf(st, i)}"></i><span class="stn">${esc(stL(st))}</span><b>${n}</b><span class="stv"><span class="f">${rp(v)}</span><span class="c">Rp ${rpc(v)}</span></span></div>`; }).join('');
   const lbl = c => c.dataset.label + ': ' + rp(c.parsed.x !== undefined && c.chart.options.indexAxis === 'y' ? c.parsed.x : c.parsed.y);
   charts.nilai = new Chart($('chNilai'), {
     type: 'bar',
