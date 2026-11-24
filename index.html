@@ -242,7 +242,9 @@ body.lg-open{overflow:hidden}
 .role-sales .admin-only{display:none!important}
 .role-sales:not(.open-access) .adm-open,.role-sales:not(.open-access) .sales-filter{display:none!important}
 #toast{z-index:400}
-.hbtn{position:relative}
+.hbtn{position:relative;touch-action:manipulation}
+.modal{backdrop-filter:none!important;background:rgba(15,23,42,.6)}
+#ntModal .sheet{animation-duration:.16s}
 .ndot{display:none;width:9px;height:9px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 2px var(--card,#fff)}
 .ndot.on{display:block}
 .hbtn .ndot{position:absolute;top:5px;right:5px}
@@ -468,7 +470,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-w</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-y</div>
         </div>
       </div>
     </div>
@@ -515,7 +517,6 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
     <div class="card">
       <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-trophy"/></svg></i>Peringkat Sales<small>ketuk nama untuk lihat customer</small></h2>
       <div id="leader"></div>
-      <button class="btn sm dark block" id="btnRemAll" style="display:none" onclick="remindAll()"><svg class="ic" width="15" height="15"><use href="#i-send"/></svg>Kirim Pengingat WA ke Semua Sales</button>
     </div>
 
     <div class="card admin-only">
@@ -707,7 +708,6 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
     <div class="grab"></div>
     <h2><svg class="ic" width="20" height="20" style="vertical-align:-3px;margin-right:6px"><use href="#i-bell"/></svg>Pemberitahuan</h2>
     <p class="sub" id="ntSub"></p>
-    <button class="btn sm dark block admin-only" id="btnRemAll2" onclick="remindAll()" style="margin-bottom:12px"><svg class="ic" width="15" height="15"><use href="#i-send"/></svg>Kirim Pengingat WA ke Semua Sales</button>
     <div id="reminders"></div>
     <div class="row" style="margin-top:14px"><button class="btn soft" onclick="closeNotif()">Tutup</button></div>
   </div>
@@ -1571,7 +1571,6 @@ function fillSelects() {
   $('fStatus').innerHTML = opts(INIT.statuses, false, true);
   $('fSumber').innerHTML = '<option value="">Pilih sumber</option>' + opts(INIT.sumber);
   $('mStatus').innerHTML = opts(INIT.statuses, false, true);
-  $('btnRemAll').style.display = 'none';
   $('btnLapSrv').style.display = INIT.waServer ? 'flex' : 'none';
   toggleFields('f');
   paintAllSel();
@@ -1680,7 +1679,6 @@ function remindSales(i) {
   m += (en ? '\n\nOverdue (' : '\n\nTerlambat (') + od.length + '):\n' + (od.map(c => '• ' + c.nama + (en ? ' - due ' : ' - jadwal ') + fmtDate(c.nextFU)).join('\n') || '-');
   beep('send'); window.open(waLink(s.wa, m), '_blank');
 }
-function remindAll() { if (!INIT.waServer) { toast('Kirim otomatis WhatsApp belum diaktifkan. Isi token WhatsApp di menu Pengaturan.', 'err'); return; } run('kirimReminderHarian', [LANG], n => toast(tx('Pengingat terkirim ke {0} Sales', n), 'ok')); }
 
 /* ============ LAPORAN MINGGUAN ============ */
 const isoD = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
