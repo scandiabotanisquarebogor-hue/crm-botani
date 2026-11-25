@@ -243,7 +243,6 @@ body.lg-open{overflow:hidden}
 .role-sales:not(.open-access) .adm-open,.role-sales:not(.open-access) .sales-filter{display:none!important}
 #toast{z-index:400}
 .hbtn{position:relative;touch-action:manipulation}
-.modal{backdrop-filter:none!important;background:rgba(15,23,42,.6)}
 #ntModal .sheet{animation-duration:.16s}
 .ndot{display:none;width:9px;height:9px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 2px var(--card,#fff)}
 .ndot.on{display:block}
@@ -470,7 +469,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-z</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-aa</div>
         </div>
       </div>
     </div>
@@ -701,6 +700,15 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
   <!-- ADMIN -->
   <section id="tab-admin" class="tab"><div id="adminBox"></div></section>
 </main>
+
+<!-- KONFIRMASI KELUAR -->
+<div class="modal" id="exModal" style="z-index:300;align-items:center;padding:20px" onclick="if(event.target===this)exitNo()">
+  <div class="sheet" style="max-width:340px;border-radius:22px;text-align:center;padding:22px 20px 18px">
+    <h2 style="margin:0 0 6px">Keluar dari aplikasi?</h2>
+    <p class="sub" style="margin:0 0 16px">Tekan Ya untuk keluar, atau tetap di sini untuk melanjutkan.</p>
+    <div class="row" style="gap:10px"><button class="btn soft" style="flex:1" onclick="exitNo()">Tetap di sini</button><button class="btn dark" style="flex:1" onclick="exitYes()">Ya, keluar</button></div>
+  </div>
+</div>
 
 <!-- PEMBERITAHUAN -->
 <div class="modal" id="ntModal" onclick="if(event.target===this)closeNotif()">
@@ -1295,6 +1303,10 @@ const EN = {
  "Hari ini: {0} • Terlambat: {1}": "Today: {0} • Overdue: {1}",
  "Deal": "Deals",
  "Kirim otomatis WhatsApp belum diaktifkan. Isi token WhatsApp di menu Pengaturan.": "Automatic WhatsApp sending is not enabled. Add the WhatsApp token in Settings.",
+ "Keluar dari aplikasi?": "Exit the app?",
+ "Tekan Ya untuk keluar, atau tetap di sini untuk melanjutkan.": "Press Yes to exit, or stay here to continue.",
+ "Tetap di sini": "Stay here",
+ "Ya, keluar": "Yes, exit",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1806,6 +1818,24 @@ function renderDash(r) {
     paintNotif(r);
   }
 }
+let EXITING = false;
+function exitAsk() { $('exModal').classList.add('show'); }
+function exitNo() { $('exModal').classList.remove('show'); }
+function exitYes() { EXITING = true; $('exModal').classList.remove('show'); try { history.go(-2); } catch (e) {} setTimeout(() => { try { window.close(); } catch (e) {} }, 350); }
+(function () {
+  try { history.replaceState({ crm: 'base' }, ''); history.pushState({ crm: 'guard' }, ''); } catch (e) { return; }
+  window.addEventListener('popstate', () => {
+    if (EXITING) return;
+    try { history.pushState({ crm: 'guard' }, ''); } catch (e) {}
+    const open = [...document.querySelectorAll('.modal.show')].pop();
+    if (open && open.id === 'exModal') { exitNo(); return; }
+    if (open) { open.dispatchEvent(new MouseEvent('click')); open.classList.remove('show'); return; }
+    if ($('hMenu').classList.contains('show')) { closeMenu(); return; }
+    const act = document.querySelector('.tab.active');
+    if (act && act.id !== 'tab-dash') { show('dash'); return; }
+    exitAsk();
+  });
+})();
 function paintNotif(r) {
   const n = (r.overdue || []).length + (r.dueToday || []).length;
   ['ndotBtn', 'ndotMenu'].forEach(id => { const e = $(id); if (e) e.classList.toggle('on', n > 0); });
