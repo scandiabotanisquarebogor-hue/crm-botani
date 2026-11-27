@@ -483,16 +483,16 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
         <div class="hmenu" id="hMenu" role="menu">
           <div class="themerow"><span>Tema</span><div class="seg tseg"><button data-th="system" onclick="setTheme('system')">Sistem</button><button data-th="dark" onclick="setTheme('dark')">Gelap</button><button data-th="light" onclick="setTheme('light')">Terang</button></div></div>
           <div class="mechip"><span class="mav" id="meAv"></span><div style="min-width:0"><b id="meName" translate="no"></b><small id="meRole"></small></div></div>
-          <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat ulang</span></button>
+          <button role="menuitem" onclick="menuRefresh()"><svg class="ic" width="18" height="18"><use href="#i-refresh"/></svg><span>Muat Ulang</span></button>
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ag</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ah</div>
         </div>
       </div>
     </div>
   </div>
-  <div class="greet">Ringkasan hari ini<b id="greetTxt">Small changes, big impact</b></div>
+  <div class="greet">Ringkasan Hari Ini<b id="greetTxt">Small changes, big impact</b></div>
 </header>
 
 <main>
@@ -512,34 +512,34 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
     </div>
 
     <div class="card">
-      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-wallet"/></svg></i>Nilai Closing<small>bulan berjalan</small></h2>
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-wallet"/></svg></i>Nilai Closing<small>Bulan Berjalan</small></h2>
       <div class="bigval">
-        <div><small>Realisasi nilai closing</small><b id="kNilai">Rp 0</b></div>
-        <div class="bv2"><span id="kEst">Rp 0</span><small>nilai prospek baru bulan ini</small></div>
+        <div><small>Realisasi Nilai Closing</small><b id="kNilai">Rp 0</b></div>
+        <div class="bv2"><span id="kEst">Rp 0</span><small>Nilai Prospek Baru Bulan Ini</small></div>
       </div>
       <div class="mini mini3" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">
-        <div><b id="kCapai">0%</b><span>Capaian vs Sales Pipeline</span></div>
-        <div><b id="kPot">Rp 0</b><span>Sales Pipeline</span></div>
-        <div><b id="kAvg">-</b><span>Penjualan batal</span></div>
+        <div><b id="kCapai">0%</b><span>Capaian vs Nilai Prospek Bulan Ini</span></div>
+        <div><b id="kPot">Rp 0</b><span>Pipeline Penjualan</span></div>
+        <div><b id="kAvg">-</b><span>Penjualan Batal</span></div>
       </div>
       <div class="grid2">
-        <div><div class="sublbl">Estimasi vs realisasi per Sales</div><div class="chart-box" style="height:230px"><canvas id="chNilai"></canvas></div></div>
-        <div><div class="sublbl">Estimasi vs realisasi tiap bulan</div><div class="chart-box" style="height:230px"><canvas id="chTren"></canvas></div></div>
+        <div><div class="sublbl">Estimasi vs Realisasi per Sales</div><div class="chart-box" style="height:230px"><canvas id="chNilai"></canvas></div></div>
+        <div><div class="sublbl">Estimasi vs Realisasi Tiap Bulan</div><div class="chart-box" style="height:230px"><canvas id="chTren"></canvas></div></div>
       </div>
-      <p class="hint">Nilai prospek baru bulan ini = total perkiraan nilai dari customer yang diinput bulan ini; Sales Pipeline = total estimasi customer yang masih diproses (belum Closing/Batal); penjualan batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet <b translate="no">Rekap YYYY-MM</b> dan <b translate="no">Riwayat</b> pada Google Sheets untuk dianalisa.</p>
+      <p class="hint">Nilai Prospek Baru Bulan Ini = total perkiraan nilai dari customer yang diinput bulan ini; Pipeline Penjualan = total estimasi customer yang masih diproses (belum Closing/Batal); Penjualan Batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet <b translate="no">Rekap YYYY-MM</b> dan <b translate="no">Riwayat</b> pada Google Sheets untuk dianalisa.</p>
     </div>
 
     <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="stwrap"><div class="chart-box"><canvas id="chStatus"></canvas></div><div id="stLegend" class="stlg"></div></div></div>
 
     <div class="card">
-      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-trophy"/></svg></i><span id="raceT">Peringkat Sales</span><small>ketuk nama untuk lihat customer</small></h2>
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-trophy"/></svg></i><span id="raceT">Peringkat Sales</span><small>Ketuk nama untuk lihat customer</small></h2>
       <div id="raceMon" class="rmon"></div>
       <div id="raceLg" class="rlg"></div>
       <div id="leader"></div>
     </div>
 
     <div class="card admin-only">
-      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Perbandingan per Sales<small>bulan lalu vs bulan ini</small></h2>
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Perbandingan per Sales<small>Bulan Lalu vs Bulan Ini</small></h2>
       <div class="chips" id="cmpChips" style="margin-bottom:10px"></div>
       <div id="cmpBox"><div class="sub">Memuat...</div></div>
     </div>
@@ -551,14 +551,14 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
     <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-list"/></svg></i>Rekap Detail</h2><div class="wrap-x"><table id="tbRekap"></table></div></div>
 
     <div class="card adm-open">
-      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-file"/></svg></i>Laporan Mingguan<small>pilih periode</small></h2>
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-file"/></svg></i>Laporan Mingguan<small>Pilih Periode</small></h2>
       <div class="chips" style="padding-top:0;margin-bottom:8px;flex-wrap:wrap">
         <button class="chip on" data-lp="7" onclick="lapPreset('7')">7 hari terakhir</button>
         <button class="chip" data-lp="week" onclick="lapPreset('week')">Minggu ini</button>
         <button class="chip" data-lp="month" onclick="lapPreset('month')">Bulan ini</button>
         <button class="chip" data-lp="prev" onclick="lapPreset('prev')">Bulan lalu</button>
       </div>
-      <div class="row"><div><label style="margin-top:0">Dari tanggal</label><input id="lapFrom" type="date" onchange="lapManual()"></div><div><label style="margin-top:0">Sampai tanggal</label><input id="lapTo" type="date" onchange="lapManual()"></div></div>
+      <div class="row"><div><label style="margin-top:0">Dari Tanggal</label><input id="lapFrom" type="date" onchange="lapManual()"></div><div><label style="margin-top:0">Sampai Tanggal</label><input id="lapTo" type="date" onchange="lapManual()"></div></div>
       <div id="lapChartWrap" style="margin-top:12px">
         <div class="chips" style="padding-top:0;margin-bottom:6px;flex-wrap:wrap">
           <button class="chip on" data-lm="fu" onclick="lapMetric('fu')">Follow Up</button>
@@ -824,11 +824,11 @@ let LANG = 'id';
 try { LANG = localStorage.getItem('crmLang') === 'en' ? 'en' : 'id'; } catch (e) {}
 const LOC = () => LANG === 'en' ? 'en-US' : 'id-ID';
 const EN = {
- "Muat ulang": "Refresh",
+ "Muat Ulang": "Refresh",
  "Suara aktif": "Sound on",
  "Suara mati": "Sound off",
  "Pengaturan (Admin)": "Settings (Admin)",
- "Ringkasan hari ini": "Today's summary",
+ "Ringkasan Hari Ini": "Today's Summary",
  "Kirim pengingat ke WA Sales": "Send reminder to Sales via WhatsApp",
  "Performa Toko": "Store Performance",
  "Total Customer": "Total Customers",
@@ -836,19 +836,19 @@ const EN = {
  "Terlambat": "Overdue",
  "Hari ini": "Today",
  "Nilai Deal": "Deal Value",
- "bulan berjalan": "current month",
- "Realisasi nilai deal": "Actual deal value",
+ "Bulan Berjalan": "Current Month",
+ "Realisasi Nilai Deal": "Actual Deal Value",
  "estimasi bulan ini": "estimate this month",
  "Capaian vs estimasi": "Achievement vs estimate",
  "Potensi penjualan": "Sales potential",
  "Rata-rata / deal": "Average / deal",
- "Estimasi vs realisasi per Sales": "Estimate vs actual per Sales",
- "Estimasi vs realisasi tiap bulan": "Estimate vs actual per month",
- "Nilai prospek baru bulan ini = total perkiraan nilai dari customer yang diinput bulan ini; Sales Pipeline = total estimasi customer yang masih diproses (belum Deal/Batal); penjualan batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet": "New prospect value this month = total expected value of customers entered this month; Sales Pipeline = total estimate of customers still in progress (not yet Closed/Cancelled); sales cancelled = total estimate of customers with Cancelled status. Figures reset automatically at the start of every month. Last month's data is saved in the sheet",
+ "Estimasi vs Realisasi per Sales": "Estimate vs Actual per Sales",
+ "Estimasi vs Realisasi Tiap Bulan": "Estimate vs Actual per Month",
+ "Nilai Prospek Baru Bulan Ini = total perkiraan nilai dari customer yang diinput bulan ini; Pipeline Penjualan = total estimasi customer yang masih diproses (belum Deal/Batal); Penjualan Batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet": "New Prospect Value This Month = total expected value of customers entered this month; Sales Pipeline = total estimate of customers still in progress (not yet Closed/Cancelled); Sales Cancelled = total estimate of customers with Cancelled status. Figures reset automatically at the start of every month. Last month's data is saved in the sheet",
  "dan": "and",
  "pada Google Sheets untuk dianalisa.": "in Google Sheets for analysis.",
  "Peringkat Sales": "Sales Race",
- "ketuk nama untuk lihat customer": "tap a name to view customers",
+ "Ketuk nama untuk lihat customer": "Tap a name to view customers",
  "Kirim Pengingat WA ke Semua Sales": "Send WhatsApp Reminder to All Sales",
  "Laporan Mingguan": "Weekly Report",
  "7 hari terakhir": "Last 7 days",
@@ -1279,7 +1279,7 @@ const EN = {
  "Username tidak ditemukan.": "Username not found.",
  "Akun admin tidak bisa dihapus.": "The admin account cannot be deleted.",
  "Perbandingan per Sales": "Comparison per Sales",
- "bulan lalu vs bulan ini": "last month vs this month",
+ "Bulan Lalu vs Bulan Ini": "Last Month vs This Month",
  "Belum ada data pembanding.": "No comparison data yet.",
  "baru": "new",
  "Akses Sales": "Sales Access",
@@ -1289,12 +1289,12 @@ const EN = {
  "Jika aktif, semua akun Sales bisa: melihat semua customer & Sales (daftar, database, dashboard, riwayat), menambah/follow up customer Sales lain, memakai tombol Cari Customer di tab Penawaran, dan Laporan Mingguan. Menu Admin tetap tertutup untuk Sales.": "When on, every Sales account can: see all customers & Sales (list, database, dashboard, history), add/follow up other Sales' customers, use the Find Customers button in the Quotation tab, and the Weekly Report. The Admin menu stays closed to Sales.",
  "Akses penuh Sales diaktifkan": "Full Sales access enabled",
  "Akses penuh Sales dinonaktifkan": "Full Sales access disabled",
- "pilih periode": "choose period",
+ "Pilih Periode": "Choose Period",
  "Minggu ini": "This week",
  "Bulan ini": "This month",
  "Bulan lalu": "Last month",
- "Dari tanggal": "From date",
- "Sampai tanggal": "To date",
+ "Dari Tanggal": "From Date",
+ "Sampai Tanggal": "To Date",
  "Tanggal \"Sampai\" tidak boleh sebelum tanggal \"Dari\".": "The \"To\" date cannot be before the \"From\" date.",
  "Format tanggal tidak valid.": "Invalid date format.",
  "Periode maksimal 1 tahun.": "Maximum period is 1 year.",
@@ -1334,13 +1334,14 @@ const EN = {
  "Follow Up {0} • Walk In {1}": "Follow Up {0} • Walk In {1}",
  "potensi penjualan": "sales potential",
  "Capaian vs potensi penjualan": "Achievement vs sales potential",
- "Penjualan batal": "Sales cancelled",
+ "Penjualan Batal": "Sales Cancelled",
  "Nilai prospek baru bulan ini": "New prospect value this month",
- "nilai prospek baru bulan ini": "new prospect value this month",
- "Capaian vs Sales Pipeline": "Achievement vs Sales Pipeline",
+ "Nilai Prospek Baru Bulan Ini": "New Prospect Value This Month",
+ "Capaian vs Nilai Prospek Bulan Ini": "Achievement vs New Prospect Value",
  "Rapikan huruf nama": "Fix name capitalization",
  "{0} nama dirapikan. Tekan Simpan untuk menerapkan.": "{0} name(s) fixed. Press Save to apply.",
  "Semua nama sudah rapi.": "All names are already tidy.",
+ "Pipeline Penjualan": "Sales Pipeline",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1865,7 +1866,7 @@ function renderDash(r) {
     $('kPeriode').textContent = monLong(r.bulan);
     $('kNilai').textContent = rp(r.nilaiTotal);
     $('kEst').textContent = rp(r.estimasiBulan);
-    $('kCapai').textContent = r.potensiTotal ? Math.round(r.nilaiTotal / r.potensiTotal * 100) + '%' : '-';
+    $('kCapai').textContent = r.estimasiBulan ? Math.round(r.nilaiTotal / r.estimasiBulan * 100) + '%' : '-';
     $('kPot').textContent = 'Rp ' + rpc(r.potensiTotal || 0);
     $('kAvg').textContent = 'Rp ' + rpc((r.nilaiByStatus || {})['Batal'] || 0);
     $('ring').style.setProperty('--p', Math.min(r.rate, 100) + '%');
