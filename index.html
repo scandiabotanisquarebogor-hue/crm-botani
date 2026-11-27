@@ -487,7 +487,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ad</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ae</div>
         </div>
       </div>
     </div>
@@ -1805,18 +1805,26 @@ function laporanServer() { const pr = lapRange(); if (!pr) return; run('kirimLap
 /* ============ DASHBOARD ============ */
 const emptyBox = (icon, txt) => `<div class="empty"><div class="ei">${ic(icon, 26)}</div>${txt}</div>`;
 function loadDash() { run('getRekap', [], r => { LAST = r; if (INIT && AUTH.role === 'sales' && INIT.openAccess !== r.openAccess) { INIT.openAccess = r.openAccess; applyRole(); } renderDash(r); if (r.overdue.length) beep('warn'); }); loadCmp(); }
-let RACE_YM = null, RACE_D = null;
+let RACE_YM = null, RACE_D = null; const RACE_C = {}, RACE_BUSY = {};
+function raceGet(ym, cb) {
+  const c = RACE_C[ym]; if (c && Date.now() - c.t < 300000) { cb(c.d); return; }
+  if (RACE_BUSY[ym]) { RACE_BUSY[ym].push(cb); return; }
+  RACE_BUSY[ym] = [cb];
+  run('getSalesRace', [ym], x => { RACE_C[ym] = { t: Date.now(), d: x }; const q = RACE_BUSY[ym]; delete RACE_BUSY[ym]; q.forEach(f => f(x)); }, () => { delete RACE_BUSY[ym]; }, true);
+}
+function racePre(r, ym, ms) { const i = ms.indexOf(ym); if (i > 0) raceGet(ms[i - 1], () => {}); }
 function raceMon(d) {
   if (!LAST || !LAST.race) return;
   const cur = LAST.race.bulan, ms = LAST.race.months || [cur], i = Math.max(0, Math.min(ms.length - 1, ms.indexOf(RACE_YM || cur) + d));
   RACE_YM = ms[i] === cur ? null : ms[i]; RACE_D = null;
-  if (RACE_YM) { const ym = RACE_YM; run('getSalesRace', [ym], x => { if (RACE_YM === ym) { RACE_D = x; paintRace(LAST); } }, null, true); }
+  if (RACE_YM) { const ym = RACE_YM; raceGet(ym, x => { if (RACE_YM === ym) { RACE_D = x; paintRace(LAST); } }); }
   paintRace(LAST);
 }
 function paintRace(r) {
   const cur = (r.race && r.race.bulan) || r.bulan, ym = RACE_YM || cur, isCur = ym === cur, ms = (r.race && r.race.months) || [cur], i = ms.indexOf(ym);
   $('raceMon').innerHTML = ms.length > 1 ? `<button onclick="raceMon(-1)" ${i <= 0 ? 'disabled' : ''} aria-label="prev">‹</button><span>${esc(monLong(ym))}</span><button onclick="raceMon(1)" ${i >= ms.length - 1 ? 'disabled' : ''} aria-label="next">›</button>` : '';
   $('raceT').textContent = tx('Peringkat Sales') + ' ' + monLong(ym);
+  if (isCur) setTimeout(() => racePre(r, ym, ms), 600);
   let rows;
   if (isCur) {
     const RC = r.race || { rows: {}, target: 125000000 };
