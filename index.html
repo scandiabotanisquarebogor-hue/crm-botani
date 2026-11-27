@@ -246,6 +246,21 @@ body.lg-open{overflow:hidden}
 .rmon button{border:1px solid var(--line);background:none;color:inherit;border-radius:10px;width:36px;height:30px;font-size:18px;line-height:1;cursor:pointer}
 .rmon button:disabled{opacity:.3;cursor:default}
 .rmon span{font-weight:700;font-size:13px;min-width:130px;text-align:center}
+.fwk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.fk{border:1px solid var(--line);border-radius:12px;padding:10px 11px;min-width:0}
+.fk span{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.fk b{display:block;font-size:14.5px;margin:3px 0 2px;overflow-wrap:anywhere}
+.fk small{display:block;font-size:11px;color:var(--muted)}
+.fk.fu{border-left:4px solid #14b8a6}.fk.wi{border-left:4px solid #f59e0b}
+.fk em{font-style:normal;font-weight:700;margin-left:4px}.fk em.up{color:#059669}.fk em.dn{color:#dc2626}
+.fws .fr{display:grid;grid-template-columns:minmax(70px,26%) minmax(0,1fr) auto;gap:8px;align-items:center;margin:6px 0;font-size:12.5px}
+.fws .fr b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fws .fr>span{font-size:11.5px;color:var(--muted);min-width:64px;text-align:right}
+.fb{display:flex;height:20px;border-radius:6px;overflow:hidden;background:#eef2f6}
+.fb i{display:flex;align-items:center;justify-content:center;font:600 10.5px/1 system-ui,sans-serif;color:#fff;font-style:normal;overflow:hidden}
+.fb i.fu{background:#14b8a6}.fb i.wi{background:#f59e0b}.fb i.no{background:transparent}
+html[data-theme=dark] .fb{background:#1c2940}
+#fwNote{font-size:11px;color:var(--muted);margin-top:10px}#fwTb tr[onclick]{cursor:pointer}#fwTb tr.sel td{background:rgba(20,184,166,.12)}
 .rh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .rt{font-weight:700;font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .rt em{font-style:normal;color:#0d9488;margin-left:6px}
@@ -487,7 +502,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ah</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ai</div>
         </div>
       </div>
     </div>
@@ -544,8 +559,14 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <div id="cmpBox"><div class="sub">Memuat...</div></div>
     </div>
 
-    <div class="grid2 one">
-      <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Status per Sales</h2><div class="chart-box"><canvas id="chSales"></canvas></div></div>
+    <div class="card" id="fwCard">
+      <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-chart"/></svg></i>Follow Up vs Walk In<small>Analisis Penjualan</small></h2>
+      <div class="chips" id="fwChips" style="padding-top:0;margin-bottom:8px"></div>
+      <div id="fwKpi" class="fwk"></div>
+      <div class="sublbl">Tren Bulanan</div><div class="chart-box" style="height:230px"><canvas id="chFW"></canvas></div>
+      <div class="sublbl" style="margin-top:14px">Komposisi per Sales</div><div id="fwSales" class="fws"></div>
+      <div class="wrap-x" style="margin-top:12px"><table id="fwTb"></table></div>
+      <div class="rnote" id="fwNote"></div>
     </div>
 
     <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-list"/></svg></i>Rekap Detail</h2><div class="wrap-x"><table id="tbRekap"></table></div></div>
@@ -855,6 +876,14 @@ const EN = {
  "Buat Laporan": "Create Report",
  "Kirim Otomatis": "Send Automatically",
  "Buka WhatsApp": "Open WhatsApp",
+ "Follow Up vs Walk In": "Follow Up vs Walk In",
+ "Analisis Penjualan": "Sales Analysis",
+ "Tren Bulanan": "Monthly Trend",
+ "Komposisi per Sales": "Mix by Sales",
+ "dari total": "of total",
+ "Bulan": "Month",
+ "% Follow Up": "% Follow Up",
+ "% Walk In": "% Walk In",
  "Status per Sales": "Status by Salesperson",
  "Komposisi Status": "Status Distribution",
  "Perlu Follow Up Sekarang": "Needs Follow-up Now",
@@ -1914,13 +1943,69 @@ function paintNotif(r) {
 function openNotif() { closeMenu(); $('ntModal').classList.add('show'); }
 function closeNotif() { $('ntModal').classList.remove('show'); }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNotif(); });
+let FW_YM = null;
+function fwData(ym) {
+  const r = LAST; if (!r) return null;
+  const cur = (r.race && r.race.bulan) || r.bulan;
+  let rows;
+  if (ym === cur) {
+    const RC = r.race || { rows: {} };
+    rows = r.sales.map(s => { const fu = r.nilaiBySales[s] || 0, e = (RC.rows || {})[s] || {}, total = Math.max(e.total || 0, fu); return {s, fu, wi: Math.max(0, total - fu)}; });
+  } else {
+    const c = RACE_C[ym]; if (!c) return null; const D = c.d;
+    rows = D.sales.map(s => { const e = D.rows[s] || {}, fu = e.fu || 0, total = Math.max(e.total || 0, fu); return {s, fu, wi: Math.max(0, total - fu)}; });
+  }
+  const fu = rows.reduce((a, x) => a + x.fu, 0), wi = rows.reduce((a, x) => a + x.wi, 0);
+  return {ym, rows, fu, wi, total: fu + wi};
+}
+function fwMonths() { const r = LAST, cur = (r.race && r.race.bulan) || r.bulan; return ((r.race && r.race.months) || [cur]).slice(-6); }
+function fwSel(ym) { FW_YM = ym; fwPaint(LAST); }
+function fwPaint(r) {
+  if (!$('fwCard') || !r) return;
+  if (charts.fw) { try { charts.fw.destroy(); } catch (e) {} delete charts.fw; }
+  const ms = fwMonths(), cur = (r.race && r.race.bulan) || r.bulan, sel = ms.indexOf(FW_YM) >= 0 ? FW_YM : cur;
+  const miss = ms.filter(m => m !== cur && !RACE_C[m]);
+  if (miss.length) {
+    $('fwKpi').innerHTML = '<div class="sub" style="padding:10px 0">' + esc(tx('Memuat...')) + '</div>';
+    if (!r._fwBusy) { r._fwBusy = 1; let n = miss.length; miss.forEach(m => raceGet(m, () => { if (--n === 0) { r._fwBusy = 0; if (LAST === r) fwPaint(r); } })); }
+    return;
+  }
+  const D = ms.map(fwData);
+  $('fwChips').innerHTML = ms.map(m => `<button class="chip ${m === sel ? 'on' : ''}" onclick="fwSel('${m}')">${esc(monLong(m))}</button>`).join('');
+  const i = ms.indexOf(sel), d = D[i], pv = i > 0 ? D[i - 1] : null;
+  const pct = (a, b) => b ? Math.round(a / b * 100) : 0;
+  const chg = (a, b) => (!pv || !b || !Math.round((a - b) / b * 100)) ? '' : `<em class="${a >= b ? 'up' : 'dn'}">${a >= b ? '▲' : '▼'} ${Math.abs(Math.round((a - b) / b * 100))}%</em>`;
+  $('fwKpi').innerHTML =
+    `<div class="fk fu"><span>Follow Up</span><b title="${esc(rp(d.fu))}">Rp ${rpc(d.fu)}</b><small>${pct(d.fu, d.total)}% ${tx('dari total')} ${chg(d.fu, pv && pv.fu)}</small></div>` +
+    `<div class="fk wi"><span>Walk In</span><b title="${esc(rp(d.wi))}">Rp ${rpc(d.wi)}</b><small>${d.total ? 100 - pct(d.fu, d.total) : 0}% ${tx('dari total')} ${chg(d.wi, pv && pv.wi)}</small></div>` +
+    `<div class="fk"><span>Total</span><b title="${esc(rp(d.total))}">Rp ${rpc(d.total)}</b><small>${esc(monLong(sel))} ${chg(d.total, pv && pv.total)}</small></div>`;
+  const bars = d.rows.slice().sort((a, b) => (b.fu + b.wi) - (a.fu + a.wi)).map(x => { const t = x.fu + x.wi, f = pct(x.fu, t);
+    return `<div class="fr"><b>${esc(x.s)}</b><div class="fb">${t ? `<i class="fu" style="width:${f}%">${f >= 14 ? f + '%' : ''}</i><i class="wi" style="width:${100 - f}%">${100 - f >= 14 ? (100 - f) + '%' : ''}</i>` : '<i class="no" style="width:100%"></i>'}</div><span>${rp(t)}</span></div>`; }).join('');
+  $('fwSales').innerHTML = bars || '<div class="sub">-</div>';
+  $('fwTb').innerHTML = `<tr><th>${tx('Bulan')}</th><th>Follow Up</th><th>Walk In</th><th>Total</th><th>% Follow Up</th><th>% Walk In</th></tr>` +
+    D.map(x => `<tr class="${x.ym === sel ? 'sel' : ''}" onclick="fwSel('${x.ym}')"><td><b>${esc(monLong(x.ym))}</b></td><td>${rp(x.fu)}</td><td>${rp(x.wi)}</td><td><b>${rp(x.total)}</b></td><td>${pct(x.fu, x.total)}%</td><td>${x.total ? 100 - pct(x.fu, x.total) : 0}%</td></tr>`).join('');
+  $('fwNote').textContent = tx('Pencapaian termasuk pajak. Follow Up dari data aplikasi, Walk In = selisihnya.');
+  if (typeof Chart === 'undefined') return;
+  const lbl = ms.map(m => { const p = m.split('-'); return new Date(+p[0], +p[1] - 1, 1).toLocaleDateString(LOC(), {month: 'short', year: '2-digit'}); });
+  charts.fw = new Chart($('chFW'), {
+    data: { labels: lbl, datasets: [
+      {type: 'bar', label: 'Follow Up', data: D.map(x => x.fu), backgroundColor: '#14b8a6', borderRadius: 4, stack: 'a', yAxisID: 'y'},
+      {type: 'bar', label: 'Walk In', data: D.map(x => x.wi), backgroundColor: '#f59e0b', borderRadius: 4, stack: 'a', yAxisID: 'y'},
+      {type: 'line', label: '% Follow Up', data: D.map(x => pct(x.fu, x.total)), borderColor: '#6366f1', backgroundColor: '#6366f1', pointRadius: 3, tension: .25, yAxisID: 'y2'}] },
+    options: { responsive: true, maintainAspectRatio: false, interaction: {mode: 'index', intersect: false},
+      scales: { x: {stacked: true, grid: {display: false}}, y: {stacked: true, beginAtZero: true, grid: {color: gridC()}, ticks: {callback: v => rpc(v)}},
+                y2: {position: 'right', min: 0, max: 100, grid: {display: false}, ticks: {callback: v => v + '%'}} },
+      plugins: {legend: {position: 'bottom', labels: {boxWidth: 10, usePointStyle: true}}, tooltip: {callbacks: {label: c => c.dataset.label + ': ' + (c.dataset.yAxisID === 'y2' ? c.parsed.y + '%' : rp(c.parsed.y))}}} }
+  });
+}
 function drawCharts(r) {
   if (typeof Chart === 'undefined') { console.error('Chart.js belum termuat'); return; }
   Object.values(charts).forEach(c => c.destroy());
   Chart.defaults.font.family = "'Plus Jakarta Sans',system-ui,sans-serif";
   Chart.defaults.color = themeNow() === 'dark' ? '#97a6bd' : '#64748b';
   const leg = {position: 'bottom', labels: {boxWidth: 10, usePointStyle: true}};
-  charts.sales = new Chart($('chSales'), {
+  fwPaint(r);
+  if (false) charts.sales = new Chart($('chSales'), {
     type: 'bar',
     data: { labels: r.sales, datasets: r.statuses.map((st, i) => ({label: stL(st), data: r.sales.map(s => r.matrix[s][st]), backgroundColor: colorOf(st, i), borderRadius: 4})) },
     options: { responsive: true, maintainAspectRatio: false, scales: {x: {stacked: true, grid: {display: false}}, y: {stacked: true, beginAtZero: true, ticks: {precision: 0}, grid: {color: gridC()}}}, plugins: {legend: leg} }
