@@ -246,6 +246,7 @@ body.lg-open{overflow:hidden}
 .rmon button{border:1px solid var(--line);background:none;color:inherit;border-radius:10px;width:36px;height:30px;font-size:18px;line-height:1;cursor:pointer}
 .rmon button:disabled{opacity:.3;cursor:default}
 .rmon span{font-weight:700;font-size:13px;min-width:130px;text-align:center}
+.cust p.alasan b{color:#dc2626}
 .fwk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}
 .fk{border:1px solid var(--line);border-radius:12px;padding:10px 11px;min-width:0}
 .fk span{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
@@ -502,7 +503,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-aj</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ak</div>
         </div>
       </div>
     </div>
@@ -535,13 +536,13 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <div class="mini mini3" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">
         <div><b id="kCapai">0%</b><span>Capaian vs Nilai Prospek Bulan Ini</span></div>
         <div><b id="kPot">Rp 0</b><span>Pipeline Penjualan</span></div>
-        <div><b id="kAvg">-</b><span>Penjualan Batal</span></div>
+        <div><b id="kAvg">-</b><span>Batal Transaksi</span></div>
       </div>
       <div class="grid2">
         <div><div class="sublbl">Estimasi vs Realisasi per Sales</div><div class="chart-box" style="height:230px"><canvas id="chNilai"></canvas></div></div>
         <div><div class="sublbl">Estimasi vs Realisasi Tiap Bulan</div><div class="chart-box" style="height:230px"><canvas id="chTren"></canvas></div></div>
       </div>
-      <p class="hint">Nilai Prospek Baru Bulan Ini = total perkiraan nilai dari customer yang diinput bulan ini; Pipeline Penjualan = total estimasi customer yang masih diproses (belum Closing/Batal); Penjualan Batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet <b translate="no">Rekap YYYY-MM</b> dan <b translate="no">Riwayat</b> pada Google Sheets untuk dianalisa.</p>
+      <p class="hint">Nilai Prospek Baru Bulan Ini = total perkiraan nilai dari customer yang diinput bulan ini; Pipeline Penjualan = total estimasi customer yang masih diproses (belum Closing/Batal); Batal Transaksi = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet <b translate="no">Rekap YYYY-MM</b> dan <b translate="no">Riwayat</b> pada Google Sheets untuk dianalisa.</p>
     </div>
 
     <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="stwrap"><div class="chart-box"><canvas id="chStatus"></canvas></div><div id="stLegend" class="stlg"></div></div></div>
@@ -611,6 +612,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <label>Cari customer</label>
       <div class="search"><svg class="ic" width="16" height="16"><use href="#i-search"/></svg><input id="q" type="search" placeholder="Nama / HP / produk..." oninput="renderCust()"></div>
       <div class="chips" id="chips"></div>
+      <div id="alBox" style="display:none;margin-top:6px"><label style="margin-top:0">Alasan Batal</label><select id="alSel" onchange="alF=this.value;renderCust()"></select></div>
     </div>
     <div id="custList"></div>
   </section>
@@ -627,7 +629,8 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <div class="row"><div><label>Sumber <span class="req">*</span></label><select id="fSumber"></select></div><div><label>Sales <span class="req">*</span></label><select id="fSales"></select></div></div>
       <div class="row"><div><label>Status <span class="req">*</span></label><select id="fStatus" onchange="toggleFields('f')"></select></div><div id="fNextBox"><label>Follow Up Berikutnya <span class="req">*</span></label><input id="fNext" type="date"></div></div>
       <div id="fNilaiBox" style="display:none"><div class="row"><div><label>Nilai Closing (Rp) <span class="req">*</span></label><input id="fNilai" inputmode="numeric" placeholder="0" oninput="fmtNum(this)"></div><div><label>Tanggal Closing <span class="req">*</span></label><input id="fTglClose" type="date"></div></div></div>
-      <label>Catatan <span class="req">*</span></label><textarea id="fCatatan" placeholder="Catatan awal..."></textarea>
+      <div id="fAlasanBox" style="display:none"><label>Alasan Batal <span class="req">*</span></label><select id="fAlasan" onchange="toggleFields('f')"></select></div>
+      <label id="fNoteLbl">Catatan <span class="req">*</span></label><textarea id="fCatatan" placeholder="Catatan awal..."></textarea>
       <p class="hint"><span class="req">*</span> Semua kolom wajib diisi. Tanggal follow up tidak diperlukan untuk status Closing atau Batal.</p>
       <button class="btn block" id="btnAdd" onclick="submitAdd()">Simpan Customer</button>
     </div>
@@ -649,6 +652,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
         <div><label>Bulan masuk</label><select id="acBulan" onchange="AC.bulan=this.value;acLim=100;acRender()"></select></div>
       </div>
       <div class="chips" id="acChips"></div>
+      <div id="acAlBox" style="display:none;margin:2px 0 8px"><label style="margin-top:0">Alasan Batal</label><select id="acAlSel" onchange="AC.al=this.value;acLim=100;acRender()"></select></div>
       <div id="acSum"></div>
       <div class="acbtn" style="margin:2px 0 4px"><button class="btn sm soft" onclick="acReset()">Reset filter</button><button class="btn sm" onclick="acExport()">Unduh Excel</button></div>
       <div id="acList" style="margin-top:8px"></div>
@@ -783,6 +787,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
     <div id="mNilaiBox" style="display:none"><div class="row"><div><label>Nilai Closing (Rp) <span class="req">*</span></label><input id="mNilai" inputmode="numeric" placeholder="0" oninput="fmtNum(this)"></div><div><label>Tanggal Closing <span class="req">*</span></label><input id="mTglClose" type="date"></div></div></div>
     <div id="mEstBox"><label>Estimasi Nilai Closing (Rp) <span class="req">*</span></label><input id="mEst" inputmode="numeric" placeholder="Perbarui bila ada perubahan" oninput="fmtNum(this)"></div>
     <div id="mNextBox"><label>Follow Up Berikutnya <span class="req">*</span></label><input id="mNext" type="date"></div>
+    <div id="mAlasanBox" style="display:none"><label>Alasan Batal <span class="req">*</span></label><select id="mAlasan" onchange="toggleFields('m')"></select></div>
     <label id="mNoteLbl">Hasil / Catatan <span class="req">*</span></label><textarea id="mNote" style="min-height:70px" placeholder="Apa hasil follow up hari ini?"></textarea>
     <div class="row" style="margin-top:16px"><button class="btn soft" onclick="closeModal()">Batal</button><button class="btn" id="btnFu" onclick="submitFU()">Simpan</button></div>
     <div class="hist"><b>Riwayat Follow Up</b><div id="mHist">Memuat...</div></div>
@@ -865,7 +870,7 @@ const EN = {
  "Rata-rata / deal": "Average / deal",
  "Estimasi vs Realisasi per Sales": "Estimate vs Actual per Sales",
  "Estimasi vs Realisasi Tiap Bulan": "Estimate vs Actual per Month",
- "Nilai Prospek Baru Bulan Ini = total perkiraan nilai dari customer yang diinput bulan ini; Pipeline Penjualan = total estimasi customer yang masih diproses (belum Deal/Batal); Penjualan Batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet": "New Prospect Value This Month = total expected value of customers entered this month; Sales Pipeline = total estimate of customers still in progress (not yet Closed/Cancelled); Sales Cancelled = total estimate of customers with Cancelled status. Figures reset automatically at the start of every month. Last month's data is saved in the sheet",
+ "Nilai Prospek Baru Bulan Ini = total perkiraan nilai dari customer yang diinput bulan ini; Pipeline Penjualan = total estimasi customer yang masih diproses (belum Deal/Batal); Batal Transaksi = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet": "New Prospect Value This Month = total expected value of customers entered this month; Sales Pipeline = total estimate of customers still in progress (not yet Closed/Cancelled); Cancelled Deals = total estimate of customers with Cancelled status. Figures reset automatically at the start of every month. Last month's data is saved in the sheet",
  "dan": "and",
  "pada Google Sheets untuk dianalisa.": "in Google Sheets for analysis.",
  "Peringkat Sales": "Sales Race",
@@ -884,6 +889,25 @@ const EN = {
  "Bulan": "Month",
  "% Follow Up": "% Follow Up",
  "% Walk In": "% Walk In",
+ "Batal Transaksi": "Cancelled Deals",
+ "Catatan / Remark": "Notes / Remark",
+ "Pilih alasan batal": "Select cancellation reason",
+ "Semua alasan": "All reasons",
+ "Belum diisi": "Not filled in",
+ "Jelaskan alasan lainnya di Catatan / Remark": "Explain the other reason in Notes / Remark",
+ "Jelaskan alasan lainnya...": "Explain the other reason...",
+ "Penjelasan lebih detail (opsional)...": "More detailed explanation (optional)...",
+ "Beli di tempat lain": "Bought elsewhere",
+ "Rumah masih perbaikan": "Home still under renovation",
+ "Budget kurang": "Budget too low",
+ "Pengajuan leasing tidak disetujui": "Financing (leasing) application not approved",
+ "Tidak ada respon": "No response",
+ "Model kurang cocok": "Design not a good fit",
+ "Harga lebih tinggi dari kompetitor": "Price higher than competitors",
+ "Stok tidak tersedia": "Out of stock",
+ "Pengiriman terlalu lama": "Delivery takes too long",
+ "Menunda pembelian": "Postponed the purchase",
+ "Hanya survei harga": "Just comparing prices",
  "Status per Sales": "Status by Salesperson",
  "Komposisi Status": "Status Distribution",
  "Perlu Follow Up Sekarang": "Needs Follow-up Now",
@@ -1363,7 +1387,6 @@ const EN = {
  "Follow Up {0} • Walk In {1}": "Follow Up {0} • Walk In {1}",
  "potensi penjualan": "sales potential",
  "Capaian vs potensi penjualan": "Achievement vs sales potential",
- "Penjualan Batal": "Sales Cancelled",
  "Nilai prospek baru bulan ini": "New prospect value this month",
  "Nilai Prospek Baru Bulan Ini": "New Prospect Value This Month",
  "Capaian vs Nilai Prospek Bulan Ini": "Achievement vs New Prospect Value",
@@ -1470,6 +1493,7 @@ function applyLang() {
   try { authPaint(); } catch (er) {}            // gambar ulang bagian yang berisi data dinamis dari cache (tanpa memuat ulang server)
   paintLangSw(); paintDate();
   ['fStatus', 'mStatus'].forEach(id => { const el = $(id); if (el) [...el.options].forEach(o => o.textContent = stL(o.value)); });
+  try { paintAlasan(); } catch (e) {}
   if (LAST) renderDash(LAST);
   if (CUST.length || $('custList').innerHTML) { renderChips(); renderCust(); }
   if (HIST) { renderBulan(); paintBulanOpts(); }
@@ -1644,7 +1668,7 @@ function fillSelects() {
   $('selSales').innerHTML = opts(salesNames(), true);
   $('fSales').innerHTML = '<option value="">Pilih Sales</option>' + opts(salesNames());
   $('pSales').innerHTML = '<option value="">Pilih Sales</option>' + opts(salesNames());
-  $('fStatus').innerHTML = opts(INIT.statuses, false, true);
+  $('fStatus').innerHTML = opts(INIT.statuses, false, true); paintAlasan();
   $('fSumber').innerHTML = '<option value="">Pilih sumber</option>' + opts(INIT.sumber);
   $('mStatus').innerHTML = opts(INIT.statuses, false, true);
   $('btnLapSrv').style.display = INIT.waServer ? 'flex' : 'none';
@@ -1655,6 +1679,19 @@ function fillSelects() {
 function refreshAll() {
   run('getInitData', [], d => { INIT = d; fillSelects(); loadDash(); loadCust(); toast('Data diperbarui', 'ok'); });
 }
+const ALASAN = ['Beli di tempat lain', 'Rumah masih perbaikan', 'Budget kurang', 'Pengajuan leasing tidak disetujui', 'Tidak ada respon', 'Model kurang cocok', 'Harga lebih tinggi dari kompetitor', 'Stok tidak tersedia', 'Pengiriman terlalu lama', 'Menunda pembelian', 'Hanya survei harga', 'Lainnya'];
+const alL = v => v ? (ALASAN.includes(v) ? tx(v) : v) : '';
+let alF = '';
+function paintAlasan() {
+  ['fAlasan', 'mAlasan'].forEach(id => { const el = $(id); if (!el) return; const v = el.value;
+    el.innerHTML = '<option value="">' + esc(tx('Pilih alasan batal')) + '</option>' + ALASAN.map(a => `<option value="${esc(a)}">${esc(tx(a))}</option>`).join(''); el.value = v; });
+}
+function alOpts(list, cur, label) {   // opsi filter Alasan Batal: hanya yang ada datanya + jumlah
+  const cnt = {}; list.forEach(c => { const k = c.alasan || '__none'; cnt[k] = (cnt[k] || 0) + 1; });
+  const keys = ALASAN.filter(a => cnt[a]).concat(Object.keys(cnt).filter(k => k !== '__none' && !ALASAN.includes(k))).concat(cnt.__none ? ['__none'] : []);
+  return `<option value="">${esc(tx('Semua alasan'))} (${list.length})</option>` + keys.map(k => `<option value="${esc(k)}"${k === cur ? ' selected' : ''}>${esc(k === '__none' ? tx('Belum diisi') : alL(k))} (${cnt[k]})</option>`).join('');
+}
+const alMatch = (c, f) => !f || (f === '__none' ? !c.alasan : c.alasan === f);
 function toggleFields(p) {
   const st = $(p === 'm' ? 'mStatus' : 'fStatus').value;
   const done = st === 'Closing' || st === 'Batal';
@@ -1666,10 +1703,14 @@ function toggleFields(p) {
   if (done) { $(p + 'Next').value = ''; clearErr($(p + 'Next')); }
   if (st !== 'Closing') clearErr($(p + 'Nilai'));
   if (p === 'm') { $('mEstBox').style.display = done ? 'none' : 'block'; if (done) clearErr($('mEst')); }
-  if (p === 'm') {
-    $('mNote').placeholder = st === 'Batal' ? 'Alasan batal...' : st === 'Closing' ? 'Catatan closing...' : 'Apa hasil follow up hari ini?';
-    $('mNoteLbl').innerHTML = (st === 'Batal' ? 'Alasan Batal' : 'Hasil / Catatan') + ' <span class="req">*</span>';
-  }
+  const bt = st === 'Batal', lain = bt && $(p + 'Alasan').value === 'Lainnya';
+  $(p + 'AlasanBox').style.display = bt ? 'block' : 'none';
+  if (!bt) { $(p + 'Alasan').value = ''; clearErr($(p + 'Alasan')); }
+  if (!lain) clearErr($(p === 'm' ? 'mNote' : 'fCatatan'));
+  const nl = $(p === 'm' ? 'mNoteLbl' : 'fNoteLbl'), nt = $(p === 'm' ? 'mNote' : 'fCatatan');
+  if (bt) { nl.innerHTML = 'Catatan / Remark' + (lain ? ' <span class="req">*</span>' : ''); nt.placeholder = lain ? 'Jelaskan alasan lainnya...' : 'Penjelasan lebih detail (opsional)...'; }
+  else if (p === 'm') { nl.innerHTML = 'Hasil / Catatan <span class="req">*</span>'; nt.placeholder = st === 'Closing' ? 'Catatan closing...' : 'Apa hasil follow up hari ini?'; }
+  else { nl.innerHTML = 'Catatan <span class="req">*</span>'; nt.placeholder = 'Catatan awal...'; }
 }
 
 /* ============ VALIDASI FORM ============ */
@@ -2058,6 +2099,7 @@ function custCard(c, cls, from) {
       <p translate="no">${ic('user', 13)}${esc(c.sales)} &nbsp; ${ic('mobile', 13)}${esc(c.hp) || '-'}</p>
       <p>${ic('calendar', 13)}<b>${fmtDate(c.nextFU)}</b>${cls === 'late' ? `<span class="pill">${tx('Terlambat')}</span>` : cls === 'today' ? `<span class="pill t">${tx('Hari ini')}</span>` : ''}</p>
       ${c.status === 'Closing' && c.nilai ? `<p class="nilai">${ic('wallet', 13)}${tx('Closing {0}', rp(c.nilai))}</p>` : (c.status !== 'Closing' && c.status !== 'Batal' && c.estimasi ? `<p class="est">${ic('wallet', 13)}${tx('Estimasi {0}', rp(c.estimasi))}</p>` : '')}
+      ${c.status === 'Batal' && c.alasan ? `<p class="alasan"><span translate="no">${ic('note', 13)}&nbsp;<b>${esc(alL(c.alasan))}</b></span></p>` : ''}
       ${c.catatan ? `<p translate="no">${ic('note', 13)}${esc(c.catatan)}</p>` : ''}
       <div class="acts"><button class="btn sm" onclick="openFU('${c.id}','${from}')">${ic('check', 14)}${tx('Follow Up')}</button>
       <button class="btn sm wa" onclick="quickWA('${c.id}','${from}')">${ic('phone-chat', 15)}WhatsApp</button>
@@ -2066,7 +2108,11 @@ function custCard(c, cls, from) {
 }
 function renderCust() {
   const q = $('q').value.toLowerCase().trim(), today = todayStr();
-  const data = CUST.filter(c => (statusFilter === 'ALL' || c.status === statusFilter) && (!q || (c.nama + ' ' + c.hp + ' ' + c.produk).toLowerCase().includes(q)));
+  const isB = statusFilter === 'Batal';
+  if (!isB) alF = '';
+  $('alBox').style.display = isB ? 'block' : 'none';
+  if (isB) { const bl = CUST.filter(c => c.status === 'Batal'); if (alF && !bl.some(c => alMatch(c, alF))) alF = ''; $('alSel').innerHTML = alOpts(bl, alF); }
+  const data = CUST.filter(c => (statusFilter === 'ALL' || c.status === statusFilter) && (!isB || alMatch(c, alF)) && (!q || (c.nama + ' ' + c.hp + ' ' + c.produk).toLowerCase().includes(q)));
   $('custList').innerHTML = data.length ? data.map(c => {
     const open = c.status !== 'Closing' && c.status !== 'Batal';
     const cls = open && c.nextFU && c.nextFU < today ? 'late' : open && c.nextFU === today ? 'today' : '';
@@ -2089,11 +2135,12 @@ function submitAdd() {
     ['fNext', 'Tanggal follow up berikutnya wajib diisi', done || $('fNext').value !== ''],
     ['fNilai', 'Nilai closing wajib diisi (lebih dari 0)', st !== 'Closing' || numVal($('fNilai').value) > 0],
     ['fTglClose', 'Tanggal closing wajib diisi', st !== 'Closing' || !!$('fTglClose').value],
-    ['fCatatan', 'Catatan wajib diisi', $('fCatatan').value.trim() !== '']
+    ['fAlasan', 'Pilih alasan batal', st !== 'Batal' || $('fAlasan').value !== ''],
+    ['fCatatan', st === 'Batal' ? 'Jelaskan alasan lainnya di Catatan / Remark' : 'Catatan wajib diisi', st === 'Batal' ? ($('fAlasan').value !== 'Lainnya' || $('fCatatan').value.trim() !== '') : $('fCatatan').value.trim() !== '']
   ]);
   if (!ok) return;
   const d = {nama: $('fNama').value.trim(), hp: $('fHp').value.trim(), produk: $('fProduk').value.trim(), estimasi: numVal($('fEst').value), sumber: $('fSumber').value,
-             sales: $('fSales').value, status: st, nextFU: done ? '' : $('fNext').value, catatan: $('fCatatan').value.trim(),
+             sales: $('fSales').value, status: st, nextFU: done ? '' : $('fNext').value, catatan: $('fCatatan').value.trim(), alasan: st === 'Batal' ? $('fAlasan').value : '',
              nilai: st === 'Closing' ? numVal($('fNilai').value) : 0, tglClosing: st === 'Closing' ? $('fTglClose').value : '', prospekId: PS.link ? PS.link.id : ''};
   $('btnAdd').disabled = true;
   run('addCustomer', [d], () => {
@@ -2114,9 +2161,9 @@ function openFU(id, from) {
   curCust = c; beep('tap');
   $('mTitle').textContent = c.nama;
   setModalSub();
-  clearErrs(['mChannel', 'mStatus', 'mNext', 'mNilai', 'mEst', 'mNote']);
+  clearErrs(['mChannel', 'mStatus', 'mNext', 'mNilai', 'mEst', 'mNote', 'mAlasan']);
   $('mChannel').selectedIndex = 0;
-  $('mStatus').value = c.status; $('mNext').value = ''; $('mNote').value = '';
+  $('mStatus').value = c.status; $('mNext').value = ''; $('mNote').value = ''; $('mAlasan').value = c.status === 'Batal' && ALASAN.includes(c.alasan) ? c.alasan : '';
   $('mNilai').value = c.nilai ? Number(c.nilai).toLocaleString(LOC()) : '';
   $('mTglClose').value = c.status === 'Closing' && c.tglSelesai ? String(c.tglSelesai).slice(0, 10) : '';
   $('mEst').value = c.estimasi ? Number(c.estimasi).toLocaleString(LOC()) : '';
@@ -2137,10 +2184,11 @@ function submitFU() {
     ['mNext', 'Tanggal follow up berikutnya wajib diisi', done || $('mNext').value !== ''],
     ['mNilai', 'Nilai closing wajib diisi (lebih dari 0)', st !== 'Closing' || numVal($('mNilai').value) > 0],
     ['mTglClose', 'Tanggal closing wajib diisi', st !== 'Closing' || !!$('mTglClose').value],
-    ['mNote', st === 'Batal' ? 'Alasan batal wajib diisi' : 'Hasil / catatan wajib diisi', $('mNote').value.trim() !== '']
+    ['mAlasan', 'Pilih alasan batal', st !== 'Batal' || $('mAlasan').value !== ''],
+    ['mNote', st === 'Batal' ? 'Jelaskan alasan lainnya di Catatan / Remark' : 'Hasil / catatan wajib diisi', st === 'Batal' ? ($('mAlasan').value !== 'Lainnya' || $('mNote').value.trim() !== '') : $('mNote').value.trim() !== '']
   ]);
   if (!ok) return;
-  const d = {id: curCust.id, status: st, nextFU: done ? '' : $('mNext').value, channel: $('mChannel').value, catatan: $('mNote').value.trim(),
+  const d = {id: curCust.id, status: st, nextFU: done ? '' : $('mNext').value, channel: $('mChannel').value, catatan: $('mNote').value.trim(), alasan: st === 'Batal' ? $('mAlasan').value : '',
              nilai: st === 'Closing' ? numVal($('mNilai').value) : 0, tglClosing: st === 'Closing' ? $('mTglClose').value : '', estimasi: done ? 0 : numVal($('mEst').value)};
   $('btnFu').disabled = true;
   run('saveFollowUp', [d], () => {
@@ -2186,7 +2234,7 @@ function renderHList() {
   if (histView === 'cust') {
     const items = d.customers.filter(c => !q || (c.nama + ' ' + c.sales + ' ' + c.produk).toLowerCase().includes(q));
     $('hList').innerHTML = items.length ? items.map(c =>
-      `<div class="item"><div><b translate="no">${esc(c.nama)}</b><small><span translate="no">${esc(c.sales)} &bull; ${esc(c.produk) || '-'}</span> &bull; ${tx('selesai')} ${fmtDate(c.tgl)}${c.catatan ? '<br><span translate="no">' + esc(c.catatan) + '</span>' : ''}</small></div>
+      `<div class="item"><div><b translate="no">${esc(c.nama)}</b><small><span translate="no">${esc(c.sales)} &bull; ${esc(c.produk) || '-'}</span> &bull; ${tx('selesai')} ${fmtDate(c.tgl)}${c.status === 'Batal' && c.alasan ? '<br><b><span translate="no">' + esc(alL(c.alasan)) + '</span></b>' : ''}${c.catatan ? '<br><span translate="no">' + esc(c.catatan) + '</span>' : ''}</small></div>
        <div class="r"><span class="badge" style="background:${colorOf(c.status)}">${esc(stL(c.status))}</span>${c.status === 'Closing' && c.nilai ? `<span class="nilai">${rp(c.nilai)}</span>` : ''}</div></div>`).join('')
       : emptyBox('folder', 'Belum ada customer Closing/Batal pada bulan ini.');
   } else {
@@ -2200,7 +2248,7 @@ function renderHList() {
 }
 
 /* ============ SEMUA CUSTOMER (DATABASE LENGKAP) ============ */
-const AC = {list: null, mode: 'bulan', st: 'ALL', sales: '', bulan: '', cur: ''};
+const AC = {list: null, mode: 'bulan', st: 'ALL', sales: '', bulan: '', cur: '', al: ''};
 let acLim = 100;
 const acDone = s => s === 'Closing' || s === 'Batal';
 function setHMode(m) {
@@ -2237,7 +2285,11 @@ function acRender() {
   Object.keys(cnt).forEach(s => { if (!order.includes(s)) order.push(s); });
   $('acChips').innerHTML = `<button class="chip${AC.st === 'ALL' ? ' on' : ''}" onclick="acSt('ALL')">${tx('Semua')} (${base.length})</button>`
     + order.filter(s => cnt[s] || s === AC.st).map(s => `<button class="chip${AC.st === s ? ' on' : ''}" onclick="acSt('${esc(s)}')">${esc(stL(s))} (${cnt[s] || 0})</button>`).join('');
-  const v = AC.st === 'ALL' ? base : base.filter(x => x.status === AC.st);
+  let v = AC.st === 'ALL' ? base : base.filter(x => x.status === AC.st);
+  const isB = AC.st === 'Batal';
+  if (!isB) AC.al = '';
+  $('acAlBox').style.display = isB ? 'block' : 'none';
+  if (isB) { if (AC.al && !v.some(x => alMatch(x, AC.al))) AC.al = ''; $('acAlSel').innerHTML = alOpts(v, AC.al); v = v.filter(x => alMatch(x, AC.al)); }
   AC.view = v;
   const cl = v.filter(x => x.status === 'Closing'), bt = v.filter(x => x.status === 'Batal');
   $('acCount').textContent = tx('{0} dari {1} customer', v.length, all.length);
@@ -2252,6 +2304,7 @@ function acRender() {
       <div><b translate="no">${esc(x.nama)}</b> <span class="badge" style="background:${colorOf(x.status)}">${esc(stL(x.status))}</span></div>
       <small translate="no">${esc(x.sales) || '-'} &bull; ${esc(x.produk) || '-'}${x.sumber ? ' &bull; ' + esc(x.sumber) : ''}${x.hp ? ' &bull; ' + esc(x.hp) : ''}</small>
       <small>${tx('Masuk')} ${fmtDate(x.tglInput)}${x.tglSelesai ? ' &bull; ' + tx(x.status === 'Closing' ? 'Tgl Closing' : x.status === 'Batal' ? 'Tgl Batal' : 'Selesai') + ' ' + fmtDate(x.tglSelesai) : ''}${x.status === 'Closing' && x.nilai ? ' &bull; <b>' + rp(x.nilai) + '</b>' : ''}</small>
+      ${x.status === 'Batal' && x.alasan ? `<small><span translate="no"><b>${esc(alL(x.alasan))}</b></span></small>` : ''}
       ${x.catatan ? `<small translate="no">${esc(x.catatan)}</small>` : ''}
       <div class="acbtn">
         ${ok ? `<button class="btn sm soft" onclick="acWa('${esc(x.k)}')" title="WhatsApp">${ic('phone-chat', 14)} WA</button><button class="btn sm soft" onclick="acCall('${esc(x.k)}')" title="${tx('Telepon')}">${ic('phone', 14)}</button>` : ''}
@@ -2316,15 +2369,15 @@ function xlsxBase64(rows, sheetName) {
 function acExport() {
   const v = AC.view || []; if (!v.length) { toast(tx('Tidak ada data untuk diunduh.'), 'err'); return; }
   const en = LANG === 'en';
-  const head = en ? ['Name', 'Phone', 'Sales', 'Product', 'Source', 'Status', 'Date added', 'Date finished', 'Closing value', 'Estimate', 'Notes', 'Data origin']
-                  : ['Nama Customer', 'No HP', 'Sales', 'Produk', 'Sumber', 'Status', 'Tanggal Masuk', 'Tanggal Selesai', 'Nilai Closing', 'Estimasi', 'Catatan', 'Asal Data'];
-  const rows = [head].concat(v.map(x => [x.nama, x.hp, x.sales, x.produk, x.sumber, stL(x.status), x.tglInput || '', x.tglSelesai || '', Number(x.nilai) || 0, Number(x.est) || 0, x.catatan || '', x.src === 'arsip' ? (en ? 'Archive' : 'Arsip') : (en ? 'Active' : 'Aktif')]));
+  const head = en ? ['Name', 'Phone', 'Sales', 'Product', 'Source', 'Status', 'Date added', 'Date finished', 'Closing value', 'Estimate', 'Cancellation reason', 'Remark', 'Data origin']
+                  : ['Nama Customer', 'No HP', 'Sales', 'Produk', 'Sumber', 'Status', 'Tanggal Masuk', 'Tanggal Selesai', 'Nilai Closing', 'Estimasi', 'Alasan Batal', 'Catatan / Remark', 'Asal Data'];
+  const rows = [head].concat(v.map(x => [x.nama, x.hp, x.sales, x.produk, x.sumber, stL(x.status), x.tglInput || '', x.tglSelesai || '', Number(x.nilai) || 0, Number(x.est) || 0, x.status === 'Batal' ? alL(x.alasan) : '', x.catatan || '', x.src === 'arsip' ? (en ? 'Archive' : 'Arsip') : (en ? 'Active' : 'Aktif')]));
   const d = new Date(), p = n => String(n).padStart(2, '0');
   const name = 'semua-customer-' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '.xlsx';
   dlBase64(xlsxBase64(rows, en ? 'All Customers' : 'Semua Customer'), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', name);
   toast(tx('{0} customer diunduh', v.length), 'ok');
 }
-function acReset() { AC.st = 'ALL'; AC.sales = ''; AC.bulan = ''; $('acQ').value = ''; acLim = 100; beep('tap'); acRender(); }
+function acReset() { AC.al = ''; AC.st = 'ALL'; AC.sales = ''; AC.bulan = ''; $('acQ').value = ''; acLim = 100; beep('tap'); acRender(); }
 const acFind = k => (AC.list || []).find(r => r.k === k);
 function acWa(k) {
   const x = acFind(k); if (!x || hpWarn(x.hp)) return;
