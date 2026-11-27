@@ -518,7 +518,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-am</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-an</div>
         </div>
       </div>
     </div>
@@ -2326,7 +2326,14 @@ function setHMode(m) {
 function acLoad(force) {
   if (AC.list && !force) { acRender(); return; }
   if (!AC.list) $('acList').innerHTML = `<p class="hint">${tx('Memuat data...')}</p>`;
-  run('getSemuaCustomer', [], d => { AC.list = d.list; AC.cur = d.cur; acRender(); });
+  run('getSemuaCustomer', [], d => { AC.list = d.list; AC.cur = d.cur; AC.list.forEach(x => { x.sales = salesCanonC(x.sales); }); acRender(); });
+}
+function salesCanonC(name) {
+  const n = String(name || '').trim().toLowerCase().replace(/\s+/g, ' '); if (!n || !INIT || !INIT.sales) return name;
+  const cur = INIT.sales.map(x => x.nama), k = c => c.toLowerCase().replace(/\s+/g, ' ');
+  const ex = cur.filter(c => k(c) === n); if (ex.length) return ex[0];
+  const cand = cur.filter(c => k(c).indexOf(n) >= 0 || n.indexOf(k(c)) >= 0);
+  return cand.length === 1 ? cand[0] : name;
 }
 function acPaintOpts(list) {
   const sl = [...new Set(list.map(x => x.sales).filter(Boolean))].sort();
