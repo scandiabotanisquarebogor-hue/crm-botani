@@ -487,7 +487,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-af</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ag</div>
         </div>
       </div>
     </div>
@@ -515,18 +515,18 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-wallet"/></svg></i>Nilai Closing<small>bulan berjalan</small></h2>
       <div class="bigval">
         <div><small>Realisasi nilai closing</small><b id="kNilai">Rp 0</b></div>
-        <div class="bv2"><span id="kEst">Rp 0</span><small>potensi penjualan</small></div>
+        <div class="bv2"><span id="kEst">Rp 0</span><small>nilai prospek baru bulan ini</small></div>
       </div>
       <div class="mini mini3" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">
-        <div><b id="kCapai">0%</b><span>Capaian vs potensi penjualan</span></div>
-        <div><b id="kPot">Rp 0</b><span>Penjualan batal</span></div>
-        <div><b id="kAvg">-</b><span>Nilai prospek baru bulan ini</span></div>
+        <div><b id="kCapai">0%</b><span>Capaian vs Sales Pipeline</span></div>
+        <div><b id="kPot">Rp 0</b><span>Sales Pipeline</span></div>
+        <div><b id="kAvg">-</b><span>Penjualan batal</span></div>
       </div>
       <div class="grid2">
         <div><div class="sublbl">Estimasi vs realisasi per Sales</div><div class="chart-box" style="height:230px"><canvas id="chNilai"></canvas></div></div>
         <div><div class="sublbl">Estimasi vs realisasi tiap bulan</div><div class="chart-box" style="height:230px"><canvas id="chTren"></canvas></div></div>
       </div>
-      <p class="hint">Nilai prospek baru bulan ini = total perkiraan nilai dari customer yang diinput bulan ini; potensi penjualan = total estimasi customer yang masih diproses (belum Closing/Batal); penjualan batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet <b translate="no">Rekap YYYY-MM</b> dan <b translate="no">Riwayat</b> pada Google Sheets untuk dianalisa.</p>
+      <p class="hint">Nilai prospek baru bulan ini = total perkiraan nilai dari customer yang diinput bulan ini; Sales Pipeline = total estimasi customer yang masih diproses (belum Closing/Batal); penjualan batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet <b translate="no">Rekap YYYY-MM</b> dan <b translate="no">Riwayat</b> pada Google Sheets untuk dianalisa.</p>
     </div>
 
     <div class="card"><h2><i class="hi"><svg class="ic" width="17" height="17"><use href="#i-pie"/></svg></i>Komposisi Status</h2><div class="stwrap"><div class="chart-box"><canvas id="chStatus"></canvas></div><div id="stLegend" class="stlg"></div></div></div>
@@ -844,7 +844,7 @@ const EN = {
  "Rata-rata / deal": "Average / deal",
  "Estimasi vs realisasi per Sales": "Estimate vs actual per Sales",
  "Estimasi vs realisasi tiap bulan": "Estimate vs actual per month",
- "Nilai prospek baru bulan ini = total perkiraan nilai dari customer yang diinput bulan ini; potensi penjualan = total estimasi customer yang masih diproses (belum Deal/Batal); penjualan batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet": "New prospect value this month = total expected value of customers entered this month; sales potential = total estimate of customers still in progress (not yet Closed/Cancelled); sales cancelled = total estimate of customers with Cancelled status. Figures reset automatically at the start of every month. Last month's data is saved in the sheet",
+ "Nilai prospek baru bulan ini = total perkiraan nilai dari customer yang diinput bulan ini; Sales Pipeline = total estimasi customer yang masih diproses (belum Deal/Batal); penjualan batal = total estimasi customer berstatus Batal. Angka direset otomatis setiap awal bulan. Data bulan lalu tersimpan di sheet": "New prospect value this month = total expected value of customers entered this month; Sales Pipeline = total estimate of customers still in progress (not yet Closed/Cancelled); sales cancelled = total estimate of customers with Cancelled status. Figures reset automatically at the start of every month. Last month's data is saved in the sheet",
  "dan": "and",
  "pada Google Sheets untuk dianalisa.": "in Google Sheets for analysis.",
  "Peringkat Sales": "Sales Race",
@@ -1336,6 +1336,11 @@ const EN = {
  "Capaian vs potensi penjualan": "Achievement vs sales potential",
  "Penjualan batal": "Sales cancelled",
  "Nilai prospek baru bulan ini": "New prospect value this month",
+ "nilai prospek baru bulan ini": "new prospect value this month",
+ "Capaian vs Sales Pipeline": "Achievement vs Sales Pipeline",
+ "Rapikan huruf nama": "Fix name capitalization",
+ "{0} nama dirapikan. Tekan Simpan untuk menerapkan.": "{0} name(s) fixed. Press Save to apply.",
+ "Semua nama sudah rapi.": "All names are already tidy.",
  "Penawaran": "Quotation",
  "Pengaturan": "Settings"
 };
@@ -1859,10 +1864,10 @@ function renderDash(r) {
     $('kToday').textContent = r.dueToday.length; $('kLate').textContent = r.overdue.length;
     $('kPeriode').textContent = monLong(r.bulan);
     $('kNilai').textContent = rp(r.nilaiTotal);
-    $('kEst').textContent = rp(r.potensiTotal);
+    $('kEst').textContent = rp(r.estimasiBulan);
     $('kCapai').textContent = r.potensiTotal ? Math.round(r.nilaiTotal / r.potensiTotal * 100) + '%' : '-';
-    $('kPot').textContent = 'Rp ' + rpc((r.nilaiByStatus || {})['Batal'] || 0);
-    $('kAvg').textContent = 'Rp ' + rpc(r.estimasiBulan || 0);
+    $('kPot').textContent = 'Rp ' + rpc(r.potensiTotal || 0);
+    $('kAvg').textContent = 'Rp ' + rpc((r.nilaiByStatus || {})['Batal'] || 0);
     $('ring').style.setProperty('--p', Math.min(r.rate, 100) + '%');
     $('greetTxt').textContent = r.overdue.length ? tx('{0} follow up menunggu tindakan', r.overdue.length) : tx('Semua follow up on track');
     paintRace(r);
@@ -2742,6 +2747,7 @@ function renderAdmin() {
     <h2><i class="hi">${ic('users', 17)}</i>Sales<small>maks 10</small></h2>
     <div id="aSales">${d.sales.map(s => salesRow({old: s.nama, nama: s.nama, wa: s.wa})).join('')}</div>
     <button class="btn sm soft" onclick="addSalesRow()">${ic('plus', 15)}Tambah Sales</button>
+    <button class="btn sm soft" onclick="rapikanNama()">Rapikan huruf nama</button>
     <div class="note info">Mengganti nama Sales ikut memperbarui data customer & riwayat yang sudah ada. Menghapus Sales tidak menghapus datanya.</div>
   </div>
   <div class="card">
@@ -2799,6 +2805,14 @@ function renderAdmin() {
   </div>`;
   accInit($('adminBox'));
   pwUserChg(); paintSel('pwUser'); paintTheme();
+}
+function rapikanNama() {
+  let n = 0;
+  document.querySelectorAll('#aSales .sn').forEach(i => {
+    const v = i.value.trim();
+    if (v && v === v.toUpperCase() && v !== v.toLowerCase()) { i.value = v.toLowerCase().replace(/(^|[\s.'-])([a-z])/g, (m, a, b) => a + b.toUpperCase()); n++; }
+  });
+  toast(n ? tx('{0} nama dirapikan. Tekan Simpan untuk menerapkan.', n) : tx('Semua nama sudah rapi.'), n ? 'ok' : 'warn');
 }
 function addSalesRow() {
   const box = $('aSales');
