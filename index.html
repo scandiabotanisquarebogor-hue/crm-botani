@@ -256,6 +256,8 @@ body.lg-open{overflow:hidden}
 .ba .bn{width:22px;height:22px;border-radius:50%;background:#eef2f6;color:var(--muted);font-weight:700;font-size:11.5px;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .ba .bn.top{background:#dc2626;color:#fff}
 .ba .bv{font-size:12px;color:var(--muted);white-space:nowrap}.ba .bv em{font-style:normal;font-weight:700;color:var(--ink);margin-left:4px}
+.ba.ro{cursor:default}
+.ba .dl{font-style:normal;font-weight:700;font-size:11px;margin-left:6px}.ba .dl.up{color:#dc2626}.ba .dl.dn{color:#059669}
 .ba .bb{height:8px;border-radius:5px;background:#eef2f6;margin:7px 0 4px;overflow:hidden}.ba .bb i{display:block;height:100%;background:#f87171;border-radius:5px}
 .ba small{font-size:11.5px;color:var(--muted)}
 .bsl{padding:10px 0 4px;border-bottom:1px solid var(--line)}.bsl:last-child{border-bottom:0}.bsl>.bh{display:flex;align-items:center;gap:8px}.bsl>.bh b{font-size:14px;flex:1;min-width:0}.bsl>.bh .bv{font-size:12px}
@@ -518,7 +520,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-an</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ao</div>
         </div>
       </div>
     </div>
@@ -786,6 +788,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
   <div class="sheet">
     <div class="grab"></div>
     <h2>Alasan Batal Terbanyak</h2>
+    <div id="baMon" class="rmon"></div>
     <p class="sub" id="baSub"></p>
     <div class="seg" id="baSeg" style="margin:8px 0 4px"><button id="baV1" onclick="baView('alasan')">Per Alasan</button><button id="baV2" onclick="baView('sales')">Per Sales</button></div>
     <div id="baList"></div>
@@ -941,6 +944,9 @@ const EN = {
  "{0} customer Batal • potensi Rp {1} • {2}": "{0} cancelled {0|customer|customers} • potential Rp {1} • {2}",
  "Ketuk salah satu alasan untuk melihat daftar customer-nya.": "Tap a reason to see its customers.",
  "Belum ada customer Batal bulan ini.": "No cancelled customers this month.",
+ "Belum ada data Batal pada arsip bulan ini.": "No cancelled data in this month's archive.",
+ "Data dari arsip bulan tersebut.": "Data from that month's archive.",
+ "▲▼ = selisih dibanding {0}.": "▲▼ = change vs {0}.",
  "Status per Sales": "Status by Salesperson",
  "Komposisi Status": "Status Distribution",
  "Perlu Follow Up Sekarang": "Needs Follow-up Now",
@@ -2014,31 +2020,48 @@ function paintNotif(r) {
   const b = $('btnNotif'); if (b) b.setAttribute('aria-label', tx('Pemberitahuan') + (n ? ' (' + n + ')' : ''));
   $('ntSub').textContent = n ? tx('Hari ini: {0} • Terlambat: {1}', (r.dueToday || []).length, (r.overdue || []).length) : '';
 }
-let BA_V = 'alasan';
+let BA_V = 'alasan', BA_YM = null; const BA_C = {};
+function baMonths() { const r = LAST, cur = (r.race && r.race.bulan) || r.bulan; return {cur, ms: Array.from(new Set(((r.race && r.race.months) || []).concat([cur]))).sort()}; }
+function baGet(ym, cb) {
+  const {cur} = baMonths();
+  if (ym === cur) { cb({alasan: LAST.batalAlasan || {}, sales: LAST.batalSales || {}}); return; }
+  const c = BA_C[ym]; if (c && Date.now() - c.t < 300000) { cb(c.d); return; }
+  run('getBatalAlasan', [ym], x => { BA_C[ym] = {t: Date.now(), d: x}; cb(x); }, () => cb({alasan: {}, sales: {}}), true);
+}
 function baView(v) { BA_V = v; beep('tap'); openBatal(true); }
+function baMon(d) { const {cur, ms} = baMonths(), i = Math.max(0, Math.min(ms.length - 1, ms.indexOf(BA_YM || cur) + d)); BA_YM = ms[i] === cur ? null : ms[i]; beep('tap'); openBatal(true); }
 function openBatal(keep) {
   const r = LAST; if (!r) return;
-  if (!keep) BA_V = 'alasan';
+  if (!keep) { BA_V = 'alasan'; BA_YM = null; }
+  const {cur, ms} = baMonths(), ym = BA_YM || cur, isCur = ym === cur, i = ms.indexOf(ym), pym = i > 0 ? ms[i - 1] : null;
   $('baV1').classList.toggle('on', BA_V === 'alasan'); $('baV2').classList.toggle('on', BA_V === 'sales');
-  const d = r.batalAlasan || {}, keys = Object.keys(d).sort((a, b) => d[b].n - d[a].n || d[b].nilai - d[a].nilai);
-  const tn = keys.reduce((a, k) => a + d[k].n, 0), tv = keys.reduce((a, k) => a + d[k].nilai, 0), mx = keys.length ? d[keys[0]].n : 1;
-  $('baSub').textContent = tn ? tx('{0} customer Batal • potensi Rp {1} • {2}', tn, rpc(tv), monLong(r.bulan)) : '';
-  const nm = k => k ? alL(k) : tx('Belum diisi');
-  if (BA_V === 'alasan') {
-    $('baList').innerHTML = keys.length ? keys.map((k, i) => { const o = d[k], p = Math.round(o.n / tn * 100);
-      return `<div class="ba" onclick="goBatal('${esc(k || '__none')}','')"><div class="bh"><span class="bn ${i === 0 ? 'top' : ''}">${i + 1}</span><b translate="no">${esc(nm(k))}</b><span class="bv">${tx('{0} customer', o.n)} <em>${p}%</em></span></div>
-        <div class="bb"><i style="width:${Math.max(4, o.n / mx * 100)}%"></i></div><small>${tx('Potensi Rp {0}', rpc(o.nilai))}</small></div>`; }).join('')
-      : emptyBox('folder', 'Belum ada customer Batal bulan ini.');
-  } else {
-    const bs = r.batalSales || {}, tot = s => Object.keys(bs[s]).reduce((a, k) => a + bs[s][k].n, 0), val = s => Object.keys(bs[s]).reduce((a, k) => a + bs[s][k].nilai, 0);
-    const sl = Object.keys(bs).sort((a, b) => tot(b) - tot(a) || val(b) - val(a));
-    $('baList').innerHTML = sl.length ? sl.map(s => { const o = bs[s], n = tot(s), ks = Object.keys(o).sort((a, b) => o[b].n - o[a].n || o[b].nilai - o[a].nilai);
-      return `<div class="bsl"><div class="bh"><b translate="no">${esc(s)}</b><span class="bv">${tx('{0} customer', n)} • Rp ${rpc(val(s))}</span></div>` +
-        ks.map(k => `<div class="ba sub" onclick="goBatal('${esc(k || '__none')}','${esc(s)}')"><div class="bh"><b translate="no">${esc(nm(k))}</b><span class="bv">${o[k].n} <em>${Math.round(o[k].n / n * 100)}%</em></span></div><div class="bb"><i style="width:${Math.max(4, o[k].n / o[ks[0]].n * 100)}%"></i></div></div>`).join('') + '</div>'; }).join('')
-      : emptyBox('folder', 'Belum ada customer Batal bulan ini.');
-  }
-  $('baHint').textContent = tn ? tx('Ketuk salah satu alasan untuk melihat daftar customer-nya.') : '';
+  $('baMon').innerHTML = ms.length > 1 ? `<button onclick="baMon(-1)" ${i <= 0 ? 'disabled' : ''} aria-label="prev">‹</button><span>${esc(monLong(ym))}</span><button onclick="baMon(1)" ${i >= ms.length - 1 ? 'disabled' : ''} aria-label="next">›</button>` : '';
   $('baModal').classList.add('show'); if (!keep) beep('tap');
+  $('baList').innerHTML = '<div class="sub" style="padding:14px 0">' + esc(tx('Memuat...')) + '</div>'; $('baSub').textContent = ''; $('baHint').textContent = '';
+  baGet(ym, D => { baGet(pym || ym, P => {
+    if ((BA_YM || cur) !== ym || !$('baModal').classList.contains('show')) return;
+    const pv = pym ? P : null, d = D.alasan || {}, keys = Object.keys(d).sort((a, b) => d[b].n - d[a].n || d[b].nilai - d[a].nilai);
+    const tn = keys.reduce((a, k) => a + d[k].n, 0), tv = keys.reduce((a, k) => a + d[k].nilai, 0), mx = keys.length ? d[keys[0]].n : 1;
+    const ptn = pv ? Object.keys(pv.alasan || {}).reduce((a, k) => a + pv.alasan[k].n, 0) : 0;
+    $('baSub').textContent = tn ? tx('{0} customer Batal • potensi Rp {1} • {2}', tn, rpc(tv), monLong(ym)) : '';
+    const nm = k => k ? alL(k) : tx('Belum diisi');
+    const dl = (n, k) => { if (!pv || !ptn) return ''; const q = ((pv.alasan || {})[k] || {n: 0}).n, df = n - q; return df ? `<i class="dl ${df > 0 ? 'up' : 'dn'}">${df > 0 ? '▲' : '▼'}${Math.abs(df)}</i>` : ''; };
+    const go = (k, s) => isCur ? ` onclick="goBatal('${esc(k || '__none')}','${esc(s)}')"` : '';
+    if (BA_V === 'alasan') {
+      $('baList').innerHTML = keys.length ? keys.map((k, j) => { const o = d[k], p = Math.round(o.n / tn * 100);
+        return `<div class="ba ${isCur ? '' : 'ro'}"${go(k, '')}><div class="bh"><span class="bn ${j === 0 ? 'top' : ''}">${j + 1}</span><b translate="no">${esc(nm(k))}</b><span class="bv">${tx('{0} customer', o.n)} <em>${p}%</em>${dl(o.n, k)}</span></div>
+          <div class="bb"><i style="width:${Math.max(4, o.n / mx * 100)}%"></i></div><small>${tx('Potensi Rp {0}', rpc(o.nilai))}</small></div>`; }).join('')
+        : emptyBox('folder', isCur ? 'Belum ada customer Batal bulan ini.' : 'Belum ada data Batal pada arsip bulan ini.');
+    } else {
+      const bs = D.sales || {}, tot = s => Object.keys(bs[s]).reduce((a, k) => a + bs[s][k].n, 0), val = s => Object.keys(bs[s]).reduce((a, k) => a + bs[s][k].nilai, 0);
+      const sl = Object.keys(bs).sort((a, b) => tot(b) - tot(a) || val(b) - val(a));
+      $('baList').innerHTML = sl.length ? sl.map(s => { const o = bs[s], n = tot(s), ks = Object.keys(o).sort((a, b) => o[b].n - o[a].n || o[b].nilai - o[a].nilai);
+        return `<div class="bsl"><div class="bh"><b translate="no">${esc(s)}</b><span class="bv">${tx('{0} customer', n)} • Rp ${rpc(val(s))}</span></div>` +
+          ks.map(k => `<div class="ba sub ${isCur ? '' : 'ro'}"${go(k, s)}><div class="bh"><b translate="no">${esc(nm(k))}</b><span class="bv">${o[k].n} <em>${Math.round(o[k].n / n * 100)}%</em></span></div><div class="bb"><i style="width:${Math.max(4, o[k].n / o[ks[0]].n * 100)}%"></i></div></div>`).join('') + '</div>'; }).join('')
+        : emptyBox('folder', isCur ? 'Belum ada customer Batal bulan ini.' : 'Belum ada data Batal pada arsip bulan ini.');
+    }
+    $('baHint').textContent = !tn ? '' : (isCur ? tx('Ketuk salah satu alasan untuk melihat daftar customer-nya.') : tx('Data dari arsip bulan tersebut.')) + (pv && ptn && BA_V === 'alasan' ? ' ' + tx('▲▼ = selisih dibanding {0}.', monLong(pym)) : '');
+  }); });
 }
 function closeBatal() { $('baModal').classList.remove('show'); }
 function goBatal(k, sales) {
