@@ -528,7 +528,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ap</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ar</div>
         </div>
       </div>
     </div>
@@ -1433,7 +1433,7 @@ const EN = {
  "Sales Race": "Sales Race",
  "Target": "Target",
  "Walk In": "Walk In",
- "Pencapaian termasuk pajak. Follow Up dari data aplikasi, Walk In = selisihnya.": "Achievement includes tax. Follow Up comes from app data, Walk In = the difference.",
+ "Follow Up = nilai transaksi aplikasi ÷ 1,11. Walk In = selisih dari Pencapaian.": "Follow Up = app transaction value ÷ 1.11. Walk In = difference from Achievement.",
  "Follow Up {0} • Walk In {1}": "Follow Up {0} • Walk In {1}",
  "potensi penjualan": "sales potential",
  "Capaian vs potensi penjualan": "Achievement vs sales potential",
@@ -1960,22 +1960,22 @@ function paintRace(r) {
     const RC = r.race || { rows: {}, target: 125000000 };
     rows = r.sales.map((s, i) => {
       const tot = r.statuses.reduce((a, st) => a + r.matrix[s][st], 0), cl = r.matrix[s]['Closing'] || 0;
-      const fu = r.nilaiBySales[s] || 0, e = (RC.rows || {})[s] || {}, total = Math.max(e.total || 0, fu), target = e.target || RC.target || 125000000;
-      return {s, tot, cl, fu, wi: Math.max(0, total - fu), total, target, pct: total / target * 100, idx: i};
+      const fr = r.nilaiBySales[s] || 0, fu = fr * (RC.fx || 1), e = (RC.rows || {})[s] || {}, total = Math.max(e.total || 0, fu), target = e.target || RC.target || 125000000;
+      return {s, tot, cl, fu, fr, wi: Math.max(0, total - fu), total, target, pct: total / target * 100, idx: i};
     });
   } else if (RACE_D && RACE_D.bulan === ym) {
-    rows = RACE_D.sales.map(s => { const e = RACE_D.rows[s] || {}, fu = e.fu || 0, total = Math.max(e.total || 0, fu), target = e.target || RACE_D.target || 125000000;
+    rows = RACE_D.sales.map(s => { const e = RACE_D.rows[s] || {}, fu = (e.fu || 0) * (RACE_D.fx || 1), total = Math.max(e.total || 0, fu), target = e.target || RACE_D.target || 125000000;
       return {s, fu, wi: Math.max(0, total - fu), total, target, pct: total / target * 100, past: true}; });
   } else { $('raceLg').innerHTML = ''; $('leader').innerHTML = '<div class="sub" style="padding:14px 0">' + esc(tx('Memuat...')) + '</div>'; return; }
   rows.sort((a, b) => b.total - a.total || (b.cl || 0) - (a.cl || 0) || (b.tot || 0) - (a.tot || 0));
   const tgtMax = Math.max(1, ...rows.map(x => x.target)), ax = Math.max(tgtMax, ...rows.map(x => x.total)) * 1.08;
   const seg = (v, c) => { const w = v / ax * 100; return `<i class="${c}" style="width:${w}%">${w >= 15 ? 'Rp ' + rpc(v) : ''}</i>`; };
-  $('raceLg').innerHTML = `<span><i class="fu"></i>Follow Up</span><span><i class="wi"></i>Walk In</span><span class="tg">┆ ${tx('Target')} ${rp(tgtMax)}</span><div class="rnote">${tx('Pencapaian termasuk pajak. Follow Up dari data aplikasi, Walk In = selisihnya.')}</div>`;
+  $('raceLg').innerHTML = `<span><i class="fu"></i>Follow Up</span><span><i class="wi"></i>Walk In</span><span class="tg">┆ ${tx('Target')} ${rp(tgtMax)}</span><div class="rnote">${tx('Follow Up = nilai transaksi aplikasi ÷ 1,11. Walk In = selisih dari Pencapaian.')}</div>`;
   $('leader').innerHTML = rows.length ? rows.map((x, k) =>
     `<div class="lb"><div class="medal ${k < 3 ? 'm' + (k + 1) : ''}">${k < 3 ? ic('crown', 15) : k + 1}</div>
      <div class="info" ${x.past ? '' : `onclick="goSales(${x.idx})"`}><div class="rh"><b>${esc(x.s)}</b><span class="rt">${rp(x.total)}<em>${Math.round(x.pct)}%</em></span></div>
      <div class="rbar"><div class="rtrack">${seg(x.fu, 'fu')}${seg(x.wi, 'wi')}<u class="rtg" style="left:${x.target / ax * 100}%"></u></div>${x.past ? '' : `<button class="iconwa rw" title="${esc(tx('Kirim pengingat ke WA Sales'))}" onclick="event.stopPropagation();remindSales(${x.idx})">${ic('phone-chat', 22)}</button>`}</div>
-     ${x.past ? '' : `<small>${tx('{0} customer • {1} closing • {2}', x.tot, x.cl, rp(x.fu))}</small>`}
+     ${x.past ? '' : `<small>${tx('{0} customer • {1} closing • {2}', x.tot, x.cl, rp(x.fr))}</small>`}
      <small class="rsub">${tx('Follow Up {0} • Walk In {1}', rp(x.fu), rp(x.wi))}</small></div></div>`).join('')
     : emptyBox('users', 'Isi nama Sales di menu Admin.');
 }
@@ -2098,10 +2098,10 @@ function fwData(ym) {
   let rows;
   if (ym === cur) {
     const RC = r.race || { rows: {} };
-    rows = r.sales.map(s => { const fu = r.nilaiBySales[s] || 0, e = (RC.rows || {})[s] || {}, total = Math.max(e.total || 0, fu); return {s, fu, wi: Math.max(0, total - fu)}; });
+    rows = r.sales.map(s => { const fu = (r.nilaiBySales[s] || 0) * (RC.fx || 1), e = (RC.rows || {})[s] || {}, total = Math.max(e.total || 0, fu); return {s, fu, wi: Math.max(0, total - fu)}; });
   } else {
     const c = RACE_C[ym]; if (!c) return null; const D = c.d;
-    rows = D.sales.map(s => { const e = D.rows[s] || {}, fu = e.fu || 0, total = Math.max(e.total || 0, fu); return {s, fu, wi: Math.max(0, total - fu)}; });
+    rows = D.sales.map(s => { const e = D.rows[s] || {}, fu = (e.fu || 0) * (D.fx || 1), total = Math.max(e.total || 0, fu); return {s, fu, wi: Math.max(0, total - fu)}; });
   }
   const fu = rows.reduce((a, x) => a + x.fu, 0), wi = rows.reduce((a, x) => a + x.wi, 0);
   return {ym, rows, fu, wi, total: fu + wi};
@@ -2132,7 +2132,7 @@ function fwPaint(r) {
   $('fwSales').innerHTML = bars || '<div class="sub">-</div>';
   $('fwTb').innerHTML = `<tr><th>${tx('Bulan')}</th><th>Follow Up</th><th>Walk In</th><th>Total</th><th>% Follow Up</th><th>% Walk In</th></tr>` +
     D.map(x => `<tr class="${x.ym === sel ? 'sel' : ''}" onclick="fwSel('${x.ym}')"><td><b>${esc(monLong(x.ym))}</b></td><td>${rp(x.fu)}</td><td>${rp(x.wi)}</td><td><b>${rp(x.total)}</b></td><td>${pct(x.fu, x.total)}%</td><td>${x.total ? 100 - pct(x.fu, x.total) : 0}%</td></tr>`).join('');
-  $('fwNote').textContent = tx('Pencapaian termasuk pajak. Follow Up dari data aplikasi, Walk In = selisihnya.');
+  $('fwNote').textContent = tx('Follow Up = nilai transaksi aplikasi ÷ 1,11. Walk In = selisih dari Pencapaian.');
   if (typeof Chart === 'undefined') return;
   const lbl = ms.map(m => { const p = m.split('-'); return new Date(+p[0], +p[1] - 1, 1).toLocaleDateString(LOC(), {month: 'short', year: '2-digit'}); });
   charts.fw = new Chart($('chFW'), {
