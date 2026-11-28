@@ -249,6 +249,14 @@ body.lg-open{overflow:hidden}
 .cust p.alasan b{color:#dc2626}
 .mini .tap{cursor:pointer;position:relative}.mini .tap:active{opacity:.7}
 .mini .tap .chev{font-style:normal;font-weight:700;color:#dc2626;margin-left:2px}
+.mini .tap small.tip{display:block;font-size:10px;line-height:1.25;color:#dc2626;font-weight:600;margin-top:3px}
+.mini .tap small.tip.tip{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:#fee2e2;color:#b91c1c;font-size:10.5px;font-weight:700;line-height:1.2;white-space:nowrap}
+html[data-theme=dark] .mini .tap small.tip.tip{background:rgba(220,38,38,.22);color:#fca5a5}
+.mini .tap .coach{display:none;position:absolute;right:0;top:calc(100% + 10px);width:210px;max-width:72vw;background:#111c33;color:#fff;font-size:12px;line-height:1.35;padding:9px 11px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.28);z-index:30;cursor:pointer;animation:coachIn .25s ease}
+.mini .tap .coach.show{display:block}
+.mini .tap .coach::before{content:"";position:absolute;right:24px;top:-6px;width:12px;height:12px;background:#111c33;transform:rotate(45deg);border-radius:2px}
+.mini .tap .coach b{display:inline;font-size:11px;color:#9fb0cc;margin-left:6px;font-weight:700}
+@keyframes coachIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 #baModal .sheet{animation-duration:.16s}
 .ba{padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}.ba:last-child{border-bottom:0}
 .ba .bh{display:flex;align-items:center;gap:8px;font-size:13.5px}
@@ -520,7 +528,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
           <div class="hsep"></div>
           <button role="menuitem" id="btnAdmin" class="admin-only" onclick="closeMenu();show('admin')"><svg class="ic" width="18" height="18"><use href="#i-gear"/></svg><span>Pengaturan</span></button>
           <button role="menuitem" onclick="openPw()"><svg class="ic" width="18" height="18"><use href="#i-lock"/></svg><span>Ubah Password</span></button>
-          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ao</div>
+          <button role="menuitem" onclick="doLogout()" style="color:var(--bad)"><svg class="ic" width="18" height="18"><use href="#i-logout"/></svg><span>Keluar</span></button><div style="text-align:center;font-size:10px;color:#94a3b8;padding:6px 0 2px">v2026.11.16-ap</div>
         </div>
       </div>
     </div>
@@ -553,7 +561,7 @@ input[type=password]::-ms-reveal,input[type=password]::-ms-clear{display:none}
       <div class="mini mini3" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">
         <div><b id="kCapai">0%</b><span>Capaian vs Nilai Prospek Bulan Ini</span></div>
         <div><b id="kPot">Rp 0</b><span>Pipeline Penjualan</span></div>
-        <div class="tap" id="kBatalBox" role="button" tabindex="0" onclick="openBatal()" onkeydown="if(event.key==='Enter')openBatal()"><b id="kAvg">-</b><span>Batal Transaksi <i class="chev">›</i></span></div>
+        <div class="tap" id="kBatalBox" role="button" tabindex="0" onclick="openBatal()" onkeydown="if(event.key==='Enter')openBatal()"><b id="kAvg">-</b><span>Batal Transaksi</span><small class="tip">Lihat alasan ›</small><span class="coach" id="baCoach" onclick="event.stopPropagation();baCoachHide()">Ketuk di sini untuk melihat alasan batal terbanyak <b>✕</b></span></div>
       </div>
       <div class="grid2">
         <div><div class="sublbl">Estimasi vs Realisasi per Sales</div><div class="chart-box" style="height:230px"><canvas id="chNilai"></canvas></div></div>
@@ -947,6 +955,9 @@ const EN = {
  "Belum ada data Batal pada arsip bulan ini.": "No cancelled data in this month's archive.",
  "Data dari arsip bulan tersebut.": "Data from that month's archive.",
  "▲▼ = selisih dibanding {0}.": "▲▼ = change vs {0}.",
+ "Ketuk untuk lihat alasan": "Tap to see reasons",
+ "Ketuk di sini untuk melihat alasan batal terbanyak": "Tap here to see the top cancellation reasons",
+ "Lihat alasan ›": "View reasons ›",
  "Status per Sales": "Status by Salesperson",
  "Komposisi Status": "Status Distribution",
  "Perlu Follow Up Sekarang": "Needs Follow-up Now",
@@ -1977,7 +1988,7 @@ function renderDash(r) {
     $('kEst').textContent = rp(r.estimasiBulan);
     $('kCapai').textContent = r.estimasiBulan ? Math.round(r.nilaiTotal / r.estimasiBulan * 100) + '%' : '-';
     $('kPot').textContent = 'Rp ' + rpc(r.potensiTotal || 0);
-    $('kAvg').textContent = 'Rp ' + rpc((r.nilaiByStatus || {})['Batal'] || 0);
+    $('kAvg').textContent = 'Rp ' + rpc((r.nilaiByStatus || {})['Batal'] || 0); baCoachShow(r);
     $('ring').style.setProperty('--p', Math.min(r.rate, 100) + '%');
     $('greetTxt').textContent = r.overdue.length ? tx('{0} follow up menunggu tindakan', r.overdue.length) : tx('Semua follow up on track');
     paintRace(r);
@@ -2030,7 +2041,15 @@ function baGet(ym, cb) {
 }
 function baView(v) { BA_V = v; beep('tap'); openBatal(true); }
 function baMon(d) { const {cur, ms} = baMonths(), i = Math.max(0, Math.min(ms.length - 1, ms.indexOf(BA_YM || cur) + d)); BA_YM = ms[i] === cur ? null : ms[i]; beep('tap'); openBatal(true); }
+function baCoachSeen() { try { return localStorage.getItem('baCoach') === '1'; } catch (e) { return false; } }
+function baCoachHide() { const c = $('baCoach'); if (c) c.classList.remove('show'); try { localStorage.setItem('baCoach', '1'); } catch (e) {} }
+function baCoachShow(r) {
+  const c = $('baCoach'); if (!c || baCoachSeen()) return;
+  if (!Object.keys(r.batalAlasan || {}).length) return;
+  setTimeout(() => { if (!baCoachSeen() && $('tab-dash') && $('tab-dash').classList.contains('active')) c.classList.add('show'); }, 900);
+}
 function openBatal(keep) {
+  baCoachHide();
   const r = LAST; if (!r) return;
   if (!keep) { BA_V = 'alasan'; BA_YM = null; }
   const {cur, ms} = baMonths(), ym = BA_YM || cur, isCur = ym === cur, i = ms.indexOf(ym), pym = i > 0 ? ms[i - 1] : null;
